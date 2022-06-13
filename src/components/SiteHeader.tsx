@@ -8,12 +8,14 @@ import SvgIcon from "@mui/material/SvgIcon";
 import { ReactComponent as BellIcon } from "../assets/bell.svg";
 import CornellLogo from "../assets/cornell_logo.svg";
 
+import {Link as MuiLink} from "@mui/material";
+
 const SiteHeader = () => {
   return (
     <AppBar position="static" color={"primary"} sx={{ px: 5, py: 6 }}>
       <Toolbar disableGutters variant="dense">
         <Box component="img" src={CornellLogo} sx={{ mr: 6 }} />
-        <Typography variant="h1" fontWeight="bold" sx={{ flexGrow: 1 }}>
+        <Typography component={MuiLink} href='/' color="#ffffff" underline="none" variant="h1" fontWeight="bold" sx={{ flexGrow: 1 }}>
           Chimes
         </Typography>
         <Typography variant="h2" sx={{ mx: 2.5 }}>
