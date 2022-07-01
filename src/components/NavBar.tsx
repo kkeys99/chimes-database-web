@@ -12,6 +12,9 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FilledInput from "@mui/material/FilledInput";
 import { useTheme } from "@mui/material/styles";
 
+import {Link as MuiLink} from "@mui/material";
+import  {Link as RouterLink}  from "react-router-dom";
+
 const CMList = () => {
   const cms = [
     "CLL",
@@ -20,7 +23,7 @@ const CMList = () => {
     "VZ",
     "CEL",
     "JKM",
-    "SKG",
+    "SJG",
     "AK",
     "LYL",
     "KMDS",
@@ -33,9 +36,10 @@ const CMList = () => {
       <Stack direction="row" spacing={6}>
         {cms.map((initials) => {
           return (
-            <Typography color="primary.dark" variant="h2" fontWeight="bold">
+            //
+            <MuiLink href={`/CMs/${initials}`} color="primary.dark" variant="h2" fontWeight="bold">
               {initials}
-            </Typography>
+            </MuiLink>
           );
         })}
         <Typography color="primary.dark" variant="h2" fontWeight="bold">

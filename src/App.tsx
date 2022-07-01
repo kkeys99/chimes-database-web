@@ -6,6 +6,9 @@ import NavBar from "./components/NavBar";
 import SiteHeader from "./components/SiteHeader";
 import ConcertGrid from "./components/ConcertGrid";
 
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import CM from './pages/CM';
+
 const myGirl = {
   sheet: "T19",
   name: "My Girl",
@@ -93,7 +96,12 @@ const App = () => {
       <CssBaseline />
       <SiteHeader />
       <NavBar />
-      <ConcertGrid concerts={[firstConcert]} />
+      <Router>
+        <Routes>
+          <Route path='/' element ={<ConcertGrid concerts={[firstConcert]}/>} />
+          <Route path='/CMs/:initials' element={<CM />} />
+        </Routes>
+      </Router>
     </ThemeProvider>
   );
 };

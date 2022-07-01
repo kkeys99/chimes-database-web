@@ -1,3 +1,11 @@
+# Welcome to New Chimes DB!
+
+## Usage
+
+AK has added a proxy server in `server.js` in the ways described [in this article](https://dev.to/salarc123/how-to-connect-a-react-frontend-with-a-nodejs-express-backend-50i9). Basically, this file is an Express app that listens on port 3030, and there is a "proxy" option on `package.json` that redirects HTTP requests that way. Backend engineers, feel free to change this flow.
+
+To use both frontend and server, open up two terminals and run command `npm run start` in one of them to launch the React app, and `npm run serverStart` in the other to launch the Express app. Surely there's a better way to do this but that's what's set up so far.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
