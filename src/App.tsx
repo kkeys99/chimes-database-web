@@ -5,6 +5,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import NavBar from "./components/NavBar";
 import SiteHeader from "./components/SiteHeader";
 import ConcertGrid from "./components/ConcertGrid";
+import SongPage from "./components/SongPage";
 
 const myGirl = {
   sheet: "T19",
@@ -93,7 +94,7 @@ const App = () => {
       <CssBaseline />
       <SiteHeader />
       <NavBar />
-      <ConcertGrid concerts={[firstConcert]} />
+      <SongPage />
     </ThemeProvider>
   );
 };
