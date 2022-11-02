@@ -37,7 +37,7 @@ const CMList = () => {
         {cms.map((initials) => {
           return (
             //
-            <MuiLink href={`/CMs/${initials}`} color="primary.dark" variant="h2" fontWeight="bold">
+            <MuiLink href={`/CMs/${initials}`} color="primary.dark" variant="h2" fontWeight="bold" underline="hover">
               {initials}
             </MuiLink>
           );
@@ -112,3 +112,4 @@ const NavBar = () => {
 };
 
 export default NavBar;
+

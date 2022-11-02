@@ -9,9 +9,15 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
-import {SongSearchResult, SongSearchResultLite} from '../typing/types';
+import { SongSearchResult, Song } from '../typing/types';
 
-
+/*****************************************************************************
+ * FormattedCell
+ * 
+ * Description:
+ *   Table cell with formatting so we don't have to repeat this formatting
+ *   everywhere in the ResultsTable
+*****************************************************************************/
 const FormattedCell = (props: {text: any}) => {
     return (
         <TableCell align='center'>
@@ -28,10 +34,20 @@ const playingStatsFieldsFull = ["Available", "Played", "You", "Sheet", "Song", "
                         "Arranger", "Genre", "Requests", "Key Sig", "Time Sig", "Tempo", "Added"];
 
 
-// Consider using mui styled() to style the table rows to alternate colors and hide borders
+/*****************************************************************************
+ * ResultsTable
+ * 
+ * Description:
+ *   Reusable component for wherever there is a table of song results.
+ *   "Lite" mode shows a shortened list of fields.
+*****************************************************************************/
 const ResultsTable = (props: {data: SongSearchResult[], lite: boolean}) => {
-    
+   // Consider using mui styled() to style the table rows to alternate colors and hide borders
+ 
+
     const headerFields : string[] = (props.lite) ? playingStatsFields : playingStatsFieldsFull;
+
+    console.log(props.data)
 
     return(
         <TableContainer >
@@ -48,26 +64,27 @@ const ResultsTable = (props: {data: SongSearchResult[], lite: boolean}) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {props.data.map((rowData, index) => 
+                    {props.data &&
+                    props.data.map((rowData, index) => 
                         <TableRow 
                             sx={{
                                 bgcolor:!(index%2) ? "primary.contrastText":"#FFFFFF",
                                 border:"hidden"
                             }}
                         >
-                            <FormattedCell text = {rowData.available} />
-                            {!props.lite && <FormattedCell text = {rowData.played}/>}
+                            <FormattedCell text = {rowData.song.available} />
+                            {!props.lite && <FormattedCell text = {rowData.song.played}/>}
                             <FormattedCell text = {rowData.you} />
-                            <FormattedCell text = {rowData.sheet} />
-                            <FormattedCell text = {rowData.song} />
-                            {!props.lite && <FormattedCell text = {rowData.composer}/>}
-                            {!props.lite && <FormattedCell text = {rowData.arranger}/>}
-                            {!props.lite && <FormattedCell text = {rowData.genre}/>}
-                            {!props.lite && <FormattedCell text = {rowData.requests}/>}
-                            {!props.lite && <FormattedCell text = {rowData.keysig}/>}
-                            {!props.lite && <FormattedCell text = {rowData.timesig}/>}
-                            {!props.lite && <FormattedCell text = {rowData.tempo}/>}
-                            {!props.lite && <FormattedCell text = {rowData.added}/>}
+                            <FormattedCell text = {rowData.song.sheet} />
+                            <FormattedCell text = {rowData.song.title} />
+                            {!props.lite && <FormattedCell text = {rowData.song.composer}/>}
+                            {!props.lite && <FormattedCell text = {rowData.song.arranger}/>}
+                            {!props.lite && <FormattedCell text = {rowData.song.genre}/>}
+                            {!props.lite && <FormattedCell text = {rowData.song.requests}/>}
+                            {!props.lite && <FormattedCell text = {rowData.song.keysig}/>}
+                            {!props.lite && <FormattedCell text = {rowData.song.timesig}/>}
+                            {!props.lite && <FormattedCell text = {rowData.song.tempo}/>}
+                            {!props.lite && <FormattedCell text = {rowData.song.added}/>}
                         </TableRow>
                     )}
                 </TableBody>
