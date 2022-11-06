@@ -69,7 +69,6 @@ export class Concert {
 
 // CM Page results
 // CM Page Playing Results
-export interface SongSearchResult {
-    song: Song,
-    you: number
-};
+export interface resultTableRowData extends Song {
+    you: number;
+}

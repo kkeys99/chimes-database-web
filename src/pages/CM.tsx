@@ -12,7 +12,7 @@ import ButtonBase from "@mui/material/ButtonBase";
 // Custom Components
 import ResultsTable from "../components/ResultsTable"
 import ConcertGrid from "../components/ConcertGrid";
-import { Song, SongSearchResult } from "../typing/types";
+import { Song, resultTableRowData } from "../typing/types";
 
 
 // Header of the CM Page
@@ -58,7 +58,7 @@ function CMPageHeader (props: {name: string, currentPage: string, renderSubPage:
 // Instantiable component for where there are two ResultsTables side by side
 // Used in Playing Stats, Unplayed Songs, and Requests views of the CM Page
 function TwoTableBody (props: {headerLft: string, headerRt: string, 
-        tableDataLft: SongSearchResult[], tableDataRt: SongSearchResult[]}) 
+        tableDataLft: resultTableRowData[], tableDataRt: resultTableRowData[]}) 
 {
     return (    
         <Box sx={{width:1}}>  
@@ -89,47 +89,6 @@ function TwoTableBody (props: {headerLft: string, headerRt: string,
     )
 }
 
-
-// SOME TEMPORARY PLACEHOLDER DATA FOR "UNPLAYED" SUBPAGE
-const song1 = new Song(     
-    "A1",
-    "Song 1",
-    "Bach",
-    "AK",
-    "Classical",
-    1,
-    "C Major",
-    "4/4",
-    "medium",
-    "1/1/1",
-    "1/1/1",
-     10,
-)
-const dummyData1: SongSearchResult = {
-    song: song1,
-    you: 1,
-}
-
-const song2 = new Song(
-    "B2",
-    "Song 2",
-    "Chopin",
-    "KJC",
-    "Classical",
-    2,
-    "C Major",
-    "4/4",
-    "Medium",
-    "2/2/2",
-    "2/2/2",
-    20,
-)
-const dummyData2: SongSearchResult = {
-    song: song2,
-    you: 2,
-}
-
-
 // Container for the "Playing Stats" Tab
 function CMPagePlayingStats (props: {initials: string | undefined}) {
 
@@ -141,19 +100,6 @@ function CMPagePlayingStats (props: {initials: string | undefined}) {
         .then(data => setData(data))
     }, []);
 
-    let solos_data: SongSearchResult[] = [];
-    let duets_data: SongSearchResult[] = [];
-
-    // Adds the "you" field, hard codes it to 1. This will probably change
-    data.solos.map((perf) => {
-        solos_data.push({song: perf, you: 1});
-    });
-    data.duets.map((perf) => {
-        duets_data.push({song: perf, you: 1});
-    });
-
-    console.log(solos_data);
-
     return (
         <>
         <Typography variant="h2" color="primary.dark"
@@ -162,10 +108,10 @@ function CMPagePlayingStats (props: {initials: string | undefined}) {
             This CM has played some concerts and some songs.
         </Typography>  
         <TwoTableBody
-            headerLft={`${solos_data.length} Unique solos`}
-            headerRt={`${duets_data.length} Unique duets`}
-            tableDataLft={solos_data}
-            tableDataRt={duets_data}
+            headerLft={`${data.solos.length} Unique solos`}
+            headerRt={`${data.duets.length} Unique duets`}
+            tableDataLft={data.solos}
+            tableDataRt={data.duets}
         />
         </>
     )
@@ -210,16 +156,11 @@ function CMPageArrangements (props: {initials: string | undefined}) {
         .then(data => setData(data))
     }, []);
 
-    let arr_data: SongSearchResult[] = [];
-
-    // Add "you" field. Hard codes to 1 for now
-    data.arrangements.map((perf) => {
-        arr_data.push({song: perf, you: 1})
-    })
+    let arr_data: resultTableRowData[] = [];
 
     return (
         <Box sx={{pt:'12px', pb:'12px', pl:'24px', pr:'24px'}}>
-            <ResultsTable data={arr_data} lite={false}/>
+            <ResultsTable data={data.arrangements} lite={false}/>
         </Box >
     );
 }
@@ -228,14 +169,16 @@ function CMPageArrangements (props: {initials: string | undefined}) {
 // Container for the "Unplayed Songs" Tab
 function CMPageUnplayedSongs (props: {initials: string | undefined}) {
 
+    // SOMEHOW MAKE DB RETURN YOU FIELD AS 0 SO NO NEED FOR A NEW INTERFACE
+
     return (
         <>
-        WAITING ON BACKEND - DISREGARD FOR DEMO
+        THIS DOES NOT WORK YET
         <TwoTableBody
-            headerLft={"2 Unplayed solos"}
-            headerRt={"2 Unplayed duets"}
-            tableDataLft={[dummyData1, dummyData2]}
-            tableDataRt={[dummyData2, dummyData1]}
+            headerLft={"0 Unplayed solos"}
+            headerRt={"0 Unplayed duets"}
+            tableDataLft={[]}
+            tableDataRt={[]}
         />
         </>
     );
@@ -253,28 +196,13 @@ function CMPageRequests (props: {initials: string | undefined}) {
         .then(data => setData(data))
     }, []);
 
-    let solos_data: SongSearchResult[] = [];
-    let duets_data: SongSearchResult[] = [];
-
-    // Add "you" field. Hard codes to 1 for now
-    if (data.solos) {
-        data.solos.map((perf) => {
-            solos_data.push({song: perf, you: 1});
-        });
-    }
-    if (data.duets) {
-        data.duets.map((perf) => {
-            duets_data.push({song: perf, you: 1});
-        });
-    }
-
     return (
         <>
         <TwoTableBody
-            headerLft={`${solos_data.length} Requested Unique solos`}
-            headerRt={`${duets_data.length} Requested Unique duets`}
-            tableDataLft={solos_data}
-            tableDataRt={duets_data}
+            headerLft={`${data.solos.length} Requested Unique solos`}
+            headerRt={`${data.duets.length} Requested Unique duets`}
+            tableDataLft={data.solos}
+            tableDataRt={data.duets}
         />
         </>
     )

@@ -34,7 +34,14 @@ function getCMSongs(initials) {
                 thisCMPerformances.push(performance.song)
             }
         })
-    })
+    });
+    // Add you
+    thisCMPerformances.forEach((item) => {
+        item.you = 1;
+    }
+    );
+    console.log("HELLO");
+    console.log(thisCMPerformances);
     return thisCMPerformances;
 }
 
@@ -64,6 +71,11 @@ function getCMArrangements(initials) {
             }
         })
     })
+    // Add you
+    thisCMPerformances.forEach((item) => {
+        item.you = 1;
+    }
+    );
     return thisCMPerformances;
 }
 
@@ -76,6 +88,11 @@ function getCMRequests(initials) {
             }
         })
     })
+    // Add you
+    thisCMRequests.forEach((item) => {
+        item.you = 1;
+    }
+    );
     return thisCMRequests;
 }
 
