@@ -10,24 +10,10 @@ import InputLabel from "@mui/material/InputLabel";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import FilledInput from "@mui/material/FilledInput";
+import { cms } from "../constants";
 import { useTheme } from "@mui/material/styles";
 
 const CMList = () => {
-  const cms = [
-    "CLL",
-    "CMC",
-    "EMW",
-    "VZ",
-    "CEL",
-    "JKM",
-    "SKG",
-    "AK",
-    "LYL",
-    "KMDS",
-    "GLR",
-    "JLCLM",
-  ];
-
   return (
     <Toolbar disableGutters variant="dense" sx={{ justifyContent: "center" }}>
       <Stack direction="row" spacing={6}>
