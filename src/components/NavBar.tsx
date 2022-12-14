@@ -10,34 +10,25 @@ import InputLabel from "@mui/material/InputLabel";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import FilledInput from "@mui/material/FilledInput";
+import { cms } from "../constants";
 import { useTheme } from "@mui/material/styles";
 
-import {Link as MuiLink} from "@mui/material";
-import  {Link as RouterLink}  from "react-router-dom";
+import { Link as MuiLink } from "@mui/material";
 
 const CMList = () => {
-  const cms = [
-    "CLL",
-    "CMC",
-    "EMW",
-    "VZ",
-    "CEL",
-    "JKM",
-    "SJG",
-    "AK",
-    "LYL",
-    "KMDS",
-    "GLR",
-    "JLCLM",
-  ];
-
   return (
     <Toolbar disableGutters variant="dense" sx={{ justifyContent: "center" }}>
       <Stack direction="row" spacing={6}>
-        {cms.map((initials) => {
+        {cms.map(initials => {
           return (
             //
-            <MuiLink href={`/CMs/${initials}`} color="primary.dark" variant="h2" fontWeight="bold" underline="hover">
+            <MuiLink
+              href={`/CMs/${initials}`}
+              color="primary.dark"
+              variant="h2"
+              fontWeight="bold"
+              underline="hover"
+            >
               {initials}
             </MuiLink>
           );
@@ -88,7 +79,7 @@ const SearchBar = () => {
     <Toolbar disableGutters variant="dense" sx={{ justifyContent: "center" }}>
       <SearchInput />
       <Stack direction="row" spacing={6}>
-        {tags.map((tag) => {
+        {tags.map(tag => {
           return (
             <Typography color="primary.dark" variant="body1">
               {tag}
@@ -112,4 +103,3 @@ const NavBar = () => {
 };
 
 export default NavBar;
-

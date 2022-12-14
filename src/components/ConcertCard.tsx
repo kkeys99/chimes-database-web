@@ -18,11 +18,11 @@ interface Props {
 
 /*****************************************************************************
  * IconStack
- * 
+ *
  * Description:
  *   The Edit and Bells Adjusted Icons that go on the top right corner of the
  *   ConcertCard
-*****************************************************************************/
+ *****************************************************************************/
 const IconStack = (props: { style: React.CSSProperties }) => {
   return (
     <Stack direction="row" spacing={2} style={props.style}>
@@ -40,21 +40,18 @@ const IconStack = (props: { style: React.CSSProperties }) => {
   );
 };
 
-
 /*****************************************************************************
  * ConcertCard
- * 
+ *
  * Description:
  *   The box that has the concert performances as well as "bells adjusted" icon,
  *   edit button, and stuff.
-*****************************************************************************/
+ *****************************************************************************/
 const ConcertCard = ({ concert }: Props) => {
   const theme = useTheme();
   return (
     <Box>
-      <Typography sx={{pb:"12px"}}>
-        {concert.type}
-      </Typography>
+      <Typography sx={{ pb: "12px" }}>{concert.type}</Typography>
       <Card sx={{ bgcolor: "primary.contrastText" }}>
         <CardContent sx={{ position: "relative", p: 5 }}>
           <Typography maxWidth={300} variant="body2" fontWeight="light">
@@ -66,7 +63,7 @@ const ConcertCard = ({ concert }: Props) => {
           </Typography>
           <IconStack style={{ position: "absolute", top: 12, right: 12 }} />
           <List dense sx={{ ml: 7, listStyleType: "disc" }}>
-            {concert.performances.map((performance) => {
+            {concert.performances.map(performance => {
               return (
                 <ListItemText sx={{ my: 0, display: "list-item" }}>
                   <Typography
