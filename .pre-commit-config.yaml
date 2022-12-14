@@ -8,4 +8,5 @@ repos:
     hooks:
       - id: eslint
         additional_dependencies:
+          - eslint@8.29.0
           - eslint-config-standard-with-typescript@23.0.0
