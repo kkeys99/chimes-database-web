@@ -10,4 +10,5 @@ repos:
         additional_dependencies:
           - eslint@8.29.0
           - eslint-config-standard-with-typescript@23.0.0
+          - eslint-plugin-import@2.26.0
           - "@typescript-eslint/eslint-plugin@5.46.1"
