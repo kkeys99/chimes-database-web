@@ -1,11 +1,11 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const fakeDB = require("./fakeDB");
+const express = require("express")
+const bodyParser = require("body-parser")
+const fakeDB = require("./fakeDB")
 
-const app = express();
+const app = express()
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 // List of the CM Names
 const CMNames = {
@@ -21,154 +21,154 @@ const CMNames = {
   KMDS: "Kayla M. D. Shames '22",
   GLR: "Gretchen L. Ryan '??",
   JLCLM: "Jennifer L. C. Lory-Moran '9?",
-  KGJ: "Keith G. Jenkins '9?",
-};
+  KGJ: "Keith G. Jenkins '9?"
+}
 
 // fakeDB query helper functions
 
-function getCMSongs(initials) {
-  const thisCMPerformances = [];
+function getCMSongs (initials) {
+  const thisCMPerformances = []
   fakeDB.all_concerts.map(concert => {
     concert.performances.map(performance => {
       if (performance.performers.includes(initials)) {
-        thisCMPerformances.push(performance.song);
+        thisCMPerformances.push(performance.song)
       }
-    });
-  });
+    })
+  })
   // Add you
   thisCMPerformances.forEach(item => {
-    item.you = 1;
-  });
-  console.log("HELLO");
-  console.log(thisCMPerformances);
-  return thisCMPerformances;
+    item.you = 1
+  })
+  console.log("HELLO")
+  console.log(thisCMPerformances)
+  return thisCMPerformances
 }
 
-function getCMConcerts(initials) {
-  const thisCMConcerts = [];
+function getCMConcerts (initials) {
+  const thisCMConcerts = []
   fakeDB.all_concerts.map(concert => {
-    console.log(`Looping through concert for ${initials}`);
+    console.log(`Looping through concert for ${initials}`)
     for (const performance of concert.performances) {
       if (performance.performers.includes(initials)) {
-        thisCMConcerts.push(concert);
-        return;
+        thisCMConcerts.push(concert)
+        return
       }
     }
-  });
-  return thisCMConcerts;
+  })
+  return thisCMConcerts
 }
 
-function getCMArrangements(initials) {
-  const thisCMPerformances = [];
+function getCMArrangements (initials) {
+  const thisCMPerformances = []
   fakeDB.all_concerts.map(concert => {
     concert.performances.map(performance => {
-      console.log(performance);
+      console.log(performance)
       if (performance.song.arranger.includes(initials)) {
-        console.log("Found arranger");
-        thisCMPerformances.push(performance.song);
+        console.log("Found arranger")
+        thisCMPerformances.push(performance.song)
       }
-    });
-  });
+    })
+  })
   // Add you
   thisCMPerformances.forEach(item => {
-    item.you = 1;
-  });
-  return thisCMPerformances;
+    item.you = 1
+  })
+  return thisCMPerformances
 }
 
-function getCMRequests(initials) {
-  const thisCMRequests = [];
+function getCMRequests (initials) {
+  const thisCMRequests = []
   fakeDB.all_concerts.map(concert => {
     concert.performances.map(performance => {
       if (
         performance.isRequest &&
         performance.song.arranger.includes(initials)
       ) {
-        thisCMRequests.push(performance.song);
+        thisCMRequests.push(performance.song)
       }
-    });
-  });
+    })
+  })
   // Add you
   thisCMRequests.forEach(item => {
-    item.you = 1;
-  });
-  return thisCMRequests;
+    item.you = 1
+  })
+  return thisCMRequests
 }
 
 // GET for the Home page
 app.get("/home", (req, res) => {
-  console.log("GET home");
+  console.log("GET home")
   data = {
-    concerts: fakeDB.all_concerts,
-  };
-  res.status(200).send(JSON.stringify(data));
-});
+    concerts: fakeDB.all_concerts
+  }
+  res.status(200).send(JSON.stringify(data))
+})
 
 // GET for the CM page
 app.get("/CMs/:initials/:subpage", (req, res) => {
-  console.log("CM GET");
-  let data;
+  console.log("CM GET")
+  let data
   switch (req.params.subpage) {
     case "stats": {
-      console.log("Playing Stats");
-      const songs = getCMSongs(req.params.initials);
+      console.log("Playing Stats")
+      const songs = getCMSongs(req.params.initials)
 
       // Separate solos and duets
       const solos = songs.filter((song, idx) => {
-        return song.sheet.slice(0, 2) != "DT";
-      });
+        return song.sheet.slice(0, 2) != "DT"
+      })
       const duets = songs.filter((song, idx) => {
-        return song.sheet.slice(0, 2) == "DT";
-      });
+        return song.sheet.slice(0, 2) == "DT"
+      })
 
       data = {
         solos,
-        duets,
-      };
-      break;
+        duets
+      }
+      break
     }
     case "concerts": {
-      console.log("Concerts");
+      console.log("Concerts")
       data = {
         text: CMNames[req.params.initials],
-        concerts: getCMConcerts(req.params.initials),
-      };
-      break;
+        concerts: getCMConcerts(req.params.initials)
+      }
+      break
     }
     case "arrangements": {
-      console.log("arrangements");
+      console.log("arrangements")
       data = {
-        arrangements: getCMArrangements(req.params.initials),
-      };
-      break;
+        arrangements: getCMArrangements(req.params.initials)
+      }
+      break
     }
     case "requests": {
-      console.log("requests");
-      const songs = getCMRequests(req.params.initials);
+      console.log("requests")
+      const songs = getCMRequests(req.params.initials)
 
       // Separate solos and duets
       const solos = songs.filter((song, idx) => {
-        return song.sheet.slice(0, 2) != "DT";
-      });
+        return song.sheet.slice(0, 2) != "DT"
+      })
       const duets = songs.filter((song, idx) => {
-        return song.sheet.slice(0, 2) == "DT";
-      });
+        return song.sheet.slice(0, 2) == "DT"
+      })
 
       data = {
         solos,
-        duets,
-      };
-      break;
+        duets
+      }
+      break
     }
     default: {
-      console.log(req.params.subpage);
+      console.log(req.params.subpage)
       data = {
-        text: CMNames[req.params.initials],
-      };
-      break;
+        text: CMNames[req.params.initials]
+      }
+      break
     }
   }
-  res.status(200).send(JSON.stringify(data));
-});
+  res.status(200).send(JSON.stringify(data))
+})
 
-app.listen(3030, () => console.log("Server active"));
+app.listen(3030, () => console.log("Server active"))
