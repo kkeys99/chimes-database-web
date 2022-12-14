@@ -31,7 +31,7 @@ const CMList = () => {
   return (
     <Toolbar disableGutters variant="dense" sx={{ justifyContent: "center" }}>
       <Stack direction="row" spacing={6}>
-        {cms.map((initials) => {
+        {cms.map(initials => {
           return (
             <Typography color="primary.dark" variant="h2" fontWeight="bold">
               {initials}
@@ -84,7 +84,7 @@ const SearchBar = () => {
     <Toolbar disableGutters variant="dense" sx={{ justifyContent: "center" }}>
       <SearchInput />
       <Stack direction="row" spacing={6}>
-        {tags.map((tag) => {
+        {tags.map(tag => {
           return (
             <Typography color="primary.dark" variant="body1">
               {tag}

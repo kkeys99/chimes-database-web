@@ -65,7 +65,7 @@ const ConcertCard = ({ concert }: Props) => {
         </Typography>
         <IconStack style={{ position: "absolute", top: 12, right: 12 }} />
         <List dense sx={{ ml: 7, listStyleType: "disc" }}>
-          {concert.performances.map((performance) => {
+          {concert.performances.map(performance => {
             return (
               <ListItemText sx={{ my: 0, display: "list-item" }}>
                 <Typography
