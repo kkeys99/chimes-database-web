@@ -13,15 +13,24 @@ import FilledInput from "@mui/material/FilledInput";
 import { cms } from "../constants";
 import { useTheme } from "@mui/material/styles";
 
+import { Link as MuiLink } from "@mui/material";
+
 const CMList = () => {
   return (
     <Toolbar disableGutters variant="dense" sx={{ justifyContent: "center" }}>
       <Stack direction="row" spacing={6}>
         {cms.map(initials => {
           return (
-            <Typography color="primary.dark" variant="h2" fontWeight="bold">
+            //
+            <MuiLink
+              href={`/CMs/${initials}`}
+              color="primary.dark"
+              variant="h2"
+              fontWeight="bold"
+              underline="hover"
+            >
               {initials}
-            </Typography>
+            </MuiLink>
           );
         })}
         <Typography color="primary.dark" variant="h2" fontWeight="bold">
