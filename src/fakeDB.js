@@ -54,7 +54,7 @@ class Concert {
   }
 }
 
-let all_songs = []
+let all_songs = [];
 
 // Create Songs
 const myGirl = new Song(
@@ -91,7 +91,6 @@ const cantTake = new Song(
 );
 all_songs.push(cantTake);
 
-
 const cheapThrills = new Song(
   2,
   ["DT315"],
@@ -126,7 +125,6 @@ const inTheMood = new Song(
 );
 all_songs.push(inTheMood);
 
-
 const whenYouWish = new Song(
   4,
   ["H3"],
@@ -143,7 +141,6 @@ const whenYouWish = new Song(
   0
 );
 all_songs.push(whenYouWish);
-
 
 const moonlight = new Song(
   5,
@@ -162,7 +159,6 @@ const moonlight = new Song(
 );
 all_songs.push(moonlight);
 
-
 const sentimental = new Song(
   6,
   ["Unprop"],
@@ -179,7 +175,6 @@ const sentimental = new Song(
   0
 );
 all_songs.push(sentimental);
-
 
 const cityOfStars = new Song(
   7,
@@ -198,7 +193,6 @@ const cityOfStars = new Song(
 );
 all_songs.push(cityOfStars);
 
-
 const misty = new Song(
   8,
   ["Prop"],
@@ -215,7 +209,6 @@ const misty = new Song(
   0
 );
 all_songs.push(misty);
-
 
 const btmv = new Song(
   9,
@@ -234,7 +227,6 @@ const btmv = new Song(
 );
 all_songs.push(btmv);
 
-
 const testdrive = new Song(
   10,
   ["DT372"],
@@ -252,7 +244,6 @@ const testdrive = new Song(
 );
 all_songs.push(testdrive);
 
-
 const rach = new Song(
   11,
   ["DT384"],
@@ -269,7 +260,6 @@ const rach = new Song(
   0
 );
 all_songs.push(rach);
-
 
 // Create Performances
 const perf1 = new Performance(myGirl, false, ["CLL"]);

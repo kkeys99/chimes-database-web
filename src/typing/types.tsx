@@ -1,7 +1,6 @@
 /************************************
  * Types - to use site wide
-*/
-
+ */
 
 //----------------------------------------
 // DB Entity Classes
@@ -88,11 +87,11 @@ export interface songStats {
 }
 
 export interface playsPerCM {
-  [cm: string] : number;
+  [cm: string]: number;
 }
 
 export interface songHistory {
-  [date: string] : string[];
+  [date: string]: string[];
 }
 
 export interface songPageData {

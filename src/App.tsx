@@ -19,7 +19,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/CMs/:initials" element={<CM />} />
-          <Route path="/song/:id" element={<SongPage />}/>
+          <Route path="/song/:id" element={<SongPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

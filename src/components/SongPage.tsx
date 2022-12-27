@@ -23,7 +23,13 @@ import { cms, cmStats } from "../constants";
 import { makeStyles } from "@material-ui/styles";
 import { IconButton } from "@mui/material";
 
-import { Song, songStats, songPageData, songHistory, playsPerCM } from "../typing/types"; 
+import {
+  Song,
+  songStats,
+  songPageData,
+  songHistory,
+  playsPerCM,
+} from "../typing/types";
 
 const useStyles = makeStyles(() => ({
   dateRange: {
@@ -65,8 +71,7 @@ interface PlayStatsProp {
   history: songHistory;
 }
 
-
-const SongTitle = ({sheet, title}: SongTitleProps) => {
+const SongTitle = ({ sheet, title }: SongTitleProps) => {
   return (
     <Box display="flex" flexDirection="row" sx={{ ml: 12, mt: 12, mb: 8 }}>
       <Typography variant="h2" fontWeight="bold">
@@ -79,7 +84,6 @@ const SongTitle = ({sheet, title}: SongTitleProps) => {
     </Box>
   );
 };
-
 
 const SongTag = ({ tagName, tagData }: SongTagProp) => {
   return (
@@ -103,9 +107,8 @@ const SongTag = ({ tagName, tagData }: SongTagProp) => {
   );
 };
 
-
 // The Song info - top left of page
-const SongInfo = ({song}: SongInfoProps) => {
+const SongInfo = ({ song }: SongInfoProps) => {
   const tagInfo = {
     Sheet: song.sheet,
     Composer: song.composer,
@@ -129,8 +132,6 @@ const SongInfo = ({song}: SongInfoProps) => {
     </Stack>
   );
 };
-
-
 
 const DayRange = () => {
   const [date, setDate] = React.useState<DateRange<Date>>([null, null]);
@@ -174,19 +175,15 @@ const DayRange = () => {
   );
 };
 
-
 // Song stats and plays per CM
-const Statistics = ( {stats, playsPerCM }: songStatsProp ) => {
+const Statistics = ({ stats, playsPerCM }: songStatsProp) => {
   const { performances, requests, players } = stats;
 
   return (
     <Stack direction="column" mb={4}>
       <Typography sx={{ fontSize: 18 }}>Statistics</Typography>
       <Typography sx={{ fontSize: 12, mt: 2 }}>
-        {performances +
-          " " +
-          "Performance" +
-          (performances != 1 ? "s" : "")}
+        {performances + " " + "Performance" + (performances != 1 ? "s" : "")}
       </Typography>
       <Typography sx={{ fontSize: 12 }}>
         {requests +
@@ -198,10 +195,7 @@ const Statistics = ( {stats, playsPerCM }: songStatsProp ) => {
           "%)"}
       </Typography>
       <Typography sx={{ fontSize: 12 }}>
-        {players +
-          " " +
-          "Player" +
-          (players != 1 ? "s" : "")}
+        {players + " " + "Player" + (players != 1 ? "s" : "")}
       </Typography>
       {/* List of CMs who have played this song */}
       <List dense={true}>
@@ -212,9 +206,7 @@ const Statistics = ( {stats, playsPerCM }: songStatsProp ) => {
                 <CircleIcon sx={{ width: 8, color: "#006699", mr: 2 }} />
                 <ListItemText
                   sx={{ color: "#006699" }}
-                  primary={
-                    cm + " (" + plays + ")"
-                  }
+                  primary={cm + " (" + plays + ")"}
                 />
               </ListItem>
             ) : null;
@@ -225,10 +217,8 @@ const Statistics = ( {stats, playsPerCM }: songStatsProp ) => {
   );
 };
 
-
 // History of dates played and which CMs
-const History = ({history}: historyProp) => {
-  
+const History = ({ history }: historyProp) => {
   return (
     <Stack direction="column" mb={4} ml={12}>
       <Typography sx={{ fontSize: 18 }}>History</Typography>
@@ -238,11 +228,12 @@ const History = ({history}: historyProp) => {
           // https://stackoverflow.com/questions/61831915/add-new-string-between-every-current-string-in-array
           // Adapted according to reduce spec
           // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce
-          const performersStr = performers.reduce( (accum, curr, idx) => {
-              return (idx < performers.length-1) ? 
-                accum.concat(curr, ", ") : 
-                accum.concat(curr); // omit the "+"" after the last performer
-            }, 
+          const performersStr = performers.reduce(
+            (accum, curr, idx) => {
+              return idx < performers.length - 1
+                ? accum.concat(curr, ", ")
+                : accum.concat(curr); // omit the "+"" after the last performer
+            },
             "" // Initialize to empty string
           );
           const displayItem = date + ": " + performersStr;
@@ -256,49 +247,45 @@ const History = ({history}: historyProp) => {
       </List>
     </Stack>
   );
-  
 };
 
-
 // The box to the right that contains Stats and History
-const PlayStats = ({stats, playsPerCM, history}: PlayStatsProp) => {
-
+const PlayStats = ({ stats, playsPerCM, history }: PlayStatsProp) => {
   return (
     <Box>
       <DayRange />
       <Stack direction="row" sx={{ mr: 16, mt: 6 }}>
-        <Statistics stats={stats} playsPerCM={playsPerCM}/>
+        <Statistics stats={stats} playsPerCM={playsPerCM} />
         <History history={history} />
       </Stack>
     </Box>
   );
 };
 
-
 const MediaAndDates = () => {
   return <Box></Box>;
 };
 
-
 // The Main Song Page component
 const SongPage = () => {
-  
   const { id } = useParams();
 
   const [data, setData] = useState({} as songPageData);
 
   // This will prevent it from trying to access attributes that aren't there
   // before the fetching of data is done.
-  const [ready, setReady] = useState(false)
-  
-  const {song, stats, playsPerCM, history} = data;
+  const [ready, setReady] = useState(false);
+
+  const { song, stats, playsPerCM, history } = data;
   console.log(data);
 
   useEffect(() => {
     fetch(`/song/${id}`)
       .then(res => res.json())
-      .then(data => { setData(data) })
-      .then( () => setReady(true) ); // set this at end so app doesn't try to render before
+      .then(data => {
+        setData(data);
+      })
+      .then(() => setReady(true)); // set this at end so app doesn't try to render before
   }, []);
 
   if (ready) {
@@ -306,14 +293,13 @@ const SongPage = () => {
       <Box>
         <SongTitle sheet={song.sheet[0]} title={song.title} />
         <Stack direction="row" spacing={16}>
-          <SongInfo song={song}/>
+          <SongInfo song={song} />
           <PlayStats stats={stats} playsPerCM={playsPerCM} history={history} />
         </Stack>
       </Box>
     );
-  }
-  else {
-    return(
+  } else {
+    return (
       <>
         {/* 
         If I put "Loading..." here it looks weird cause it's so fast 

@@ -106,11 +106,11 @@ function getSongPageData(id) {
     stats: {
       plays: 0,
       requests: 0,
-      players: 0
+      players: 0,
     },
     playsPerCM: {},
-    history: {}
-  }
+    history: {},
+  };
 
   fakeDB.all_concerts.map(concert => {
     // Count Total Players
@@ -126,8 +126,7 @@ function getSongPageData(id) {
           console.log(performer);
           if (performer in songPageData.playsPerCM) {
             songPageData.playsPerCM[performer] += 1;
-          }
-          else {
+          } else {
             songPageData.playsPerCM[performer] = 1;
           }
         }
