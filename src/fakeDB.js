@@ -5,6 +5,7 @@
 // Song class
 class Song {
   constructor(
+    id,
     sheet,
     title,
     composer,
@@ -18,17 +19,18 @@ class Song {
     available,
     played
   ) {
-    this.sheet = sheet;
+    this._id = id;
+    this.sheet = [...sheet];
     this.title = title;
     this.composer = composer;
     this.arranger = arranger;
-    this.genre = genre;
+    this.genre = [...genre];
     this.requests = requests;
-    this.keysig = keysig;
-    this.timesig = timesig;
-    this.tempo = tempo;
-    this.added = added;
-    this.available = available;
+    this.keysig = [...keysig];
+    this.timesig = [...timesig];
+    this.tempo = [...tempo];
+    this.added = [...added];
+    this.available = [...available];
     this.played = played;
   }
 }
@@ -52,175 +54,222 @@ class Concert {
   }
 }
 
+let all_songs = []
+
 // Create Songs
 const myGirl = new Song(
-  "T19",
+  0,
+  ["T19"],
   "My Girl",
-  "The Temptations",
-  "VT",
-  "Popular",
+  ["The Temptations"],
+  ["VT"],
+  ["Popular"],
   0,
-  "Key",
-  "Time",
-  "Tempo",
-  "Date Added",
-  "1/1/2001",
+  ["Key"],
+  ["Time"],
+  ["Tempo"],
+  ["Date Added"],
+  ["1/1/2001"],
   0
 );
+all_songs.push(myGirl);
+
 const cantTake = new Song(
-  "V9",
+  1,
+  ["V9"],
   "Can't Take My Eyes Off Of You",
-  "Franki Valli",
-  "EC",
-  "Popular",
+  ["Franki Valli"],
+  ["EC"],
+  ["Popular"],
   0,
-  "Key",
-  "Time",
-  "Tempo",
-  "Date Added",
-  "1/1/2001",
+  ["Key"],
+  ["Time"],
+  ["Tempo"],
+  ["Date Added"],
+  ["1/1/2001"],
   0
 );
+all_songs.push(cantTake);
+
+
 const cheapThrills = new Song(
-  "DT315",
+  2,
+  ["DT315"],
   "Cheap Thrills",
-  "Sia",
-  "RLO",
-  "Popular",
+  ["Sia"],
+  ["RLO"],
+  ["Popular"],
   0,
-  "Key",
-  "Time",
-  "Tempo",
-  "Date Added",
-  "1/1/2001",
+  ["Key"],
+  ["Time"],
+  ["Tempo"],
+  ["Date Added"],
+  ["1/1/2001"],
   0
 );
+all_songs.push(cheapThrills);
+
 const inTheMood = new Song(
-  "M24",
-  "In The Moods",
-  "???",
-  "???",
-  "Popular",
+  3,
+  ["M24"],
+  "In The Mood",
+  ["???"],
+  ["???"],
+  ["Popular"],
   0,
-  "Key",
-  "Time",
-  "Tempo",
-  "Date Added",
-  "1/1/2001",
+  ["Key"],
+  ["Time"],
+  ["Tempo"],
+  ["Date Added"],
+  ["1/1/2001"],
   0
 );
+all_songs.push(inTheMood);
+
+
 const whenYouWish = new Song(
-  "H3",
+  4,
+  ["H3"],
   "When You Wish Upon A Star (from 'Pinocchio')",
-  "???",
-  "???",
-  "Popular",
+  ["???"],
+  ["???"],
+  ["Popular"],
   0,
-  "Key",
-  "Time",
-  "Tempo",
-  "Date Added",
-  "1/1/2001",
+  ["Key"],
+  ["Time"],
+  ["Tempo"],
+  ["Date Added"],
+  ["1/1/2001"],
   0
 );
+all_songs.push(whenYouWish);
+
+
 const moonlight = new Song(
-  "B206",
+  5,
+  ["B206"],
   "Moonlight Sonata -  Adagio, Op. 27, No. 2",
-  "Beethoven",
-  "???",
-  "Popular",
+  ["Beethoven"],
+  ["???"],
+  ["Popular"],
   0,
-  "Key",
-  "Time",
-  "Tempo",
-  "Date Added",
-  "1/1/2001",
+  ["Key"],
+  ["Time"],
+  ["Tempo"],
+  ["Date Added"],
+  ["1/1/2001"],
   0
 );
+all_songs.push(moonlight);
+
+
 const sentimental = new Song(
-  "Unprop",
+  6,
+  ["Unprop"],
   "In A Sentimental Mood",
-  "Duke Ellington",
-  "???",
-  "Popular",
+  ["Duke Ellington"],
+  ["???"],
+  ["Popular"],
   0,
-  "Key",
-  "Time",
-  "Tempo",
-  "Date Added",
-  "1/1/2001",
+  ["Key"],
+  ["Time"],
+  ["Tempo"],
+  ["Date Added"],
+  ["1/1/2001"],
   0
 );
+all_songs.push(sentimental);
+
+
 const cityOfStars = new Song(
-  "Unprop",
-  "City of Starts",
-  "Justin Hurwitz",
-  "JHK",
-  "Popular",
+  7,
+  ["Unprop"],
+  "City of Stars",
+  ["Justin Hurwitz"],
+  ["JHK"],
+  ["Popular"],
   0,
-  "Key",
-  "Time",
-  "Tempo",
-  "Date Added",
-  "1/1/2001",
+  ["Key"],
+  ["Time"],
+  ["Tempo"],
+  ["Date Added"],
+  ["1/1/2001"],
   0
 );
+all_songs.push(cityOfStars);
+
+
 const misty = new Song(
-  "Prop",
+  8,
+  ["Prop"],
   "Misty Mountains",
-  "Howard Shore",
-  "JHK",
-  "Popular",
+  ["Howard Shore"],
+  ["JHK"],
+  ["Popular"],
   0,
-  "Key",
-  "Time",
-  "Tempo",
-  "Date Added",
-  "1/1/2001",
+  ["Key"],
+  ["Time"],
+  ["Tempo"],
+  ["Date Added"],
+  ["1/1/2001"],
   0
 );
+all_songs.push(misty);
+
+
 const btmv = new Song(
-  "H315",
+  9,
+  ["H315"],
   "Be Thou My Vision (Slane)",
-  "Irish Trad.",
-  "KKC",
-  "Hymn",
+  ["Irish Trad."],
+  ["KKC"],
+  ["Hymn"],
   0,
-  "Key",
-  "Time",
-  "Tempo",
-  "Date Added",
-  "1/1/2001",
+  ["Key"],
+  ["Time"],
+  ["Tempo"],
+  ["Date Added"],
+  ["1/1/2001"],
   0
 );
+all_songs.push(btmv);
+
+
 const testdrive = new Song(
-  "DT372",
+  10,
+  ["DT372"],
   "Test Drive (from 'How to Train Your Dragon')",
-  "John Powell",
-  "AK",
-  "Movie",
+  ["John Powell"],
+  ["AK"],
+  ["Movie"],
   0,
-  "Key",
-  "Time",
-  "Tempo",
-  "Date Added",
-  "1/1/2001",
+  ["Key"],
+  ["Time"],
+  ["Tempo"],
+  ["Date Added"],
+  ["1/1/2001"],
   0
 );
+all_songs.push(testdrive);
+
+
 const rach = new Song(
-  "DT384",
+  11,
+  ["DT384"],
   "Piano Concerto No. 2 in c minor, Op. 18",
-  "Sergei Rachmaninoff",
-  "CLL",
-  "Classical",
+  ["Sergei Rachmaninoff"],
+  ["CLL"],
+  ["Classical"],
   0,
-  "Key",
-  "Time",
-  "Tempo",
-  "Date Added",
-  "1/1/2001",
+  ["Key"],
+  ["Time"],
+  ["Tempo"],
+  ["Date Added"],
+  ["1/1/2001"],
   0
 );
+all_songs.push(rach);
+
 
 // Create Performances
 const perf1 = new Performance(myGirl, false, ["CLL"]);
@@ -259,3 +308,4 @@ const concert2 = new Concert("2/3/2022", "Afternoon", true, [
 
 // List of concerts aka the whole DB
 exports.all_concerts = [concert1, concert2];
+exports.all_songs = all_songs;

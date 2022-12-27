@@ -1,42 +1,46 @@
-//---------------------------------------
-// Table Results
-//---------------------------------------
+/************************************
+ * Types - to use site wide
+*/
 
-import { getTextOfJSDocComment } from "typescript";
 
-// Concert - Related Classes
+//----------------------------------------
+// DB Entity Classes
+//----------------------------------------
 export class Note {
   public: boolean = false;
   text: string = "";
 }
 
 export class Song {
-  sheet: string = "";
+  _id: number;
+  sheet: string[] = [""];
   title: string = "";
-  composer: string = "";
-  arranger: string = "";
-  genre: string = "";
+  composer: string[] = [""];
+  arranger: string[] = [""];
+  genre: string[] = [""];
   requests: number = 0;
-  keysig: string = "";
-  timesig: string = "";
-  tempo: string = "";
-  added: string = "";
-  available: string = "";
+  keysig: string[] = [""];
+  timesig: string[] = [""];
+  tempo: string[] = [""];
+  added: string[] = [""];
+  available: string[] = [""];
   played: number = 0;
   constructor(
-    sheet: string = "",
+    id: number = 0,
+    sheet: string[] = [""],
     title: string = "",
-    composer: string = "",
-    arranger: string = "",
-    genre: string = "",
+    composer: string[] = [""],
+    arranger: string[] = [""],
+    genre: string[] = [""],
     requests: number = 0,
-    keysig: string = "",
-    timesig: string = "",
-    tempo: string = "",
-    added: string = "",
-    available: string = "",
+    keysig: string[] = [""],
+    timesig: string[] = [""],
+    tempo: string[] = [""],
+    added: string[] = [""],
+    available: string[] = [""],
     played: number = 0
   ) {
+    this._id = id;
     this.sheet = sheet;
     this.title = title;
     this.composer = composer;
@@ -66,8 +70,34 @@ export class Concert {
   performances: Performance[] = [new Performance()];
 }
 
-// CM Page results
-// CM Page Playing Results
+//----------------------------------------
+// CM Page
+//----------------------------------------
 export interface resultTableRowData extends Song {
   you: number;
+}
+
+//----------------------------------------
+// Song Page
+//----------------------------------------
+
+export interface songStats {
+  performances: number;
+  requests: number;
+  players: number;
+}
+
+export interface playsPerCM {
+  [cm: string] : number;
+}
+
+export interface songHistory {
+  [date: string] : string[];
+}
+
+export interface songPageData {
+  song: Song;
+  stats: songStats;
+  playsPerCM: playsPerCM;
+  history: songHistory;
 }
