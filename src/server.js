@@ -171,4 +171,9 @@ app.get("/CMs/:initials/:subpage", (req, res) => {
   res.status(200).send(JSON.stringify(data));
 });
 
+app.post("/log", (req, res) => {
+  console.log("POST concert log")
+  console.log(req.body)
+});
+
 app.listen(3030, () => console.log("Server active"));

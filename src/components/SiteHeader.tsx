@@ -1,4 +1,6 @@
 import * as React from "react";
+import { useTheme } from '@mui/material/styles';
+
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -11,8 +13,12 @@ import CornellLogo from "../assets/cornell_logo.svg";
 import { Link as MuiLink } from "@mui/material";
 
 const SiteHeader = () => {
+  const theme = useTheme();
   return (
-    <AppBar position="static" color={"primary"} sx={{ px: 5, py: 6 }}>
+    <AppBar 
+      position="fixed" color={"primary"} elevation={0}
+      sx={{ px: 5, py: 6, zIndex: theme.zIndex.drawer + 1}} // Keeps this visible over concert log
+    >
       <Toolbar disableGutters variant="dense">
         <Box component="img" src={CornellLogo} sx={{ mr: 6 }} />
         <Typography

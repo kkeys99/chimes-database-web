@@ -71,3 +71,23 @@ export class Concert {
 export interface resultTableRowData extends Song {
   you: number;
 }
+
+//---------------------------------------
+// Concert Log Fields
+//---------------------------------------
+
+export interface songEntry {
+  title: string;
+  CM: string;
+  request: boolean;
+
+}
+
+export interface concertLogFields {
+  concertType: string;
+  bellsAdjusted: boolean;
+  songs: songEntry[];
+  privateNote: string;
+  publicNote: string;
+
+}
