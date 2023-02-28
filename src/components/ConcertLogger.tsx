@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useState} from 'react'
+import { useState } from "react";
 
 import { useTheme } from "@mui/material/styles";
 
@@ -7,24 +7,24 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
-import Drawer from '@mui/material/Drawer';
-import Checkbox from '@mui/material/Checkbox';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
+import Drawer from "@mui/material/Drawer";
+import Checkbox from "@mui/material/Checkbox";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
-import InputBase from '@mui/material/InputBase';
-import Button from '@mui/material/Button'
-import MenuIcon from '@mui/icons-material/Menu';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import StarIcon from '@mui/icons-material/Star';
-import DeleteIcon from '@mui/icons-material/Delete';
+import InputBase from "@mui/material/InputBase";
+import Button from "@mui/material/Button";
+import MenuIcon from "@mui/icons-material/Menu";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import StarIcon from "@mui/icons-material/Star";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import { IconButton } from "@mui/material";
 
 import { concertLogFields, songEntry } from "../typing/types";
@@ -34,50 +34,49 @@ const drawerWidth = 256;
 const concertTypes = ["morning", "afternoon", "evening", "specialty"];
 
 interface ConcertLoggerProps {
-    open: boolean
+  open: boolean;
 }
 
 interface LogIconProps {
-    children: any
+  children: any;
 }
 
 interface SongLoggerProps {
-    song:        songEntry;  // The song data itself
-    index:       number;     // The vertical position in the list
-    bottom:      boolean;    // Whether it's the bottom entry
-    addSong:     Function;   // Handlers from the top-level Logger
-    deleteSong:  Function;
-    editSong:    Function;
+  song: songEntry; // The song data itself
+  index: number; // The vertical position in the list
+  bottom: boolean; // Whether it's the bottom entry
+  addSong: Function; // Handlers from the top-level Logger
+  deleteSong: Function;
+  editSong: Function;
 }
 
-
 // This was necessary for having more control over the shape of the selector
-// In the default way, the words were not sitting inside the box. 
+// In the default way, the words were not sitting inside the box.
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
-    'label + &': {
-      marginTop: theme.spacing(3),
-    },
-    '& .MuiInputBase-input': {
-      position: 'relative',
-      backgroundColor: theme.palette.primary.contrastText,
-      borderRadius: 4,
-      padding: '4px 8px',
-    },
+  "label + &": {
+    marginTop: theme.spacing(3),
+  },
+  "& .MuiInputBase-input": {
+    position: "relative",
+    backgroundColor: theme.palette.primary.contrastText,
+    borderRadius: 4,
+    padding: "4px 8px",
+  },
 }));
 
 // A simple component that's basically a styled icon button
 // TODO - change this to styled API maybe?
-const LogIcon = ({children}: LogIconProps) => {
-    return (
-        <IconButton disableRipple sx={{p:0}}>
-            {children}
-        </IconButton>
-    );
-}
+const LogIcon = ({ children }: LogIconProps) => {
+  return (
+    <IconButton disableRipple sx={{ p: 0 }}>
+      {children}
+    </IconButton>
+  );
+};
 
 /*****************************************************************************
  * SongLogger
- * 
+ *
  * Description:
  *   A single row of the "Add Song" section.
  *   Contains the inputs for Title and CM,
@@ -85,350 +84,380 @@ const LogIcon = ({children}: LogIconProps) => {
  *   Each input has a change handler that calls a function from the
  *     ConcertLogger. This is necessary because the Logger functions
  *     need to know the index.
-*****************************************************************************/
-const SongLogger = ({song, index, bottom, addSong, deleteSong, editSong}: SongLoggerProps) => {
+ *****************************************************************************/
+const SongLogger = ({
+  song,
+  index,
+  bottom,
+  addSong,
+  deleteSong,
+  editSong,
+}: SongLoggerProps) => {
+  const theme = useTheme();
+  const inputFontSize = theme.typography.body2;
 
-    const theme = useTheme();
-    const inputFontSize = theme.typography.body2;
+  // TODO add click and drag functionality
 
-    // TODO add click and drag functionality
-    
-    const addSongHandler: React.MouseEventHandler = () => {
-        addSong(index);
-    }
+  const addSongHandler: React.MouseEventHandler = () => {
+    addSong(index);
+  };
 
-    const deleteSongHandler: React.MouseEventHandler = () => {
-        deleteSong(index);
-    }
+  const deleteSongHandler: React.MouseEventHandler = () => {
+    deleteSong(index);
+  };
 
-    const titleChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        song.title = e.target.value;
-        editSong(index, song);
-    }
+  const titleChangeHandler: React.ChangeEventHandler<HTMLInputElement> = e => {
+    song.title = e.target.value;
+    editSong(index, song);
+  };
 
-    const cmChangeHandler= (e: any) => { // TODO - find out what kind of event this is so I dont use "any" as cop-out
-        song.CM = e.target.value;
-        editSong(index, song);
-    }
+  const cmChangeHandler = (e: any) => {
+    // TODO - find out what kind of event this is so I dont use "any" as cop-out
+    song.CM = e.target.value;
+    editSong(index, song);
+  };
 
-    const requestChangeHandler: React.MouseEventHandler = () => {
-        song.request = !song.request;
-        editSong(index, song);
-    }
+  const requestChangeHandler: React.MouseEventHandler = () => {
+    song.request = !song.request;
+    editSong(index, song);
+  };
 
-    return (
-        <FormGroup row sx={{display:"flex", gap:"8px", py:1}}>
-
-            {/* Icons on the left-hand side: drag and add song */}
-            <Stack direction="column" spacing={1}>
-                <LogIcon>
-                    <MenuIcon sx={{fontSize:inputFontSize}}/>
-                </LogIcon>
-                {//bottom && // Only be able to add at the bottom of list - disabled for now bc we can't reorder
-                    <LogIcon >
-                        <AddCircleOutlineIcon sx={{fontSize:inputFontSize}} onClick={addSongHandler}/>
-                    </LogIcon>
-                }
-            </Stack>
-           
-           {/* Song Title text field*/}
-            <TextField
-                onChange={titleChangeHandler}
-                name="title"
-                value={song.title}
-                multiline
-                minRows={1}
-                sx={{ py:1, width:"96px", flexShrink:0}} 
-                variant="filled" 
-                InputProps={{disableUnderline: true, sx:{borderRadius:"4px", py:1, px:2, fontSize: inputFontSize}}} 
+  return (
+    <FormGroup row sx={{ display: "flex", gap: "8px", py: 1 }}>
+      {/* Icons on the left-hand side: drag and add song */}
+      <Stack direction="column" spacing={1}>
+        <LogIcon>
+          <MenuIcon sx={{ fontSize: inputFontSize }} />
+        </LogIcon>
+        {
+          //bottom && // Only be able to add at the bottom of list - disabled for now bc we can't reorder
+          <LogIcon>
+            <AddCircleOutlineIcon
+              sx={{ fontSize: inputFontSize }}
+              onClick={addSongHandler}
             />
+          </LogIcon>
+        }
+      </Stack>
 
-            {/* CM Selector */}
-            <Select 
-                name={"CM"}
-                value={song.CM}
-                onChange={cmChangeHandler}
-                sx={{width:"64px", flexShrink:0, fontSize: inputFontSize}}
-                input={<BootstrapInput />}
-            >
-                {concertTypes.map((type) => {
-                    return(
-                        <MenuItem
-                            sx={{fontSize:inputFontSize}} 
-                            value={type}
-                        >
-                            {type}
-                        </MenuItem>
-                    );
-                })}
-            </Select>
-            
-            {/* Icons on the right-hand side: Request and Delete */}
-            <LogIcon >
-                {song.request ?
-                <StarIcon sx={{fontSize:inputFontSize}} onClick={requestChangeHandler} /> :
-                <StarBorderIcon sx={{fontSize:inputFontSize}} onClick={requestChangeHandler}/>
-                }
-            </LogIcon>
-            <LogIcon >
-                <DeleteIcon sx={{fontSize:inputFontSize}} onClick={deleteSongHandler} />
-            </LogIcon>
+      {/* Song Title text field*/}
+      <TextField
+        onChange={titleChangeHandler}
+        name="title"
+        value={song.title}
+        multiline
+        minRows={1}
+        sx={{ py: 1, width: "96px", flexShrink: 0 }}
+        variant="filled"
+        InputProps={{
+          disableUnderline: true,
+          sx: { borderRadius: "4px", py: 1, px: 2, fontSize: inputFontSize },
+        }}
+      />
 
-        </FormGroup>
-    )
-}
+      {/* CM Selector */}
+      <Select
+        name={"CM"}
+        value={song.CM}
+        onChange={cmChangeHandler}
+        sx={{ width: "64px", flexShrink: 0, fontSize: inputFontSize }}
+        input={<BootstrapInput />}
+      >
+        {concertTypes.map(type => {
+          return (
+            <MenuItem sx={{ fontSize: inputFontSize }} value={type}>
+              {type}
+            </MenuItem>
+          );
+        })}
+      </Select>
+
+      {/* Icons on the right-hand side: Request and Delete */}
+      <LogIcon>
+        {song.request ? (
+          <StarIcon
+            sx={{ fontSize: inputFontSize }}
+            onClick={requestChangeHandler}
+          />
+        ) : (
+          <StarBorderIcon
+            sx={{ fontSize: inputFontSize }}
+            onClick={requestChangeHandler}
+          />
+        )}
+      </LogIcon>
+      <LogIcon>
+        <DeleteIcon
+          sx={{ fontSize: inputFontSize }}
+          onClick={deleteSongHandler}
+        />
+      </LogIcon>
+    </FormGroup>
+  );
+};
 
 /*****************************************************************************
  * ConcertLogger
- * 
+ *
  * Description:
  *   A drawer that you can slide out to log the concert
  *   https://mui.com/material-ui/react-drawer/
-*****************************************************************************/
+ *****************************************************************************/
 const ConcertLogger = ({ open }: ConcertLoggerProps) => {
   const theme = useTheme();
   const inputFontSize = theme.typography.body2;
 
   // Props passed into the Paper component of the Drawer
-  const paperProps = {sx:{width:'256px', borderRight:'none'}, elevation:1,};
+  const paperProps = {
+    sx: { width: "256px", borderRight: "none" },
+    elevation: 1,
+  };
 
   // Form related things //
   const emptySong = () => {
-      const newSong: songEntry = {
-          title: "",
-          CM: "",
-          request: false
-      } 
-      return newSong;
-  }
+    const newSong: songEntry = {
+      title: "",
+      CM: "",
+      request: false,
+    };
+    return newSong;
+  };
   const defaultLog: concertLogFields = {
-      concertType: "morning",
-      bellsAdjusted: false,
-      songs: [emptySong()],
-      privateNote: "",
-      publicNote: ""
-  }
+    concertType: "morning",
+    bellsAdjusted: false,
+    songs: [emptySong()],
+    privateNote: "",
+    publicNote: "",
+  };
   const [logForm, setLog] = useState(defaultLog);
-
 
   // Handlers for editing song entries //
 
   const addSongLogger = (index: number) => {
-        // Go here when you press the plus icon
+    // Go here when you press the plus icon
 
-        // Doing it this way because splice edits in-place and returns deleted items
-        const songList: songEntry[] = logForm.songs;
-        songList.splice(index+1, 0, emptySong());
+    // Doing it this way because splice edits in-place and returns deleted items
+    const songList: songEntry[] = logForm.songs;
+    songList.splice(index + 1, 0, emptySong());
 
-        // Change the State
-        setLog({
-            ...logForm,
-            songs: songList
-        })
-  }
+    // Change the State
+    setLog({
+      ...logForm,
+      songs: songList,
+    });
+  };
 
   const removeSongLogger = (index: number) => {
-        // Go here when you press the trash icon
-        
-        // Guard clause for when there is only one entry
-        if (logForm.songs.length == 1) {
-            // TODO - Should pressing delete on a single entry clear it?
-            // if so, include that logic here.
-            return
-        }
+    // Go here when you press the trash icon
 
-        // Doing it this way because splice edits in-place and returns deleted items
-        const songList: songEntry[] = logForm.songs;
-        songList.splice(index, 1);
+    // Guard clause for when there is only one entry
+    if (logForm.songs.length == 1) {
+      // TODO - Should pressing delete on a single entry clear it?
+      // if so, include that logic here.
+      return;
+    }
 
-        // Change the state
-        setLog({
-            ...logForm,
-            songs: songList
-        })
+    // Doing it this way because splice edits in-place and returns deleted items
+    const songList: songEntry[] = logForm.songs;
+    songList.splice(index, 1);
 
-  }
+    // Change the state
+    setLog({
+      ...logForm,
+      songs: songList,
+    });
+  };
 
   const editSongEntry = (index: number, song: songEntry) => {
-        // Any change to the song entry will invoke this function
-        // The input change callbacks themselves are located in the SongLogger component,
-        // but they all call this function, which updates the whole object.
-        // Is this the best way? Maybe not. But it works for now.
+    // Any change to the song entry will invoke this function
+    // The input change callbacks themselves are located in the SongLogger component,
+    // but they all call this function, which updates the whole object.
+    // Is this the best way? Maybe not. But it works for now.
 
-        let songList = logForm.songs;
-        songList[index] = song;
+    let songList = logForm.songs;
+    songList[index] = song;
 
-        // Change the state
-        setLog({
-            ...logForm,
-            songs: songList
-        })
-  }
-  
+    // Change the state
+    setLog({
+      ...logForm,
+      songs: songList,
+    });
+  };
+
   const submitHandler = (e: React.FormEvent) => {
-        // This is the handler for when the form is submitted
+    // This is the handler for when the form is submitted
 
-        // This will prevent the page from refreshing
-        e.preventDefault();
+    // This will prevent the page from refreshing
+    e.preventDefault();
 
-        // Send the actual HTTP POST request
-        fetch('/log', {
-            method: 'POST',
-            headers: {"Content-type": "application/json"},
-            body: JSON.stringify(logForm)
-        })
+    // Send the actual HTTP POST request
+    fetch("/log", {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(logForm),
+    });
 
-        // Clear the form
-        setLog(defaultLog);
+    // Clear the form
+    setLog(defaultLog);
 
-        // Maybe logic that will trigger a pop-up will go here, reacting to a return code?
-  }
+    // Maybe logic that will trigger a pop-up will go here, reacting to a return code?
+  };
 
   return (
     <Drawer
-        sx={{width: drawerWidth, 
-            ".& MuiDrawer-paper": {border:'none'}
-        }}
-        variant='persistent'
-        anchor='left'
-        open={open}
-        PaperProps={paperProps}
+      sx={{ width: drawerWidth, ".& MuiDrawer-paper": { border: "none" } }}
+      variant="persistent"
+      anchor="left"
+      open={open}
+      PaperProps={paperProps}
     >
-        <Toolbar sx={{height:'96px'}}/> {/* Blank toolbar to push content down */}
-
-        <Box sx={{py:5, px:3}} margin='dense' component='form' onSubmit={submitHandler}>
-            <FormControl> {/* Do this to maintain state for required fields */}
-                <Typography color="primary.dark" variant="h2">
-                    Log Concert
-                </Typography>
-
-                {/* DATE */}
-                <Typography sx={{pt:4, pb:0.5}} color="primary.dark" variant="body1">
-                    Date:
-                </Typography>
-
-                {/* CONCERT TYPE */}
-                <FormGroup
-                    row
-                    sx={{pt:4, pb:0.5, display:"flex", gap:2}}
-                >
-                    <Typography color="primary.dark" variant="body1">
-                        Concert type:
-                    </Typography>
-                    <Select 
-                        name="concertType"
-                        value={logForm.concertType}
-                        onChange={(e) => {
-                            console.log(e.target.value)
-                            setLog({
-                                ...logForm,
-                                concertType: e.target.value
-                            })
-                        }}
-                        input={<BootstrapInput />}
-                    >
-                        {concertTypes.map((type) => {
-                            return(
-                                <MenuItem 
-                                    value={type}
-                                >
-                                    {type}
-                                </MenuItem>
-                            );
-                        })}
-                    </Select>
-                </FormGroup>
-                
-                {/* ADJUSTED BELLS */}
-                <FormControlLabel sx={{pt:4, pb:0.5}} 
-                    // For whatever reason, formControlLabel has a marginLeft of -11??
-                    control={<Checkbox 
-                        disableRipple
-                        name="bellsAdjusted"
-                        value={logForm.bellsAdjusted}
-                        checked={logForm.bellsAdjusted}
-                        onChange={(e) => {
-                            setLog({
-                                ...logForm,
-                               bellsAdjusted: e.target.checked
-                            })
-                        }}
-                        color='secondary'
-                        sx={{py:0, position:"relative"}}
-                    />} 
-                    label="Adjusted bells" 
-                />
-            </FormControl> {/* Need to end this here bc focus class turns notes red */}
-
-            {/* SONGS */}
-            <Typography sx={{pt:4, pb:0.5}} color="primary.dark" variant="body1">
-                Add song:
+      <Toolbar sx={{ height: "96px" }} />{" "}
+      {/* Blank toolbar to push content down */}
+      <Box
+        sx={{ py: 5, px: 3 }}
+        margin="dense"
+        component="form"
+        onSubmit={submitHandler}
+      >
+        <FormControl>
+          {" "}
+          {/* Do this to maintain state for required fields */}
+          <Typography color="primary.dark" variant="h2">
+            Log Concert
+          </Typography>
+          {/* DATE */}
+          <Typography
+            sx={{ pt: 4, pb: 0.5 }}
+            color="primary.dark"
+            variant="body1"
+          >
+            Date:
+          </Typography>
+          {/* CONCERT TYPE */}
+          <FormGroup row sx={{ pt: 4, pb: 0.5, display: "flex", gap: 2 }}>
+            <Typography color="primary.dark" variant="body1">
+              Concert type:
             </Typography>
-            {logForm.songs.map((song, index) => (
-                <SongLogger
-                    song={song}
-                    index={index}
-                    addSong={addSongLogger}
-                    deleteSong={removeSongLogger}
-                    editSong={editSongEntry}
-                    bottom ={index==logForm.songs.length-1}
-                />
-            ))}
-
-            {/* NOTE PRIVATE */}
-            <FormLabel sx={{pt:2, pb:0.5, color:theme.palette.primary.dark}}>
-                Note (private):
-            </FormLabel>
-            <TextField 
-                name="privateNote"
-                value={logForm.privateNote}
-                onChange={(e) => {
-                    console.log(e.target.value)
-                    setLog({
-                        ...logForm,
-                        privateNote: e.target.value
-                    })
+            <Select
+              name="concertType"
+              value={logForm.concertType}
+              onChange={e => {
+                console.log(e.target.value);
+                setLog({
+                  ...logForm,
+                  concertType: e.target.value,
+                });
+              }}
+              input={<BootstrapInput />}
+            >
+              {concertTypes.map(type => {
+                return <MenuItem value={type}>{type}</MenuItem>;
+              })}
+            </Select>
+          </FormGroup>
+          {/* ADJUSTED BELLS */}
+          <FormControlLabel
+            sx={{ pt: 4, pb: 0.5 }}
+            // For whatever reason, formControlLabel has a marginLeft of -11??
+            control={
+              <Checkbox
+                disableRipple
+                name="bellsAdjusted"
+                value={logForm.bellsAdjusted}
+                checked={logForm.bellsAdjusted}
+                onChange={e => {
+                  setLog({
+                    ...logForm,
+                    bellsAdjusted: e.target.checked,
+                  });
                 }}
-                fullWidth
-                multiline
-                minRows={2}
-                sx={{py:1}} 
-                variant="filled" 
-                InputProps={{disableUnderline: true, sx: {borderRadius:"4px", py:1, fontSize: inputFontSize}}} 
-            />
-
-            {/* NOTE PUBLIC */}
-            <FormLabel sx={{pt:2, pb:0.5, color:theme.palette.primary.dark}}>
-                Note (public):
-            </FormLabel>
-            <TextField 
-                name="publicNote"
-                value={logForm.publicNote}
-                onChange={(e) => {
-                    console.log(e.target.value)
-                    setLog({
-                        ...logForm,
-                        publicNote: e.target.value
-                    })
-                }}
-                fullWidth
-                multiline
-                minRows={2}
-                sx={{py:1}} 
-                variant="filled" 
-                InputProps={{disableUnderline: true, sx: {borderRadius:"4px", py:1, fontSize: inputFontSize}}} 
-            />
-
-            {/* SUBMIT BUTTON */}
-            <Stack direction='row' justifyContent='end' sx={{pt:5}}>
-                <Button variant='contained' type='submit' color='info'
-                    disableElevation
-                    sx={{px:2, py:1, textTransform:'none'}}
-                >
-                    Log Concert
-                </Button>
-            </Stack>          
-        </Box>
+                color="secondary"
+                sx={{ py: 0, position: "relative" }}
+              />
+            }
+            label="Adjusted bells"
+          />
+        </FormControl>{" "}
+        {/* Need to end this here bc focus class turns notes red */}
+        {/* SONGS */}
+        <Typography
+          sx={{ pt: 4, pb: 0.5 }}
+          color="primary.dark"
+          variant="body1"
+        >
+          Add song:
+        </Typography>
+        {logForm.songs.map((song, index) => (
+          <SongLogger
+            song={song}
+            index={index}
+            addSong={addSongLogger}
+            deleteSong={removeSongLogger}
+            editSong={editSongEntry}
+            bottom={index == logForm.songs.length - 1}
+          />
+        ))}
+        {/* NOTE PRIVATE */}
+        <FormLabel sx={{ pt: 2, pb: 0.5, color: theme.palette.primary.dark }}>
+          Note (private):
+        </FormLabel>
+        <TextField
+          name="privateNote"
+          value={logForm.privateNote}
+          onChange={e => {
+            console.log(e.target.value);
+            setLog({
+              ...logForm,
+              privateNote: e.target.value,
+            });
+          }}
+          fullWidth
+          multiline
+          minRows={2}
+          sx={{ py: 1 }}
+          variant="filled"
+          InputProps={{
+            disableUnderline: true,
+            sx: { borderRadius: "4px", py: 1, fontSize: inputFontSize },
+          }}
+        />
+        {/* NOTE PUBLIC */}
+        <FormLabel sx={{ pt: 2, pb: 0.5, color: theme.palette.primary.dark }}>
+          Note (public):
+        </FormLabel>
+        <TextField
+          name="publicNote"
+          value={logForm.publicNote}
+          onChange={e => {
+            console.log(e.target.value);
+            setLog({
+              ...logForm,
+              publicNote: e.target.value,
+            });
+          }}
+          fullWidth
+          multiline
+          minRows={2}
+          sx={{ py: 1 }}
+          variant="filled"
+          InputProps={{
+            disableUnderline: true,
+            sx: { borderRadius: "4px", py: 1, fontSize: inputFontSize },
+          }}
+        />
+        {/* SUBMIT BUTTON */}
+        <Stack direction="row" justifyContent="end" sx={{ pt: 5 }}>
+          <Button
+            variant="contained"
+            type="submit"
+            color="info"
+            disableElevation
+            sx={{ px: 2, py: 1, textTransform: "none" }}
+          >
+            Log Concert
+          </Button>
+        </Stack>
+      </Box>
     </Drawer>
   );
 };

@@ -80,7 +80,6 @@ export interface songEntry {
   title: string;
   CM: string;
   request: boolean;
-
 }
 
 export interface concertLogFields {
@@ -89,5 +88,4 @@ export interface concertLogFields {
   songs: songEntry[];
   privateNote: string;
   publicNote: string;
-
 }
