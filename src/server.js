@@ -212,6 +212,11 @@ app.get("/CMs/:initials/:subpage", (req, res) => {
   res.status(200).send(JSON.stringify(data));
 });
 
+app.post("/log", (req, res) => {
+  console.log("POST concert log");
+  console.log(req.body);
+});
+
 // GET for the Song page
 app.get("/song/:_id", (req, res) => {
   console.log("GET song");

@@ -9,6 +9,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Concert } from "../typing/types";
 
+import ConcertLogger from "../components/ConcertLogger";
+import { Button } from "@mui/material";
+
 function Home() {
   const [data, setData] = useState({ concerts: [] });
 

@@ -92,8 +92,18 @@ const SearchBar = () => {
 };
 
 const NavBar = () => {
+  const theme = useTheme();
   return (
-    <AppBar position="static" sx={{ bgcolor: "primary.contrastText", py: 3 }}>
+    <AppBar
+      position="fixed"
+      elevation={0}
+      sx={{
+        bgcolor: "primary.contrastText",
+        py: 3,
+        mt: 24,
+        zIndex: theme.zIndex.drawer - 1,
+      }}
+    >
       <Stack spacing={2}>
         <CMList />
         <SearchBar />
