@@ -13,6 +13,7 @@ import Home from "./pages/Home";
 import ConcertLogger from "./components/ConcertLogger";
 
 import { Button, Box, Typography } from "@mui/material";
+import SongPage from "./components/SongPage";
 
 const App = () => {
   const [logOpen, setLogOpen] = useState(false);
@@ -39,6 +40,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/CMs/:initials" element={<CM />} />
+          <Route path="/song/:id" element={<SongPage />} />
         </Routes>
       </Router>
 

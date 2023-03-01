@@ -95,6 +95,47 @@ function getCMRequests(initials) {
   return thisCMRequests;
 }
 
+function getSong(id) {
+  return fakeDB.all_songs.find(song => song._id == id);
+}
+
+function getSongPageData(id) {
+  const song = fakeDB.all_songs.find(song => song._id == id);
+  let songPageData = {
+    song: song,
+    stats: {
+      plays: 0,
+      requests: 0,
+      players: 0,
+    },
+    playsPerCM: {},
+    history: {},
+  };
+
+  fakeDB.all_concerts.map(concert => {
+    // Count Total Players
+    for (const performance of concert.performances) {
+      if (performance.song._id == song._id) {
+        // Update plays / requests data
+        songPageData.stats.plays += 1;
+        performance.isRequest && (songPageData.stats.requests += 1);
+        // Performers (TODO think of how to handle same song plays mult times on same day)
+        songPageData.history[concert.date] = performance.performers;
+        // Plays per CM data
+        for (const performer of performance.performers) {
+          console.log(performer);
+          if (performer in songPageData.playsPerCM) {
+            songPageData.playsPerCM[performer] += 1;
+          } else {
+            songPageData.playsPerCM[performer] = 1;
+          }
+        }
+      }
+    }
+  });
+  return songPageData;
+}
+
 // GET for the Home page
 app.get("/home", (req, res) => {
   console.log("GET home");
@@ -174,6 +215,14 @@ app.get("/CMs/:initials/:subpage", (req, res) => {
 app.post("/log", (req, res) => {
   console.log("POST concert log");
   console.log(req.body);
+});
+
+// GET for the Song page
+app.get("/song/:_id", (req, res) => {
+  console.log("GET song");
+  data = getSongPageData(req.params._id);
+  console.log(data);
+  res.status(200).send(JSON.stringify(data));
 });
 
 app.listen(3030, () => console.log("Server active"));

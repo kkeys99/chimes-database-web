@@ -11,6 +11,7 @@ import { useTheme } from "@mui/material/styles";
 import { ReactComponent as BellIcon } from "../assets/bell.svg";
 import { ReactComponent as EditIcon } from "../assets/edit.svg";
 import { Note, Song, Performance, Concert } from "../typing/types";
+import { Link as MuiLink } from "@mui/material";
 
 interface Props {
   concert: Concert;
@@ -66,13 +67,15 @@ const ConcertCard = ({ concert }: Props) => {
             {concert.performances.map(performance => {
               return (
                 <ListItemText sx={{ my: 0, display: "list-item" }}>
-                  <Typography
+                  <MuiLink
                     display="inline"
                     variant="body2"
                     color="secondary.main"
+                    href={`/song/${performance.song._id}`}
+                    underline="hover"
                   >
-                    {`${performance.song.sheet} - ${performance.song.title}`}
-                  </Typography>
+                    {`${performance.song.sheet[0]} - ${performance.song.title}`}
+                  </MuiLink>
                   <Typography display="inline" variant="body2">
                     {` (${performance.performers.join(", ")})`}
                   </Typography>

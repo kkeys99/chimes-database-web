@@ -1,4 +1,7 @@
 import * as React from "react";
+import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -20,6 +23,14 @@ import { cms, cmStats } from "../constants";
 import { makeStyles } from "@material-ui/styles";
 import { IconButton } from "@mui/material";
 
+import {
+  Song,
+  songStats,
+  songPageData,
+  songHistory,
+  playsPerCM,
+} from "../typing/types";
+
 const useStyles = makeStyles(() => ({
   dateRange: {
     height: 28,
@@ -31,29 +42,40 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+interface SongTitleProps {
+  sheet: string;
+  title: string;
+}
+
+interface SongInfoProps {
+  song: Song;
+}
+
 interface SongTagProp {
   tagName: string;
   tagData: string[];
 }
 
-interface SingleStat {
-  statName: string;
-  stat: number;
+interface songStatsProp {
+  stats: songStats;
+  playsPerCM: playsPerCM;
 }
 
-interface PlayingStatsProp {
-  playingStats: {
-    numPerformances: SingleStat;
-    numRequests: SingleStat;
-    numPlayers: SingleStat;
-  };
+interface historyProp {
+  history: songHistory;
 }
 
-const SongTitle = () => {
+interface PlayStatsProp {
+  stats: songStats;
+  playsPerCM: playsPerCM;
+  history: songHistory;
+}
+
+const SongTitle = ({ sheet, title }: SongTitleProps) => {
   return (
     <Box display="flex" flexDirection="row" sx={{ ml: 12, mt: 12, mb: 8 }}>
       <Typography variant="h2" fontWeight="bold">
-        DT312 - La La Land
+        {`${sheet} - ${title}`}
       </Typography>
       {/* <IconButton>
                 <Bookmark/>
@@ -85,15 +107,16 @@ const SongTag = ({ tagName, tagData }: SongTagProp) => {
   );
 };
 
-const SongInfo = () => {
+// The Song info - top left of page
+const SongInfo = ({ song }: SongInfoProps) => {
   const tagInfo = {
-    Sheet: ["DT312", "DT313", "DT314", "DT315"],
-    Composer: ["Jason Hurwitz"],
-    Arranger: ["Julia King"],
-    Genre: ["Movie", "Show Music"],
-    Key: ["C Major", "F Major", "D Major", "G Major"],
-    "Time Signature": ["3/4", "4/4"],
-    Tempo: ["Fast"],
+    Sheet: song.sheet,
+    Composer: song.composer,
+    Arranger: song.arranger,
+    Genre: song.genre,
+    Key: song.keysig,
+    "Time Signature": song.timesig,
+    Tempo: song.tempo,
   };
 
   return (
@@ -104,7 +127,7 @@ const SongInfo = () => {
         })}
       </Stack>
       <Stack direction="row" spacing={4}>
-        yo
+        Media, Dates, and Sheet PDFs Coming Soon...
       </Stack>
     </Stack>
   );
@@ -152,45 +175,38 @@ const DayRange = () => {
   );
 };
 
-const Statistics = ({ playingStats }: PlayingStatsProp) => {
-  const { numPerformances, numRequests, numPlayers } = playingStats;
+// Song stats and plays per CM
+const Statistics = ({ stats, playsPerCM }: songStatsProp) => {
+  const { performances, requests, players } = stats;
 
   return (
     <Stack direction="column" mb={4}>
       <Typography sx={{ fontSize: 18 }}>Statistics</Typography>
       <Typography sx={{ fontSize: 12, mt: 2 }}>
-        {numPerformances.stat +
-          " " +
-          numPerformances.statName +
-          (numPerformances.stat > 1 ? "s" : "")}
+        {performances + " " + "Performance" + (performances != 1 ? "s" : "")}
       </Typography>
       <Typography sx={{ fontSize: 12 }}>
-        {numRequests.stat +
+        {requests +
           " " +
-          numRequests.statName +
-          (numRequests.stat > 1 ? "s" : "") +
+          "Request" +
+          (requests != 1 ? "s" : "") +
           " (" +
-          Math.round((numRequests.stat / numPerformances.stat) * 100) +
+          Math.round((requests / performances) * 100) +
           "%)"}
       </Typography>
       <Typography sx={{ fontSize: 12 }}>
-        {numPlayers.stat +
-          " " +
-          numPlayers.statName +
-          (numPlayers.stat > 1 ? "s" : "")}
+        {players + " " + "Player" + (players != 1 ? "s" : "")}
       </Typography>
+      {/* List of CMs who have played this song */}
       <List dense={true}>
-        {cmStats.chimesmasters.map(element => {
-          const findSong = element.songs.filter(e => e.song === "La La Land");
+        {Object.entries(playsPerCM).map(([cm, plays]) => {
           const cmStr =
-            findSong.length > 0 ? (
+            plays > 0 ? (
               <ListItem dense={true} sx={{ mb: -4, mt: -2 }}>
                 <CircleIcon sx={{ width: 8, color: "#006699", mr: 2 }} />
                 <ListItemText
                   sx={{ color: "#006699" }}
-                  primary={
-                    element.name + " (" + findSong[0].stats.performed + ")"
-                  }
+                  primary={cm + " (" + plays + ")"}
                 />
               </ListItem>
             ) : null;
@@ -201,29 +217,30 @@ const Statistics = ({ playingStats }: PlayingStatsProp) => {
   );
 };
 
-const History = () => {
-  const getDates = () => {
-    let dates: string[] = [];
-    cmStats.chimesmasters.map(cm => {
-      const specificSong = cm.songs.filter(e => e.song === "La La Land");
-      if (specificSong.length > 0) {
-        specificSong[0].stats.date.map(day => {
-          dates.push(day + ": " + cm.name);
-        });
-      }
-    });
-    return dates;
-  };
-
+// History of dates played and which CMs
+const History = ({ history }: historyProp) => {
   return (
     <Stack direction="column" mb={4} ml={12}>
       <Typography sx={{ fontSize: 18 }}>History</Typography>
       <List dense={true}>
-        {getDates().map(element => {
+        {Object.entries(history).map(([date, performers]) => {
+          // Inspiration from
+          // https://stackoverflow.com/questions/61831915/add-new-string-between-every-current-string-in-array
+          // Adapted according to reduce spec
+          // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce
+          const performersStr = performers.reduce(
+            (accum, curr, idx) => {
+              return idx < performers.length - 1
+                ? accum.concat(curr, ", ")
+                : accum.concat(curr); // omit the "+"" after the last performer
+            },
+            "" // Initialize to empty string
+          );
+          const displayItem = date + ": " + performersStr;
           return (
             <ListItem dense={true} sx={{ mb: -4, mt: -2 }}>
               <CircleIcon sx={{ width: 8, color: "#006699", mr: 2 }} />
-              <ListItemText sx={{ color: "#006699" }} primary={element} />
+              <ListItemText sx={{ color: "#006699" }} primary={displayItem} />
             </ListItem>
           );
         })}
@@ -232,28 +249,14 @@ const History = () => {
   );
 };
 
-const PlayStats = () => {
-  const statistics = {
-    numPerformances: {
-      statName: "Perforamance",
-      stat: 2,
-    },
-    numRequests: {
-      statName: "Request",
-      stat: 1,
-    },
-    numPlayers: {
-      statName: "Player",
-      stat: 2,
-    },
-  };
-
+// The box to the right that contains Stats and History
+const PlayStats = ({ stats, playsPerCM, history }: PlayStatsProp) => {
   return (
-    <Box position="fixed" right={30}>
+    <Box>
       <DayRange />
       <Stack direction="row" sx={{ mr: 16, mt: 6 }}>
-        <Statistics playingStats={statistics} />
-        <History />
+        <Statistics stats={stats} playsPerCM={playsPerCM} />
+        <History history={history} />
       </Stack>
     </Box>
   );
@@ -263,17 +266,48 @@ const MediaAndDates = () => {
   return <Box></Box>;
 };
 
+// The Main Song Page component
 const SongPage = () => {
-  return (
-    <Box>
-      <SongTitle />
-      <Stack direction="row">
-        <SongInfo />
-        <PlayStats />
-        {/* <MediaAndDates/> */}
-      </Stack>
-    </Box>
-  );
+  const { id } = useParams();
+
+  const [data, setData] = useState({} as songPageData);
+
+  // This will prevent it from trying to access attributes that aren't there
+  // before the fetching of data is done.
+  const [ready, setReady] = useState(false);
+
+  const { song, stats, playsPerCM, history } = data;
+  console.log(data);
+
+  useEffect(() => {
+    fetch(`/song/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        setData(data);
+      })
+      .then(() => setReady(true)); // set this at end so app doesn't try to render before
+  }, []);
+
+  if (ready) {
+    return (
+      <Box>
+        <SongTitle sheet={song.sheet[0]} title={song.title} />
+        <Stack direction="row" spacing={16}>
+          <SongInfo song={song} />
+          <PlayStats stats={stats} playsPerCM={playsPerCM} history={history} />
+        </Stack>
+      </Box>
+    );
+  } else {
+    return (
+      <>
+        {/* 
+        If I put "Loading..." here it looks weird cause it's so fast 
+        so I'll leave it blank for now 
+        */}
+      </>
+    );
+  }
 };
 
 export default SongPage;
