@@ -2,6 +2,9 @@
  * Types - to use site wide
  */
 
+ import dayjs from 'dayjs';
+ import { Dayjs } from "dayjs";
+
 //----------------------------------------
 // DB Entity Classes
 //----------------------------------------
@@ -87,6 +90,7 @@ export interface songEntry {
 }
 
 export interface concertLogFields {
+  date: Dayjs;
   concertType: string;
   bellsAdjusted: boolean;
   songs: songEntry[];
