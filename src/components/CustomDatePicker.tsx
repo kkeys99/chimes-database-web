@@ -11,6 +11,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Dayjs } from "dayjs";
+import { PopperProps } from "@mui/material";
 
 
 interface DatePickerProps {
@@ -23,8 +24,10 @@ const CustomDatePicker = ({date, light, setDate }:DatePickerProps) => {
 
     const theme = useTheme();
     const [open, setOpen] = useState(false);
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const [closing, setClosing] = useState(false);
 
-    console.log(`Date is ${date}`);
+    console.log(`Rerendering popper - open is ${open}`);
 
     const dateChangeHandler: any = (newValue: Date) => {
         console.log(`Picker dateChange with ${newValue}`);
@@ -32,17 +35,41 @@ const CustomDatePicker = ({date, light, setDate }:DatePickerProps) => {
         setDate(dayjs(newValue));
     };
 
-    // TODO - open calendar on click
-    const focusHandler: React.FocusEventHandler<HTMLInputElement> = () => {
-        //https://stackoverflow.com/questions/61238028/how-do-i-spawn-my-date-picker-ui-upon-first-clicking-on-the-date-text-field
-        setOpen(true);
-    }
+    const focusHandler: React.FocusEventHandler<HTMLInputElement> = (event) => {
+        // When the Popper sends a close request to the Date Picker,
+        // The focus returns to the input, so it doesn't do to set open to true here
+        // or even toggle, in addition to setting open to false on onClose.
+        // So, I have a third state variable, closing, that is set on onClose
+        // to tell this focus handler it's in the "returned" focus mode and not reopen the Popper
+
+        console.log("in focusHandler");
+        if (closing) {
+            console.log("closing")
+            setClosing(false);
+        }
+        else {
+            console.log("not closing")
+            // set open state
+            //https://stackoverflow.com/questions/61238028/how-do-i-spawn-my-date-picker-ui-upon-first-clicking-on-the-date-text-field
+            setOpen(true);
+
+            // set anchorEl prop of calendar - got from first answer here
+            //https://stackoverflow.com/questions/72691395/material-ui-datepicker-opening-in-top-left-corner
+            setAnchorEl(event.currentTarget);
+        }
+    };
 
 
     return(
     <DatePicker 
         disableFuture
         open={open} // TODO - enable calendar popup. This seems difficult for now.
+        onClose={() => {
+            console.log("onClose");
+            setOpen(false);
+            setAnchorEl(null);
+            setClosing(true);
+        }}
         value={date}
         onChange={dateChangeHandler} 
         slotProps={{
@@ -68,12 +95,15 @@ const CustomDatePicker = ({date, light, setDate }:DatePickerProps) => {
             InputProps: { // props for OutlinedInput
                 endAdornment:null,
                 notched:false,
-                //onFocus: focusHandler, // TODO: enable calendar popup
+                onFocus: focusHandler, // enable calendar popup
                 sx:{
                     height:"28px", // For some reason this was more than the stack
                 }
             } // InputProps
         }, // textField
+        popper:{
+            anchorEl:anchorEl,
+        }
         }} // slotProps
     />
     );
