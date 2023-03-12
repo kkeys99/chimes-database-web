@@ -1,6 +1,12 @@
 import * as React from "react";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import dayjs from "dayjs";
+
+import { useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
+
+import InputBase from "@mui/material/InputBase";
 
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
@@ -11,17 +17,17 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import CircleIcon from "@mui/icons-material/Circle";
-import {
-  DateRangePicker,
-  DateRange,
-} from "@mui/x-date-pickers-pro/DateRangePicker";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import Bookmark from "../assets/bookmark.svg";
 import { cms, cmStats } from "../constants";
 import { makeStyles } from "@material-ui/styles";
 import { IconButton } from "@mui/material";
+
+import CustomDatePicker from "./CustomDatePicker";
 
 import {
   Song,
@@ -30,6 +36,8 @@ import {
   songHistory,
   playsPerCM,
 } from "../typing/types";
+import { Dayjs } from "dayjs";
+import { SettingsPowerRounded } from "@mui/icons-material";
 
 const useStyles = makeStyles(() => ({
   dateRange: {
@@ -39,6 +47,20 @@ const useStyles = makeStyles(() => ({
     borderRadius: 4,
     fontSize: 16,
     textAlign: "center",
+  },
+}));
+
+// This was necessary for having more control over the shape of the selector
+// In the default way, the words were not sitting inside the box.
+const BootstrapInput = styled(InputBase)(({ theme }) => ({
+  "label + &": {
+    marginTop: theme.spacing(3),
+  },
+  "& .MuiInputBase-input": {
+    position: "relative",
+    backgroundColor: theme.palette.primary.contrastText,
+    borderRadius: 4,
+    padding: "4px 8px",
   },
 }));
 
@@ -134,14 +156,29 @@ const SongInfo = ({ song }: SongInfoProps) => {
 };
 
 const DayRange = () => {
-  const [date, setDate] = React.useState<DateRange<Date>>([null, null]);
+  const theme = useTheme();
+  const firstDay = dayjs("2006-01-01");
+
+  //const [date, setDate] = React.useState<DateRange<Date>>([null, null]);
+  const [dateFrom, setFrom] = useState<Dayjs>(firstDay);
+  const [dateTo, setTo] = useState<Dayjs>(dayjs());
+
   const classes = useStyles();
 
   return (
     <LocalizationProvider
-      dateAdapter={AdapterDateFns}
+      dateAdapter={AdapterDayjs}
       localeText={{ start: "", end: "" }}
     >
+      <Stack direction="row" sx={{ display: "flex", height: "28px" }}>
+        <Box sx={{ mx: 4 }}> from </Box>
+
+        <CustomDatePicker light={false} date={dateFrom} setDate={setFrom} />
+        <Box sx={{ mx: 4 }}> to </Box>
+        <CustomDatePicker light={false} date={dateTo} setDate={setTo} />
+      </Stack>
+
+      {/*
       <DateRangePicker
         inputFormat="MM/dd/yy"
         value={date}
@@ -150,7 +187,6 @@ const DayRange = () => {
         }}
         renderInput={(startProps, endProps) => (
           <React.Fragment>
-            <Box sx={{ mx: 4 }}> from </Box>
             <TextField
               {...startProps}
               InputProps={{
@@ -159,7 +195,6 @@ const DayRange = () => {
               }}
               variant="standard"
             />
-            <Box sx={{ mx: 4 }}> to </Box>
             <TextField
               {...endProps}
               InputProps={{
@@ -171,6 +206,7 @@ const DayRange = () => {
           </React.Fragment>
         )}
       />
+      */}
     </LocalizationProvider>
   );
 };

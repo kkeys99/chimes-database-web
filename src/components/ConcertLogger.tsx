@@ -1,5 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
+import dayjs from "dayjs";
+import { Dayjs } from "dayjs";
 
 import { useTheme } from "@mui/material/styles";
 
@@ -23,6 +25,9 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CustomDatePicker from "./CustomDatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { styled } from "@mui/material/styles";
 import { IconButton } from "@mui/material";
@@ -222,14 +227,25 @@ const ConcertLogger = ({ open }: ConcertLoggerProps) => {
     };
     return newSong;
   };
+
   const defaultLog: concertLogFields = {
+    date: dayjs(),
     concertType: "morning",
     bellsAdjusted: false,
     songs: [emptySong()],
     privateNote: "",
     publicNote: "",
   };
+
   const [logForm, setLog] = useState(defaultLog);
+
+  const dateChangeHandler = (newValue: Dayjs) => {
+    setLog({
+      ...logForm,
+      date: newValue, // Date picker will take care of dayjs
+    });
+  };
+  console.log(`Re-rendering Logger w date ${logForm.date}`);
 
   // Handlers for editing song entries //
 
@@ -286,10 +302,12 @@ const ConcertLogger = ({ open }: ConcertLoggerProps) => {
 
   const submitHandler = (e: React.FormEvent) => {
     // This is the handler for when the form is submitted
-
+    console.log("Submitting Form");
     // This will prevent the page from refreshing
     e.preventDefault();
-
+    //if (e.keycode == 13) {
+    //  return;
+    //}
     // Send the actual HTTP POST request
     fetch("/log", {
       method: "POST",
@@ -326,13 +344,22 @@ const ConcertLogger = ({ open }: ConcertLoggerProps) => {
             Log Concert
           </Typography>
           {/* DATE */}
-          <Typography
-            sx={{ pt: 4, pb: 0.5 }}
-            color="primary.dark"
-            variant="body1"
+          <LocalizationProvider
+            dateAdapter={AdapterDayjs}
+            localeText={{ start: "", end: "" }}
           >
-            Date:
-          </Typography>
+            <FormGroup row sx={{ pt: 4, pb: 0.5, display: "flex", gap: 2 }}>
+              <Typography color="primary.dark" variant="body1">
+                Date:
+              </Typography>
+
+              <CustomDatePicker
+                light={true}
+                date={logForm.date}
+                setDate={dateChangeHandler}
+              />
+            </FormGroup>
+          </LocalizationProvider>
           {/* CONCERT TYPE */}
           <FormGroup row sx={{ pt: 4, pb: 0.5, display: "flex", gap: 2 }}>
             <Typography color="primary.dark" variant="body1">
