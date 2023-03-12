@@ -2,8 +2,8 @@
  * Types - to use site wide
  */
 
- import dayjs from 'dayjs';
- import { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import { Dayjs } from "dayjs";
 
 //----------------------------------------
 // DB Entity Classes

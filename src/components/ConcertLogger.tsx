@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
-import dayjs from 'dayjs';
- import { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import { Dayjs } from "dayjs";
 
 import { useTheme } from "@mui/material/styles";
 
@@ -27,7 +27,7 @@ import StarIcon from "@mui/icons-material/Star";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CustomDatePicker from "./CustomDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { styled } from "@mui/material/styles";
 import { IconButton } from "@mui/material";
@@ -242,10 +242,10 @@ const ConcertLogger = ({ open }: ConcertLoggerProps) => {
   const dateChangeHandler = (newValue: Dayjs) => {
     setLog({
       ...logForm,
-      date: newValue // Date picker will take care of dayjs
-    })
-  }
-  console.log(`Re-rendering Logger w date ${logForm.date}`)
+      date: newValue, // Date picker will take care of dayjs
+    });
+  };
+  console.log(`Re-rendering Logger w date ${logForm.date}`);
 
   // Handlers for editing song entries //
 
@@ -302,7 +302,7 @@ const ConcertLogger = ({ open }: ConcertLoggerProps) => {
 
   const submitHandler = (e: React.FormEvent) => {
     // This is the handler for when the form is submitted
-    console.log("Submitting Form")
+    console.log("Submitting Form");
     // This will prevent the page from refreshing
     e.preventDefault();
     //if (e.keycode == 13) {
@@ -343,29 +343,23 @@ const ConcertLogger = ({ open }: ConcertLoggerProps) => {
           <Typography color="primary.dark" variant="h2">
             Log Concert
           </Typography>
-
           {/* DATE */}
           <LocalizationProvider
             dateAdapter={AdapterDayjs}
             localeText={{ start: "", end: "" }}
           >
-          <FormGroup row sx={{ pt: 4, pb: 0.5, display: "flex", gap: 2 }}>
-            <Typography
-              color="primary.dark"
-              variant="body1"
-            >
-              Date:
-            </Typography>
-            
-            <CustomDatePicker 
-              light={true}
-              date={logForm.date}
-              setDate={dateChangeHandler}
-            />
-            
-          </FormGroup>
-          </LocalizationProvider>
+            <FormGroup row sx={{ pt: 4, pb: 0.5, display: "flex", gap: 2 }}>
+              <Typography color="primary.dark" variant="body1">
+                Date:
+              </Typography>
 
+              <CustomDatePicker
+                light={true}
+                date={logForm.date}
+                setDate={dateChangeHandler}
+              />
+            </FormGroup>
+          </LocalizationProvider>
           {/* CONCERT TYPE */}
           <FormGroup row sx={{ pt: 4, pb: 0.5, display: "flex", gap: 2 }}>
             <Typography color="primary.dark" variant="body1">

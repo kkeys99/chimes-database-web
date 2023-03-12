@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
 import { useTheme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
@@ -20,8 +20,7 @@ import CircleIcon from "@mui/icons-material/Circle";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import Bookmark from "../assets/bookmark.svg";
 import { cms, cmStats } from "../constants";
@@ -156,11 +155,9 @@ const SongInfo = ({ song }: SongInfoProps) => {
   );
 };
 
-
-
 const DayRange = () => {
   const theme = useTheme();
-  const firstDay = dayjs('2006-01-01');
+  const firstDay = dayjs("2006-01-01");
 
   //const [date, setDate] = React.useState<DateRange<Date>>([null, null]);
   const [dateFrom, setFrom] = useState<Dayjs>(firstDay);
@@ -173,25 +170,14 @@ const DayRange = () => {
       dateAdapter={AdapterDayjs}
       localeText={{ start: "", end: "" }}
     >
-      <Stack 
-        direction="row"
-        sx={{display:"flex", height:"28px"}}
-      >
+      <Stack direction="row" sx={{ display: "flex", height: "28px" }}>
         <Box sx={{ mx: 4 }}> from </Box>
-        
-        <CustomDatePicker 
-          light={false}
-          date={dateFrom}
-          setDate={setFrom}
-        />
+
+        <CustomDatePicker light={false} date={dateFrom} setDate={setFrom} />
         <Box sx={{ mx: 4 }}> to </Box>
-        <CustomDatePicker 
-          light={false}
-          date={dateTo}
-          setDate={setTo}
-        />
+        <CustomDatePicker light={false} date={dateTo} setDate={setTo} />
       </Stack>
-      
+
       {/*
       <DateRangePicker
         inputFormat="MM/dd/yy"
