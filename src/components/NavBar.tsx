@@ -73,7 +73,7 @@ const SearchBar = () => {
     "Key",
     "Time Signature",
     "Tempo",
-    "Date added",
+    "Date Added",
   ];
   return (
     <Toolbar disableGutters variant="dense" sx={{ justifyContent: "center" }}>

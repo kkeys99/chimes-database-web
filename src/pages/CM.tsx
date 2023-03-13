@@ -136,7 +136,10 @@ function CMPagePlayingStats(props: { initials: string | undefined }) {
 }
 
 // Container for the "Concerts" Tab
-function CMPageConcerts(props: { initials: string | undefined }) {
+function CMPageConcerts(props: {
+  initials: string | undefined;
+  logEdit: Function;
+}) {
   const [data, setData] = useState({ concerts: [] });
 
   useEffect(() => {
@@ -149,7 +152,9 @@ function CMPageConcerts(props: { initials: string | undefined }) {
 
   let bodyComponent;
   if (data.concerts.length > 0) {
-    bodyComponent = <ConcertGrid concerts={data.concerts} />;
+    bodyComponent = (
+      <ConcertGrid concerts={data.concerts} logEdit={props.logEdit} />
+    );
   } else {
     bodyComponent = <>No Concerts Found</>;
   }
@@ -220,7 +225,7 @@ function CMPageRequests(props: { initials: string | undefined }) {
 }
 
 // Container for the Body of the CM Page
-function CM() {
+function CM(props: { logEdit: Function }) {
   const [data, setData] = useState({ text: "" });
 
   // Setter gets passed to header component
@@ -250,7 +255,9 @@ function CM() {
       break;
     }
     case "Concerts": {
-      bodyComponent = <CMPageConcerts initials={initials} />;
+      bodyComponent = (
+        <CMPageConcerts initials={initials} logEdit={props.logEdit} />
+      );
       break;
     }
     case "Arrangements": {

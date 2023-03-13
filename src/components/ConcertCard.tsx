@@ -15,31 +15,8 @@ import { Link as MuiLink } from "@mui/material";
 
 interface Props {
   concert: Concert;
+  logEdit: Function;
 }
-
-/*****************************************************************************
- * IconStack
- *
- * Description:
- *   The Edit and Bells Adjusted Icons that go on the top right corner of the
- *   ConcertCard
- *****************************************************************************/
-const IconStack = (props: { style: React.CSSProperties }) => {
-  return (
-    <Stack direction="row" spacing={2} style={props.style}>
-      <SvgIcon
-        inheritViewBox
-        component={BellIcon}
-        sx={{ height: "20px", width: "20px" }}
-      />
-      <SvgIcon
-        inheritViewBox
-        component={EditIcon}
-        sx={{ height: "20px", width: "20px" }}
-      />
-    </Stack>
-  );
-};
 
 /*****************************************************************************
  * ConcertCard
@@ -48,8 +25,15 @@ const IconStack = (props: { style: React.CSSProperties }) => {
  *   The box that has the concert performances as well as "bells adjusted" icon,
  *   edit button, and stuff.
  *****************************************************************************/
-const ConcertCard = ({ concert }: Props) => {
+const ConcertCard = ({ concert, logEdit }: Props) => {
   const theme = useTheme();
+
+  const handleEditClick: any = () => {
+    console.log("Clicked Edit Button");
+    logEdit(concert._id);
+    return;
+  };
+
   return (
     <Box>
       <Typography sx={{ pb: "12px" }}>{concert.type}</Typography>
@@ -62,7 +46,33 @@ const ConcertCard = ({ concert }: Props) => {
             look at my awesome note hehehe i need to make sure this doesn't
             overlap anything that would be no bueno
           </Typography>
-          <IconStack style={{ position: "absolute", top: 12, right: 12 }} />
+
+          {/*** Bell and Edit Icons ***********************************/}
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ position: "absolute", top: 12, right: 12 }}
+          >
+            <SvgIcon
+              inheritViewBox
+              component={BellIcon}
+              sx={{ height: "20px", width: "20px" }}
+            />
+            <SvgIcon
+              inheritViewBox
+              component={EditIcon}
+              onClick={handleEditClick}
+              sx={{
+                height: "20px",
+                width: "20px",
+                ":hover": {
+                  cursor: "pointer",
+                },
+              }}
+            />
+          </Stack>
+
+          {/*** Concert Songs List *********************************/}
           <List dense sx={{ ml: 7, listStyleType: "disc" }}>
             {concert.performances.map(performance => {
               return (

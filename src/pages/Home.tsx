@@ -12,7 +12,11 @@ import { Concert } from "../typing/types";
 import ConcertLogger from "../components/ConcertLogger";
 import { Button } from "@mui/material";
 
-function Home() {
+interface HomePageProps {
+  logEdit: Function;
+}
+
+function Home({ logEdit }: HomePageProps) {
   const [data, setData] = useState({ concerts: [] });
 
   useEffect(() => {
@@ -25,7 +29,7 @@ function Home() {
 
   let bodyComponent;
   if (data.concerts.length > 0) {
-    bodyComponent = <ConcertGrid concerts={data.concerts} />;
+    bodyComponent = <ConcertGrid concerts={data.concerts} logEdit={logEdit} />;
   } else {
     bodyComponent = <></>;
   }

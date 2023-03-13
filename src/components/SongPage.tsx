@@ -172,7 +172,6 @@ const DayRange = () => {
     >
       <Stack direction="row" sx={{ display: "flex", height: "28px" }}>
         <Box sx={{ mx: 4 }}> from </Box>
-
         <CustomDatePicker light={false} date={dateFrom} setDate={setFrom} />
         <Box sx={{ mx: 4 }}> to </Box>
         <CustomDatePicker light={false} date={dateTo} setDate={setTo} />

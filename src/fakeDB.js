@@ -37,7 +37,8 @@ class Song {
 
 // Performance class - instance of CM playing a song
 class Performance {
-  constructor(song, isRequest, performers) {
+  constructor(id, song, isRequest, performers) {
+    this._id = id;
     this.song = song;
     this.isRequest = isRequest;
     this.performers = performers;
@@ -46,7 +47,8 @@ class Performance {
 
 // Concert class - a collection of Performances w date, bells adjusted
 class Concert {
-  constructor(date, type, bellsAdjusted, performances) {
+  constructor(id, date, type, bellsAdjusted, performances) {
+    this._id = id;
     this.date = date;
     this.type = type;
     this.bellsAdjusted = bellsAdjusted;
@@ -262,18 +264,33 @@ const rach = new Song(
 all_songs.push(rach);
 
 // Create Performances
-const perf1 = new Performance(myGirl, false, ["CLL"]);
-const perf2 = new Performance(sentimental, false, ["CLL"]);
-const perf3 = new Performance(cantTake, false, ["CLL"]);
-const perf4 = new Performance(cheapThrills, false, ["CLL", "JKM"]);
-const perf5 = new Performance(misty, false, ["CLL"]);
-const perf6 = new Performance(cityOfStars, false, ["CLL"]);
-const perf7 = new Performance(inTheMood, false, ["CLL"]);
-const perf8 = new Performance(whenYouWish, false, ["CLL"]);
-const perf9 = new Performance(moonlight, false, ["CLL"]);
-const perf10 = new Performance(btmv, false, ["AK"]);
-const perf11 = new Performance(testdrive, false, ["CLL", "AK"]);
-const perf12 = new Performance(rach, false, ["CLL", "AK"]);
+let all_performances = [];
+
+const perf1 = new Performance(1, myGirl, false, ["CLL"]);
+const perf2 = new Performance(2, sentimental, false, ["CLL"]);
+const perf3 = new Performance(3, cantTake, false, ["CLL"]);
+const perf4 = new Performance(4, cheapThrills, false, ["CLL", "JKM"]);
+const perf5 = new Performance(5, misty, false, ["CLL"]);
+const perf6 = new Performance(6, cityOfStars, false, ["CLL"]);
+const perf7 = new Performance(7, inTheMood, false, ["CLL"]);
+const perf8 = new Performance(8, whenYouWish, false, ["CLL"]);
+const perf9 = new Performance(9, moonlight, false, ["CLL"]);
+const perf10 = new Performance(10, btmv, false, ["AK"]);
+const perf11 = new Performance(11, testdrive, false, ["CLL", "AK"]);
+const perf12 = new Performance(12, rach, false, ["CLL", "AK"]);
+
+all_performances.push(perf1);
+all_performances.push(perf2);
+all_performances.push(perf3);
+all_performances.push(perf4);
+all_performances.push(perf5);
+all_performances.push(perf6);
+all_performances.push(perf7);
+all_performances.push(perf8);
+all_performances.push(perf9);
+all_performances.push(perf10);
+all_performances.push(perf11);
+all_performances.push(perf12);
 
 // List of Performances
 const performances = [
@@ -289,8 +306,8 @@ const performances = [
 ];
 
 // Concerts
-const concert1 = new Concert("2/2/2022", "Morning", true, performances);
-const concert2 = new Concert("2/3/2022", "Afternoon", true, [
+const concert1 = new Concert(1, "2/2/2022", "Morning", true, performances);
+const concert2 = new Concert(2, "2/3/2022", "Afternoon", true, [
   perf10,
   perf11,
   perf12,
@@ -299,3 +316,4 @@ const concert2 = new Concert("2/3/2022", "Afternoon", true, [
 // List of concerts aka the whole DB
 exports.all_concerts = [concert1, concert2];
 exports.all_songs = all_songs;
+exports.all_performances = all_performances;
