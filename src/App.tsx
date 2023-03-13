@@ -14,19 +14,47 @@ import ConcertLogger from "./components/ConcertLogger";
 
 import { Button, Box, Typography } from "@mui/material";
 import SongPage from "./components/SongPage";
+import { LegendToggleOutlined } from "@mui/icons-material";
 
 const App = () => {
+  
+  /*** Concert Logger ************************************/
+  // State variables
   const [logOpen, setLogOpen] = useState(false);
+  const [logEditMode, setLogEditMode] = useState(false);
+  const [logEditID, setLogEditID] = useState<number | null>(null);
 
-  const toggleOpen = () => {
+  // Callback functions
+  
+  const logButtonClickHandler: React.MouseEventHandler = () => {
+    // Toggle the open state
     logOpen ? setLogOpen(false) : setLogOpen(true);
-  };
+    // Fully clear edit mode
+    setLogEditMode(false);
+    setLogEditID(null);
+  }
 
-  const posleft = logOpen ? 256 - 8 : -8;
+  const handleLogEdit = (id: number) => {
+    setLogEditID(id);
+    setLogEditMode(true);
+    setLogOpen(true);
+  }
 
+  const cancelEdit = () => {
+    setLogEditID(null);
+    setLogEditMode(false);
+  }
+
+
+  /*** Log Tab Button ************************************/
+  // Style and position variables
+  const buttonHeight = 34;
+  const buttonMargin = 4;
+  const posleft = logOpen ? 256 - buttonMargin : -buttonMargin;
   const buttonOffsetY = "40px";
-  const buttonOffsetX = "8px";
+  const buttonOffsetX = "8px";  
 
+  /*** Return Component***********************************/
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -38,8 +66,8 @@ const App = () => {
       <div style={{ height: 224 }} />
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/CMs/:initials" element={<CM />} />
+          <Route path="/" element={<Home logEdit={handleLogEdit}/>} />
+          <Route path="/CMs/:initials" element={<CM logEdit={handleLogEdit}/>} />
           <Route path="/song/:id" element={<SongPage />} />
         </Routes>
       </Router>
@@ -47,12 +75,14 @@ const App = () => {
       {/* The Button to slide the Concert Log in and out*/}
       <Box
         sx={{
+          overflow:'hidden', // This makes button box-shadow not appear outside of box
           position: "fixed",
           left: posleft,
-          top: 126,
-          zIndex: theme.zIndex.drawer + 1,
+          top: 122,
+          zIndex: theme.zIndex.drawer +1,
           transform: "rotate(90deg)",
-          transformOrigin: `${buttonOffsetX} 34px`,
+          transformOrigin: `${buttonMargin}px ${buttonMargin + buttonHeight}px`,
+          //transformOrigin: 'bottom left',
           // copied from Drawer Paper on DOM
           // For some reason, I don't think it's perfectly aligned but pretty close.
           //Maybe should change it all into a Slider component instead of Drawer in a subsequent commit?
@@ -63,9 +93,11 @@ const App = () => {
       >
         <Button
           disableRipple
-          onClick={toggleOpen}
+          onClick={logButtonClickHandler}
           variant="contained"
           sx={{
+            boxShadow:2,
+            height: buttonHeight,
             position: "relative",
             left: 0,
             zIndex: theme.zIndex.drawer + 1,
@@ -73,35 +105,31 @@ const App = () => {
             color: "primary.dark",
             textTransform: "none",
             lineHeight: "18px",
-            mx: buttonOffsetX,
+            mx: `${buttonMargin}px`,
+            mt: `${buttonMargin}px`,
             borderRadius: "4px 4px 0px 0px",
             "&.MuiButton-root": {
               padding: "8px 12px", // not sure why this works but doing it in the sx prop doesn't
               ":hover": {
                 backgroundColor: "primary.light",
                 fontWeight: "bold",
-                boxShadow:
-                  "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)",
+                boxShadow:2
+                //  "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)",
               },
+              
             },
           }}
         >
           Log
         </Button>
-        {/* This covers the edge of the drawer */}
-        <Box
-          sx={{
-            position: "relative",
-            height: buttonOffsetY,
-            width: "100%",
-            zIndex: theme.zIndex.drawer + 2,
-            color: "primary.light",
-            backgroundColor: "primary.light",
-            boxShadow: "none",
-          }}
-        ></Box>
       </Box>
-      <ConcertLogger open={logOpen} />
+      <ConcertLogger 
+        open={logOpen} 
+        isEditMode={logEditMode} 
+        editID={logEditID} 
+        setEditMode={setLogEditMode} 
+        cancelEdit={cancelEdit}
+      />
     </ThemeProvider>
   );
 };

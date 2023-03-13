@@ -18,20 +18,19 @@ interface DatePickerProps {
     light: boolean;
     date: Dayjs;
     setDate: Function;
+    disabled?: boolean;
 }
   
-const CustomDatePicker = ({date, light, setDate }:DatePickerProps) => {
+const CustomDatePicker = ({date, light, setDate, disabled=false }:DatePickerProps) => {
 
     const theme = useTheme();
     const [open, setOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [closing, setClosing] = useState(false);
 
-    console.log(`Rerendering popper - open is ${open}`);
+    //console.log(`Rerendering popper - open is ${open}`);
 
     const dateChangeHandler: any = (newValue: Date) => {
-        console.log(`Picker dateChange with ${newValue}`);
-        console.log(`Picker dateChange date is: ${date}`);
         setDate(dayjs(newValue));
     };
 
@@ -43,12 +42,11 @@ const CustomDatePicker = ({date, light, setDate }:DatePickerProps) => {
         // to tell this focus handler it's in the "returned" focus mode and not reopen the Popper
 
         console.log("in focusHandler");
+
         if (closing) {
-            console.log("closing")
             setClosing(false);
         }
         else {
-            console.log("not closing")
             // set open state
             //https://stackoverflow.com/questions/61238028/how-do-i-spawn-my-date-picker-ui-upon-first-clicking-on-the-date-text-field
             setOpen(true);
@@ -63,6 +61,7 @@ const CustomDatePicker = ({date, light, setDate }:DatePickerProps) => {
     return(
     <DatePicker 
         disableFuture
+        disabled={disabled}
         open={open} // TODO - enable calendar popup. This seems difficult for now.
         onClose={() => {
             console.log("onClose");
@@ -93,7 +92,7 @@ const CustomDatePicker = ({date, light, setDate }:DatePickerProps) => {
                 }
             }, // sx
             InputProps: { // props for OutlinedInput
-                endAdornment:null,
+                //endAdornment:null, // it still works without this???
                 notched:false,
                 onFocus: focusHandler, // enable calendar popup
                 sx:{

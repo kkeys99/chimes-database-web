@@ -136,13 +136,37 @@ function getSongPageData(id) {
   return songPageData;
 }
 
+function getConcertById(id) {
+  for (const concert of fakeDB.all_concerts) {
+    if (concert._id == id) {
+      return concert;
+    }
+  }
+  return false;
+}
+
 // GET for the Home page
 app.get("/home", (req, res) => {
   console.log("GET home");
+  
   data = {
     concerts: fakeDB.all_concerts,
   };
   res.status(200).send(JSON.stringify(data));
+});
+
+app.get("/concert/:_id", (req, res) => {
+  console.log("GET concert by ID");
+  const concert = getConcertById(req.params._id);
+  if (concert === false) {
+    res.status(404).send("No Concert Matches ID")
+  }
+  else {
+    data = {
+      concert: concert,
+    };
+    res.status(200).send(JSON.stringify(data));
+  }
 });
 
 // GET for the CM page

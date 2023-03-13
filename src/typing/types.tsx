@@ -59,12 +59,14 @@ export class Song {
 }
 
 export class Performance {
+  _id: number = 0;
   song: Song = new Song();
   isRequest: boolean = false;
   performers: String[] = [];
 }
 
 export class Concert {
+  _id: number = 0;
   type: string = "";
   date: Date = new Date();
   bellsAdjusted: boolean = false;
