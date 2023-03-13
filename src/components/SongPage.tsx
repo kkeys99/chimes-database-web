@@ -22,7 +22,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-
 import Bookmark from "../assets/bookmark.svg";
 import { cms, cmStats } from "../constants";
 import { makeStyles } from "@material-ui/styles";
@@ -173,25 +172,14 @@ const DayRange = () => {
       dateAdapter={AdapterDayjs}
       localeText={{ start: "", end: "" }}
     >
-      <Stack 
-        direction="row"
-        sx={{display:"flex", height:"28px"}}
-      >
+
+      <Stack direction="row" sx={{ display: "flex", height: "28px" }}>
         <Box sx={{ mx: 4 }}> from </Box>
-        
-        <CustomDatePicker 
-          light={false}
-          date={dateFrom}
-          setDate={setFrom}
-        />
+        <CustomDatePicker light={false} date={dateFrom} setDate={setFrom} />
         <Box sx={{ mx: 4 }}> to </Box>
-        <CustomDatePicker 
-          light={false}
-          date={dateTo}
-          setDate={setTo}
-        />
+        <CustomDatePicker light={false} date={dateTo} setDate={setTo} />
       </Stack>
-      
+
       {/*
       <DateRangePicker
         inputFormat="MM/dd/yy"

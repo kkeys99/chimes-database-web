@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import dayjs from 'dayjs';
- import { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 
 import { useTheme } from "@mui/material/styles";
 
@@ -365,7 +365,7 @@ const ConcertLogger = ({ open, isEditMode, editID, cancelEdit }: ConcertLoggerPr
     //if (e.keycode == 13) {
     //  return;
     //}
-
+    
     if (!isEditMode) {
       // Send the actual HTTP POST request
       fetch("/log", {
@@ -434,7 +434,6 @@ const ConcertLogger = ({ open, isEditMode, editID, cancelEdit }: ConcertLoggerPr
           </FormGroup>
           </LocalizationProvider>
 
-          {/*** CONCERT TYPE *******************************/}
           <FormGroup row sx={{ pt: 4, pb: 0.5, display: "flex", gap: 2 }}>
             <Typography color="primary.dark" variant="body1">
               Concert type:
