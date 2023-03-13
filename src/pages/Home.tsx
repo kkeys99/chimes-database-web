@@ -16,7 +16,7 @@ interface HomePageProps {
   logEdit: Function;
 }
 
-function Home({logEdit}: HomePageProps) {
+function Home({ logEdit }: HomePageProps) {
   const [data, setData] = useState({ concerts: [] });
 
   useEffect(() => {
@@ -29,7 +29,7 @@ function Home({logEdit}: HomePageProps) {
 
   let bodyComponent;
   if (data.concerts.length > 0) {
-    bodyComponent = <ConcertGrid concerts={data.concerts} logEdit={logEdit}/>;
+    bodyComponent = <ConcertGrid concerts={data.concerts} logEdit={logEdit} />;
   } else {
     bodyComponent = <></>;
   }

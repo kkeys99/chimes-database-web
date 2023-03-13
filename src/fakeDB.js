@@ -264,7 +264,7 @@ const rach = new Song(
 all_songs.push(rach);
 
 // Create Performances
-let all_performances = []
+let all_performances = [];
 
 const perf1 = new Performance(1, myGirl, false, ["CLL"]);
 const perf2 = new Performance(2, sentimental, false, ["CLL"]);
@@ -291,8 +291,6 @@ all_performances.push(perf9);
 all_performances.push(perf10);
 all_performances.push(perf11);
 all_performances.push(perf12);
-
-
 
 // List of Performances
 const performances = [

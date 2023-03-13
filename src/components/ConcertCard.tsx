@@ -27,13 +27,13 @@ interface Props {
  *****************************************************************************/
 const ConcertCard = ({ concert, logEdit }: Props) => {
   const theme = useTheme();
-  
+
   const handleEditClick: any = () => {
-    console.log("Clicked Edit Button")
+    console.log("Clicked Edit Button");
     logEdit(concert._id);
     return;
-  }
-  
+  };
+
   return (
     <Box>
       <Typography sx={{ pb: "12px" }}>{concert.type}</Typography>
@@ -48,22 +48,26 @@ const ConcertCard = ({ concert, logEdit }: Props) => {
           </Typography>
 
           {/*** Bell and Edit Icons ***********************************/}
-          <Stack direction="row" spacing={2} sx={{ position: "absolute", top: 12, right: 12 }} >
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ position: "absolute", top: 12, right: 12 }}
+          >
             <SvgIcon
               inheritViewBox
               component={BellIcon}
-              sx={{ height: "20px", width: "20px",
-              }}
+              sx={{ height: "20px", width: "20px" }}
             />
             <SvgIcon
               inheritViewBox
               component={EditIcon}
               onClick={handleEditClick}
-              sx={{ 
-                height: "20px", width: "20px",
-                ":hover":{
-                  cursor:"pointer"
-                }
+              sx={{
+                height: "20px",
+                width: "20px",
+                ":hover": {
+                  cursor: "pointer",
+                },
               }}
             />
           </Stack>

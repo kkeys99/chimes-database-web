@@ -26,8 +26,7 @@ interface ConcertGridRowProps {
  *****************************************************************************/
 function ConcertGridRow({ date, rowConcerts, logEdit }: ConcertGridRowProps) {
   // Just a hack that I don't remember why I did. This will be removed eventually
-  const concert1 =
-    rowConcerts.length > 1 ? rowConcerts[1] : rowConcerts[0];
+  const concert1 = rowConcerts.length > 1 ? rowConcerts[1] : rowConcerts[0];
 
   return (
     <Box sx={{ pb: "24px" }}>
@@ -36,8 +35,8 @@ function ConcertGridRow({ date, rowConcerts, logEdit }: ConcertGridRowProps) {
       </Typography>
       <Stack direction="row" spacing="10px">
         <ConcertCard concert={rowConcerts[0]} logEdit={logEdit} />
-        <ConcertCard concert={rowConcerts[0]} logEdit={logEdit}/>
-        <ConcertCard concert={concert1} logEdit={logEdit}/>
+        <ConcertCard concert={rowConcerts[0]} logEdit={logEdit} />
+        <ConcertCard concert={concert1} logEdit={logEdit} />
       </Stack>
     </Box>
   );
@@ -53,7 +52,11 @@ function ConcertGridRow({ date, rowConcerts, logEdit }: ConcertGridRowProps) {
 const ConcertGrid = ({ concerts, logEdit }: ConcertGridProps) => {
   return (
     <Stack>
-      <ConcertGridRow date={"July 2, 2022"} rowConcerts={concerts} logEdit={logEdit} />
+      <ConcertGridRow
+        date={"July 2, 2022"}
+        rowConcerts={concerts}
+        logEdit={logEdit}
+      />
     </Stack>
   );
 };

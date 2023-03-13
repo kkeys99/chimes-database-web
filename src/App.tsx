@@ -17,7 +17,6 @@ import SongPage from "./components/SongPage";
 import { LegendToggleOutlined } from "@mui/icons-material";
 
 const App = () => {
-  
   /*** Concert Logger ************************************/
   // State variables
   const [logOpen, setLogOpen] = useState(false);
@@ -25,26 +24,25 @@ const App = () => {
   const [logEditID, setLogEditID] = useState<number | null>(null);
 
   // Callback functions
-  
+
   const logButtonClickHandler: React.MouseEventHandler = () => {
     // Toggle the open state
     logOpen ? setLogOpen(false) : setLogOpen(true);
     // Fully clear edit mode
     setLogEditMode(false);
     setLogEditID(null);
-  }
+  };
 
   const handleLogEdit = (id: number) => {
     setLogEditID(id);
     setLogEditMode(true);
     setLogOpen(true);
-  }
+  };
 
   const cancelEdit = () => {
     setLogEditID(null);
     setLogEditMode(false);
-  }
-
+  };
 
   /*** Log Tab Button ************************************/
   // Style and position variables
@@ -52,7 +50,7 @@ const App = () => {
   const buttonMargin = 4;
   const posleft = logOpen ? 256 - buttonMargin : -buttonMargin;
   const buttonOffsetY = "40px";
-  const buttonOffsetX = "8px";  
+  const buttonOffsetX = "8px";
 
   /*** Return Component***********************************/
   return (
@@ -66,8 +64,11 @@ const App = () => {
       <div style={{ height: 224 }} />
       <Router>
         <Routes>
-          <Route path="/" element={<Home logEdit={handleLogEdit}/>} />
-          <Route path="/CMs/:initials" element={<CM logEdit={handleLogEdit}/>} />
+          <Route path="/" element={<Home logEdit={handleLogEdit} />} />
+          <Route
+            path="/CMs/:initials"
+            element={<CM logEdit={handleLogEdit} />}
+          />
           <Route path="/song/:id" element={<SongPage />} />
         </Routes>
       </Router>
@@ -75,11 +76,11 @@ const App = () => {
       {/* The Button to slide the Concert Log in and out*/}
       <Box
         sx={{
-          overflow:'hidden', // This makes button box-shadow not appear outside of box
+          overflow: "hidden", // This makes button box-shadow not appear outside of box
           position: "fixed",
           left: posleft,
           top: 122,
-          zIndex: theme.zIndex.drawer +1,
+          zIndex: theme.zIndex.drawer + 1,
           transform: "rotate(90deg)",
           transformOrigin: `${buttonMargin}px ${buttonMargin + buttonHeight}px`,
           //transformOrigin: 'bottom left',
@@ -96,7 +97,7 @@ const App = () => {
           onClick={logButtonClickHandler}
           variant="contained"
           sx={{
-            boxShadow:2,
+            boxShadow: 2,
             height: buttonHeight,
             position: "relative",
             left: 0,
@@ -113,21 +114,20 @@ const App = () => {
               ":hover": {
                 backgroundColor: "primary.light",
                 fontWeight: "bold",
-                boxShadow:2
+                boxShadow: 2,
                 //  "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)",
               },
-              
             },
           }}
         >
           Log
         </Button>
       </Box>
-      <ConcertLogger 
-        open={logOpen} 
-        isEditMode={logEditMode} 
-        editID={logEditID} 
-        setEditMode={setLogEditMode} 
+      <ConcertLogger
+        open={logOpen}
+        isEditMode={logEditMode}
+        editID={logEditID}
+        setEditMode={setLogEditMode}
         cancelEdit={cancelEdit}
       />
     </ThemeProvider>

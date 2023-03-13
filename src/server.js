@@ -148,7 +148,7 @@ function getConcertById(id) {
 // GET for the Home page
 app.get("/home", (req, res) => {
   console.log("GET home");
-  
+
   data = {
     concerts: fakeDB.all_concerts,
   };
@@ -159,9 +159,8 @@ app.get("/concert/:_id", (req, res) => {
   console.log("GET concert by ID");
   const concert = getConcertById(req.params._id);
   if (concert === false) {
-    res.status(404).send("No Concert Matches ID")
-  }
-  else {
+    res.status(404).send("No Concert Matches ID");
+  } else {
     data = {
       concert: concert,
     };

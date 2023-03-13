@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import { Dayjs } from "dayjs";
 
 import { useTheme } from "@mui/material/styles";
@@ -27,12 +27,17 @@ import StarIcon from "@mui/icons-material/Star";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CustomDatePicker from "./CustomDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { styled } from "@mui/material/styles";
 import { IconButton } from "@mui/material";
 
-import { concertLogFields, songEntry, Concert, Performance } from "../typing/types";
+import {
+  concertLogFields,
+  songEntry,
+  Concert,
+  Performance,
+} from "../typing/types";
 
 const drawerWidth = 256;
 
@@ -188,7 +193,7 @@ const SongLogger = ({
             sx={{ fontSize: inputFontSize }}
             onClick={requestChangeHandler}
           />
-          ) : (
+        ) : (
           <StarBorderIcon
             sx={{ fontSize: inputFontSize }}
             onClick={requestChangeHandler}
@@ -212,52 +217,55 @@ const SongLogger = ({
  *   A drawer that you can slide out to log the concert
  *   https://mui.com/material-ui/react-drawer/
  *****************************************************************************/
-const ConcertLogger = ({ open, isEditMode, editID, cancelEdit }: ConcertLoggerProps) => {
+const ConcertLogger = ({
+  open,
+  isEditMode,
+  editID,
+  cancelEdit,
+}: ConcertLoggerProps) => {
   const theme = useTheme();
   const inputFontSize = theme.typography.body2;
 
   const [editedConcert, setEditedConcert] = useState<Concert | null>(null);
   const [concertFetched, setConcertFetched] = useState(false);
-  
+
   useEffect(() => {
     // Referenced this because I don't really know what I'm doing here lol
     //https://stackoverflow.com/questions/49725012/handling-response-status-using-fetch-in-react-js
-    if ( isEditMode && (!concertFetched || (editID != editedConcert?._id)) ) {
+    if (isEditMode && (!concertFetched || editID != editedConcert?._id)) {
       console.log("Fetching concert");
       fetch(`/concert/${editID}`)
-        .then((res) => {
-          if(!res.ok) {
+        .then(res => {
+          if (!res.ok) {
             console.log("Got an error code");
             throw new Error();
-          }
-          else {
+          } else {
             return res.json();
           }
-      })
-      .then((data) => {
-        console.log(data)
-        setEditedConcert(data.concert);
-        setConcertFetched(true);
-        setLog({
-          date:dayjs(data.concert.date),
-          concertType: data.concert.type,
-          bellsAdjusted: data.concert.bellsAdjusted,
-          songs: data.concert.performances.map((perf: Performance) => {
-            return {
-              title: perf.song.title, 
-              CM: perf.performers[0], // TODO fix this
-              request: perf.isRequest
-            }
-          }),
-          privateNote: "",
-          publicNote: "", // TODO fix this
         })
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-    }
-    else if (!isEditMode && concertFetched) {
+        .then(data => {
+          console.log(data);
+          setEditedConcert(data.concert);
+          setConcertFetched(true);
+          setLog({
+            date: dayjs(data.concert.date),
+            concertType: data.concert.type,
+            bellsAdjusted: data.concert.bellsAdjusted,
+            songs: data.concert.performances.map((perf: Performance) => {
+              return {
+                title: perf.song.title,
+                CM: perf.performers[0], // TODO fix this
+                request: perf.isRequest,
+              };
+            }),
+            privateNote: "",
+            publicNote: "", // TODO fix this
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    } else if (!isEditMode && concertFetched) {
       // Reset Fetched and clear the form
       setConcertFetched(false);
       setLog(defaultLog);
@@ -266,7 +274,7 @@ const ConcertLogger = ({ open, isEditMode, editID, cancelEdit }: ConcertLoggerPr
 
   // Props passed into the Paper component of the Drawer
   const paperProps = {
-    sx: { width: "256px", borderRight: "none", overflow:"hidden" },
+    sx: { width: "256px", borderRight: "none", overflow: "hidden" },
     elevation: 1,
   };
 
@@ -294,15 +302,15 @@ const ConcertLogger = ({ open, isEditMode, editID, cancelEdit }: ConcertLoggerPr
   const dateChangeHandler = (newValue: Dayjs) => {
     setLog({
       ...logForm,
-      date: newValue // Date picker will take care of dayjs
-    })
-  }
-  console.log(`Re-rendering Logger w date ${logForm.date}`)
+      date: newValue, // Date picker will take care of dayjs
+    });
+  };
+  console.log(`Re-rendering Logger w date ${logForm.date}`);
 
-  const cancelEditHandler: React.MouseEventHandler = () =>{
+  const cancelEditHandler: React.MouseEventHandler = () => {
     cancelEdit();
     setLog(defaultLog);
-  }
+  };
 
   // Handlers for editing song entries //
 
@@ -359,13 +367,13 @@ const ConcertLogger = ({ open, isEditMode, editID, cancelEdit }: ConcertLoggerPr
 
   const submitHandler = (e: React.FormEvent) => {
     // This is the handler for when the form is submitted
-    console.log("Submitting Form")
+    console.log("Submitting Form");
     // This will prevent the page from refreshing
     e.preventDefault();
     //if (e.keycode == 13) {
     //  return;
     //}
-    
+
     if (!isEditMode) {
       // Send the actual HTTP POST request
       fetch("/log", {
@@ -373,9 +381,7 @@ const ConcertLogger = ({ open, isEditMode, editID, cancelEdit }: ConcertLoggerPr
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(logForm),
       });
-    }
-    else { 
-
+    } else {
     }
 
     // Clear the form
@@ -386,21 +392,22 @@ const ConcertLogger = ({ open, isEditMode, editID, cancelEdit }: ConcertLoggerPr
 
   return (
     <Drawer
-      sx={{ width: drawerWidth, 
-        ".& MuiDrawer-paper": { border: "none" } 
-      }}
+      sx={{ width: drawerWidth, ".& MuiDrawer-paper": { border: "none" } }}
       variant="persistent"
       anchor="left"
       open={open}
       PaperProps={paperProps}
     >
       {/*** Blank Div to push content down *********/}
-      <Box sx={{ width:"100%", minHeight: "96px" }} />
-      
+      <Box sx={{ width: "100%", minHeight: "96px" }} />
+
       {/*** Concert Log Form ***********************/}
       <Box
-        sx={{ py: 5, px: 3, 
-          height:"100%",  overflow:'scroll',  // These keep the scroll area just to 
+        sx={{
+          py: 5,
+          px: 3,
+          height: "100%",
+          overflow: "scroll", // These keep the scroll area just to
         }}
         margin="dense"
         component="form"
@@ -417,21 +424,18 @@ const ConcertLogger = ({ open, isEditMode, editID, cancelEdit }: ConcertLoggerPr
             dateAdapter={AdapterDayjs}
             localeText={{ start: "", end: "" }}
           >
-          <FormGroup row sx={{ pt: 4, pb: 0.5, display: "flex", gap: 2 }}>
-            <Typography
-              color="primary.dark"
-              variant="body1"
-            >
-              Date:
-            </Typography>
-            
-            <CustomDatePicker 
-              light={true}
-              date={logForm.date}
-              setDate={dateChangeHandler}
-              disabled={isEditMode}
-            />            
-          </FormGroup>
+            <FormGroup row sx={{ pt: 4, pb: 0.5, display: "flex", gap: 2 }}>
+              <Typography color="primary.dark" variant="body1">
+                Date:
+              </Typography>
+
+              <CustomDatePicker
+                light={true}
+                date={logForm.date}
+                setDate={dateChangeHandler}
+                disabled={isEditMode}
+              />
+            </FormGroup>
           </LocalizationProvider>
 
           <FormGroup row sx={{ pt: 4, pb: 0.5, display: "flex", gap: 2 }}>
@@ -480,8 +484,8 @@ const ConcertLogger = ({ open, isEditMode, editID, cancelEdit }: ConcertLoggerPr
             }
             label="Adjusted bells"
           />
-        </FormControl> {/* Need to end this here bc focus class turns notes red */}
-        
+        </FormControl>{" "}
+        {/* Need to end this here bc focus class turns notes red */}
         {/*** SONGS ****************************************************/}
         <Typography
           sx={{ pt: 4, pb: 0.5 }}
@@ -500,7 +504,6 @@ const ConcertLogger = ({ open, isEditMode, editID, cancelEdit }: ConcertLoggerPr
             bottom={index == logForm.songs.length - 1}
           />
         ))}
-
         {/*** NOTE PRIVATE ***********************************************/}
         <FormLabel sx={{ pt: 2, pb: 0.5, color: theme.palette.primary.dark }}>
           Note (private):
@@ -525,7 +528,6 @@ const ConcertLogger = ({ open, isEditMode, editID, cancelEdit }: ConcertLoggerPr
             sx: { borderRadius: "4px", py: 1, fontSize: inputFontSize },
           }}
         />
-
         {/*** NOTE PUBLIC ***********************************************/}
         <FormLabel sx={{ pt: 2, pb: 0.5, color: theme.palette.primary.dark }}>
           Note (public):
@@ -550,26 +552,25 @@ const ConcertLogger = ({ open, isEditMode, editID, cancelEdit }: ConcertLoggerPr
             sx: { borderRadius: "4px", py: 1, fontSize: inputFontSize },
           }}
         />
-
         {/*** SUBMIT BUTTON ***********************************************/}
-        <Stack direction="row" display="flex" sx={{ pt: 5, width:"100%" }}>
-          {isEditMode && // Only render this button if in edit mode
-          <Button
-            disableElevation
-            onClick={cancelEditHandler}
-            variant="contained"
-            color="info"
-            sx={{ px: 2, py: 1, textTransform: "none", flexShrink:0}}
-          >
-            {isEditMode ? "Cancel" : "Clear Form"}
-          </Button>
-          }
-          <Box 
+        <Stack direction="row" display="flex" sx={{ pt: 5, width: "100%" }}>
+          {isEditMode && ( // Only render this button if in edit mode
+            <Button
+              disableElevation
+              onClick={cancelEditHandler}
+              variant="contained"
+              color="info"
+              sx={{ px: 2, py: 1, textTransform: "none", flexShrink: 0 }}
+            >
+              {isEditMode ? "Cancel" : "Clear Form"}
+            </Button>
+          )}
+          <Box
             // A box that pushes the Log Button to the end or sits between clear/cancel button
             sx={{
-              height:"100%",
-              width:"100%",
-              flex:"flex-grow"
+              height: "100%",
+              width: "100%",
+              flex: "flex-grow",
             }}
           />
           <Button
@@ -577,9 +578,9 @@ const ConcertLogger = ({ open, isEditMode, editID, cancelEdit }: ConcertLoggerPr
             type="submit"
             color="info"
             disableElevation
-            sx={{ px: 2, py: 1, textTransform: "none", flexShrink:0}}
+            sx={{ px: 2, py: 1, textTransform: "none", flexShrink: 0 }}
           >
-            {isEditMode ? "Edit Concert" : "Log Concert" }
+            {isEditMode ? "Edit Concert" : "Log Concert"}
           </Button>
         </Stack>
       </Box>
