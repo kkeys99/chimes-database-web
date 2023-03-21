@@ -25,3 +25,21 @@ export function date2string(date: string) {
 
   return monthDict[month].concat(" ", day, ", ", year);
 }
+
+// Convert song tag attribute name to what is shown on screen
+export function songFieldToDisplay(field: string) {
+  if (!field) {return ""}
+  let result_str = field.replace("_", " ");
+  result_str = result_str[0].toUpperCase() + result_str.substring(1);
+  for (let i = 1; i < result_str.length; i++) {
+    if (result_str[i-1] === " ") {
+      try {
+        // In case the character is not a letter - YouTube Link
+        result_str = result_str.substring(0, i) + result_str[i].toUpperCase() + result_str.substring(i+1);
+      } catch {
+        // Do nothing
+      };
+    }
+  }
+  return result_str;
+}

@@ -21,11 +21,11 @@ export class Song {
   arranger: string[] = [""];
   genre: string[] = [""];
   requests: number = 0;
-  keysig: string[] = [""];
-  timesig: string[] = [""];
+  key: string[] = [""];
+  time_sig: string[] = [""];
   tempo: string[] = [""];
-  added: string[] = [""];
-  available: string[] = [""];
+  date_added: string = "";
+  available: string = "";
   played: number = 0;
   constructor(
     id: number = 0,
@@ -35,11 +35,11 @@ export class Song {
     arranger: string[] = [""],
     genre: string[] = [""],
     requests: number = 0,
-    keysig: string[] = [""],
-    timesig: string[] = [""],
+    key: string[] = [""],
+    time_sig: string[] = [""],
     tempo: string[] = [""],
-    added: string[] = [""],
-    available: string[] = [""],
+    date_added: string = "",
+    available: string = "",
     played: number = 0
   ) {
     this._id = id;
@@ -49,10 +49,10 @@ export class Song {
     this.arranger = arranger;
     this.genre = genre;
     this.requests = requests;
-    this.keysig = keysig;
-    this.timesig = timesig;
+    this.key = key;
+    this.time_sig = time_sig;
     this.tempo = tempo;
-    this.added = added;
+    this.date_added = date_added;
     this.available = available;
     this.played = played;
   }

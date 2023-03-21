@@ -13,7 +13,7 @@ import Home from "./pages/Home";
 import ConcertLogger from "./components/ConcertLogger";
 
 import { Button, Box, Typography } from "@mui/material";
-import SongPage from "./components/SongPage";
+import SongPage from "./pages/SongPage";
 import { LegendToggleOutlined } from "@mui/icons-material";
 
 const App = () => {

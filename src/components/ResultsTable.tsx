@@ -208,10 +208,10 @@ const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
                   {!props.lite && <FormattedCell text={rowData.arranger} />}
                   {!props.lite && <FormattedCell text={rowData.genre} />}
                   {!props.lite && <FormattedCell text={rowData.requests} />}
-                  {!props.lite && <FormattedCell text={rowData.keysig} />}
-                  {!props.lite && <FormattedCell text={rowData.timesig} />}
+                  {!props.lite && <FormattedCell text={rowData.key} />}
+                  {!props.lite && <FormattedCell text={rowData.time_sig} />}
                   {!props.lite && <FormattedCell text={rowData.tempo} />}
-                  {!props.lite && <FormattedCell text={rowData.added} />}
+                  {!props.lite && <FormattedCell text={rowData.date_added} />}
                 </TableRow>
               ))}
         </TableBody>

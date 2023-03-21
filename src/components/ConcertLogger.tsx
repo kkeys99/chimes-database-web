@@ -53,6 +53,7 @@ interface ConcertLoggerProps {
 
 interface LogIconProps {
   children: any;
+  clickHandler?: React.MouseEventHandler | null;
 }
 
 interface SongLoggerProps {
@@ -80,9 +81,16 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 
 // A simple component that's basically a styled icon button
 // TODO - change this to styled API maybe?
-const LogIcon = ({ children }: LogIconProps) => {
+const LogIcon = ({ children, clickHandler=null }: LogIconProps) => {
+  
   return (
-    <IconButton disableRipple sx={{ p: 0 }}>
+    <IconButton 
+      disableRipple sx={{ p: 0 }} 
+      onClick={(e) => {
+        if (clickHandler) {
+          clickHandler(e);
+        }
+      }} >
       {children}
     </IconButton>
   );
@@ -145,10 +153,9 @@ const SongLogger = ({
         </LogIcon>
         {
           //bottom && // Only be able to add at the bottom of list - disabled for now bc we can't reorder
-          <LogIcon>
+          <LogIcon clickHandler={addSongHandler}>
             <AddCircleOutlineIcon
               sx={{ fontSize: inputFontSize }}
-              onClick={addSongHandler}
             />
           </LogIcon>
         }
@@ -187,23 +194,20 @@ const SongLogger = ({
       </Select>
 
       {/* Icons on the right-hand side: Request and Delete */}
-      <LogIcon>
+      <LogIcon clickHandler={requestChangeHandler}>
         {song.request ? (
           <StarIcon
             sx={{ fontSize: inputFontSize }}
-            onClick={requestChangeHandler}
           />
         ) : (
           <StarBorderIcon
             sx={{ fontSize: inputFontSize }}
-            onClick={requestChangeHandler}
           />
         )}
       </LogIcon>
-      <LogIcon>
+      <LogIcon clickHandler={deleteSongHandler}>
         <DeleteIcon
           sx={{ fontSize: inputFontSize }}
-          onClick={deleteSongHandler}
         />
       </LogIcon>
     </FormGroup>
@@ -306,7 +310,6 @@ const ConcertLogger = ({
     });
   };
   console.log(`Re-rendering Logger w date ${logForm.date}`);
-
   const cancelEditHandler: React.MouseEventHandler = () => {
     cancelEdit();
     setLog(defaultLog);
@@ -316,11 +319,9 @@ const ConcertLogger = ({
 
   const addSongLogger = (index: number) => {
     // Go here when you press the plus icon
-
     // Doing it this way because splice edits in-place and returns deleted items
     const songList: songEntry[] = logForm.songs;
     songList.splice(index + 1, 0, emptySong());
-
     // Change the State
     setLog({
       ...logForm,
@@ -330,7 +331,6 @@ const ConcertLogger = ({
 
   const removeSongLogger = (index: number) => {
     // Go here when you press the trash icon
-
     // Guard clause for when there is only one entry
     if (logForm.songs.length == 1) {
       // TODO - Should pressing delete on a single entry clear it?
@@ -341,7 +341,6 @@ const ConcertLogger = ({
     // Doing it this way because splice edits in-place and returns deleted items
     const songList: songEntry[] = logForm.songs;
     songList.splice(index, 1);
-
     // Change the state
     setLog({
       ...logForm,
@@ -354,10 +353,8 @@ const ConcertLogger = ({
     // The input change callbacks themselves are located in the SongLogger component,
     // but they all call this function, which updates the whole object.
     // Is this the best way? Maybe not. But it works for now.
-
     let songList = logForm.songs;
     songList[index] = song;
-
     // Change the state
     setLog({
       ...logForm,
@@ -370,10 +367,6 @@ const ConcertLogger = ({
     console.log("Submitting Form");
     // This will prevent the page from refreshing
     e.preventDefault();
-    //if (e.keycode == 13) {
-    //  return;
-    //}
-
     if (!isEditMode) {
       // Send the actual HTTP POST request
       fetch("/log", {
@@ -382,11 +375,10 @@ const ConcertLogger = ({
         body: JSON.stringify(logForm),
       });
     } else {
+      // What to do when submit on edit mode
     }
-
     // Clear the form
     setLog(defaultLog);
-
     // Maybe logic that will trigger a pop-up will go here, reacting to a return code?
   };
 
@@ -407,14 +399,13 @@ const ConcertLogger = ({
           py: 5,
           px: 3,
           height: "100%",
-          overflow: "scroll", // These keep the scroll area just to
+          overflow: "scroll", // These keep the scroll area just to visible part
         }}
         margin="dense"
         component="form"
         onSubmit={submitHandler}
       >
-        <FormControl>
-          {/* Do this to maintain state for required fields */}
+        <FormControl> {/* Do this to maintain state for required fields */}
           <Typography color="primary.dark" variant="h2">
             {isEditMode ? "Edit Concert" : "Log Concert"}
           </Typography>
@@ -438,6 +429,7 @@ const ConcertLogger = ({
             </FormGroup>
           </LocalizationProvider>
 
+          {/*** CONCERT TYPE *********************************/}
           <FormGroup row sx={{ pt: 4, pb: 0.5, display: "flex", gap: 2 }}>
             <Typography color="primary.dark" variant="body1">
               Concert type:
