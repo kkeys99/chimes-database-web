@@ -81,16 +81,17 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 
 // A simple component that's basically a styled icon button
 // TODO - change this to styled API maybe?
-const LogIcon = ({ children, clickHandler=null }: LogIconProps) => {
-  
+const LogIcon = ({ children, clickHandler = null }: LogIconProps) => {
   return (
-    <IconButton 
-      disableRipple sx={{ p: 0 }} 
-      onClick={(e) => {
+    <IconButton
+      disableRipple
+      sx={{ p: 0 }}
+      onClick={e => {
         if (clickHandler) {
           clickHandler(e);
         }
-      }} >
+      }}
+    >
       {children}
     </IconButton>
   );
@@ -154,9 +155,7 @@ const SongLogger = ({
         {
           //bottom && // Only be able to add at the bottom of list - disabled for now bc we can't reorder
           <LogIcon clickHandler={addSongHandler}>
-            <AddCircleOutlineIcon
-              sx={{ fontSize: inputFontSize }}
-            />
+            <AddCircleOutlineIcon sx={{ fontSize: inputFontSize }} />
           </LogIcon>
         }
       </Stack>
@@ -196,19 +195,13 @@ const SongLogger = ({
       {/* Icons on the right-hand side: Request and Delete */}
       <LogIcon clickHandler={requestChangeHandler}>
         {song.request ? (
-          <StarIcon
-            sx={{ fontSize: inputFontSize }}
-          />
+          <StarIcon sx={{ fontSize: inputFontSize }} />
         ) : (
-          <StarBorderIcon
-            sx={{ fontSize: inputFontSize }}
-          />
+          <StarBorderIcon sx={{ fontSize: inputFontSize }} />
         )}
       </LogIcon>
       <LogIcon clickHandler={deleteSongHandler}>
-        <DeleteIcon
-          sx={{ fontSize: inputFontSize }}
-        />
+        <DeleteIcon sx={{ fontSize: inputFontSize }} />
       </LogIcon>
     </FormGroup>
   );
@@ -405,11 +398,12 @@ const ConcertLogger = ({
         component="form"
         onSubmit={submitHandler}
       >
-        <FormControl> {/* Do this to maintain state for required fields */}
+        <FormControl>
+          {" "}
+          {/* Do this to maintain state for required fields */}
           <Typography color="primary.dark" variant="h2">
             {isEditMode ? "Edit Concert" : "Log Concert"}
           </Typography>
-
           {/*** DATE ********************************/}
           <LocalizationProvider
             dateAdapter={AdapterDayjs}
@@ -428,7 +422,6 @@ const ConcertLogger = ({
               />
             </FormGroup>
           </LocalizationProvider>
-
           {/*** CONCERT TYPE *********************************/}
           <FormGroup row sx={{ pt: 4, pb: 0.5, display: "flex", gap: 2 }}>
             <Typography color="primary.dark" variant="body1">
@@ -452,7 +445,6 @@ const ConcertLogger = ({
               })}
             </Select>
           </FormGroup>
-
           {/*** ADJUSTED BELLS ****************************************/}
           <FormControlLabel
             sx={{ pt: 4, pb: 0.5 }}

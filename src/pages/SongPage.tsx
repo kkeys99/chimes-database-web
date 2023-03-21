@@ -38,7 +38,7 @@ import { Dayjs } from "dayjs";
 
 //https://stackoverflow.com/questions/51419176/how-to-get-a-subset-of-keyof-t-whose-value-tk-are-callable-functions-in-typ
 // Making a type of list fields so checking for length doesn't error out when you remove items
-type KeyOfType<T, U> = {[P in keyof T]: T[P] extends U ? P: never}[keyof T];
+type KeyOfType<T, U> = { [P in keyof T]: T[P] extends U ? P : never }[keyof T];
 type ListTags = KeyOfType<Song, string[]>;
 
 interface SongTitleProps {
@@ -89,7 +89,6 @@ interface PlayStatsProp {
   history: songHistory;
 }
 
-
 const SongTitle = ({ sheet, title }: SongTitleProps) => {
   return (
     <Box display="flex" flexDirection="row">
@@ -102,56 +101,37 @@ const SongTitle = ({ sheet, title }: SongTitleProps) => {
   );
 };
 
-
 const ListSongTag = ({ tagName, tagData }: SongTagProp) => {
   return (
     <Box flexShrink={0}>
-      <Typography variant="h2" >
-        {songFieldToDisplay(tagName)}
-      </Typography>
-      <List
-        dense={true}
-      >
-        {tagData && tagData.map(element => {
-          return (
-            <ListItem 
-              dense
-              disableGutters
-            >
-              <ListItemText
-                primary={element} />
-            </ListItem>
-          );
-        }
-        )}
+      <Typography variant="h2">{songFieldToDisplay(tagName)}</Typography>
+      <List dense={true}>
+        {tagData &&
+          tagData.map(element => {
+            return (
+              <ListItem dense disableGutters>
+                <ListItemText primary={element} />
+              </ListItem>
+            );
+          })}
       </List>
     </Box>
   );
 };
 
-
 const SingleSongTag = ({ tagName, tagData }: SingleSongTagProp) => {
   return (
     <Box flexShrink={0}>
-      <Typography variant="h2" >
-        {songFieldToDisplay(tagName)}
-      </Typography>
+      <Typography variant="h2">{songFieldToDisplay(tagName)}</Typography>
       {/* Hacks! This is a list of one item just so the spacing can be the same as list fields */}
-      <List
-        dense={true}
-      >
-        <ListItem 
-          dense
-          disableGutters
-        >
-          <ListItemText
-            primary={tagData} />
+      <List dense={true}>
+        <ListItem dense disableGutters>
+          <ListItemText primary={tagData} />
         </ListItem>
       </List>
     </Box>
   );
 };
-
 
 interface LogIconProps {
   children: any;
@@ -160,89 +140,108 @@ interface LogIconProps {
 
 // A simple component that's basically a styled icon button
 // TODO - change this to styled API maybe?
-const EditFieldIconButton = ({ children, clickHandler=null }: LogIconProps) => {
-  
+const EditFieldIconButton = ({
+  children,
+  clickHandler = null,
+}: LogIconProps) => {
   return (
-    <IconButton 
-      disableRipple sx={{ p: 0 }} 
-      onClick={(e) => {
+    <IconButton
+      disableRipple
+      sx={{ p: 0 }}
+      onClick={e => {
         if (clickHandler) {
           clickHandler(e);
         }
-      }} >
+      }}
+    >
       {children}
     </IconButton>
   );
 };
 
-
-const EditSongTagField = ({tagName, tagData, index, addFieldListItem, removeFieldListItem, editFieldListItem}: EditSongTagItemProp) => {
-  
-  const fieldChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+const EditSongTagField = ({
+  tagName,
+  tagData,
+  index,
+  addFieldListItem,
+  removeFieldListItem,
+  editFieldListItem,
+}: EditSongTagItemProp) => {
+  const fieldChangeHandler: React.ChangeEventHandler<HTMLInputElement> = e => {
     editFieldListItem(tagName, index, e.target.value);
-  }
+  };
 
-  const addItemHandler: React.MouseEventHandler = (e) => {
+  const addItemHandler: React.MouseEventHandler = e => {
     addFieldListItem(tagName, index);
-  }
+  };
 
-  const removeItemHandler: React.MouseEventHandler = (e) => {
+  const removeItemHandler: React.MouseEventHandler = e => {
     removeFieldListItem(tagName, index);
-  }
-  
+  };
+
   return (
-    <Stack direction="row" spacing={1} width={"100%"} >
+    <Stack direction="row" spacing={1} width={"100%"}>
       <TextField
         onChange={fieldChangeHandler}
         name={tagName}
         value={tagData[index]}
         multiline
         minRows={1}
-        sx={{ py: 1, }}
+        sx={{ py: 1 }}
         variant="filled"
         InputProps={{
           disableUnderline: true,
-          sx: { borderRadius: "4px", py: 1, px: 2, fontSize: "12px", },
+          sx: { borderRadius: "4px", py: 1, px: 2, fontSize: "12px" },
         }}
       />
       <EditFieldIconButton clickHandler={addItemHandler}>
-        <AddCircleOutlineIcon sx={{fontSize:"12px"}}/>
+        <AddCircleOutlineIcon sx={{ fontSize: "12px" }} />
       </EditFieldIconButton>
       <EditFieldIconButton clickHandler={removeItemHandler}>
-        <DeleteIcon sx={{fontSize:"12px"}}/>
+        <DeleteIcon sx={{ fontSize: "12px" }} />
       </EditFieldIconButton>
     </Stack>
-  )
-}
+  );
+};
 
-
-const EditSongTag = ({tagName, tagData, removeFieldListItem, addFieldListItem, editFieldListItem}: EditSongTagProp) => {
+const EditSongTag = ({
+  tagName,
+  tagData,
+  removeFieldListItem,
+  addFieldListItem,
+  editFieldListItem,
+}: EditSongTagProp) => {
   return (
     <Box width={"100%"}>
-      <Typography variant="h2" >
-        {songFieldToDisplay(tagName)}
-      </Typography>
-      <List
-        dense={true}
-      >
-        {tagData && tagData.map((element, i) => {
-          // TODO figure out key prop for this
-          return (
-            <EditSongTagField tagName={tagName} tagData={tagData} index={i}
-              removeFieldListItem={removeFieldListItem} 
-              addFieldListItem={addFieldListItem} 
-              editFieldListItem={editFieldListItem}
-            />
-          );
-        })}
+      <Typography variant="h2">{songFieldToDisplay(tagName)}</Typography>
+      <List dense={true}>
+        {tagData &&
+          tagData.map((element, i) => {
+            // TODO figure out key prop for this
+            return (
+              <EditSongTagField
+                tagName={tagName}
+                tagData={tagData}
+                index={i}
+                removeFieldListItem={removeFieldListItem}
+                addFieldListItem={addFieldListItem}
+                editFieldListItem={editFieldListItem}
+              />
+            );
+          })}
       </List>
     </Box>
   );
-}
-
+};
 
 // The Song info - top left of page
-const SongInfo = ({ song, isEditMode, removeFieldListItem, addFieldListItem, editFieldListItem }: SongInfoProps) => {
+const SongInfo = ({
+  song,
+  isEditMode,
+  removeFieldListItem,
+  addFieldListItem,
+  editFieldListItem,
+}: SongInfoProps) => {
   console.log(`Rendering SongInfo in Edit Mode ${isEditMode}`);
   const tagInfoRow1: (keyof Song)[] = [
     "sheet",
@@ -252,53 +251,61 @@ const SongInfo = ({ song, isEditMode, removeFieldListItem, addFieldListItem, edi
     "key",
     "time_sig",
     "tempo",
-    "date_added"
+    "date_added",
   ];
 
   // For now, this is temporary until these fields are actually implemented
   const tagInfoRow2 = {
     "Reference (Youtube Link)": "Coming Soon...",
     "Chimes Recording": "Coming Soon...",
-    "Available": "IMPLEMENT THIS LOGIC",
-    "Notes": ""
-  }
+    Available: "IMPLEMENT THIS LOGIC",
+    Notes: "",
+  };
 
   return (
-    <Box sx={{width:"65%"}}> 
+    <Box sx={{ width: "65%" }}>
       {/*** Row 1 of Items *********/}
-      <Stack direction="row" 
-        spacing={2} 
-        sx={{width:"100%", justifyContent:'space-between'}} 
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ width: "100%", justifyContent: "space-between" }}
       >
         {tagInfoRow1.map((key, i) => {
           return (
             // Don't make Date Added editable
-            (key === "date_added") ? <SingleSongTag key={i} tagName={key} tagData={song[key]} />
-              :
-              // Other than Date Added - Choose between edit or display components
-              (isEditMode) ?
-                <EditSongTag key={i} tagName={key} tagData={song[key as ListTags]} 
-                  removeFieldListItem={removeFieldListItem} addFieldListItem={addFieldListItem} editFieldListItem={editFieldListItem}
-                /> 
-                : 
-                <ListSongTag key={i} tagName={key} tagData={song[key as ListTags]} />
+            key === "date_added" ? (
+              <SingleSongTag key={i} tagName={key} tagData={song[key]} />
+            ) : // Other than Date Added - Choose between edit or display components
+            isEditMode ? (
+              <EditSongTag
+                key={i}
+                tagName={key}
+                tagData={song[key as ListTags]}
+                removeFieldListItem={removeFieldListItem}
+                addFieldListItem={addFieldListItem}
+                editFieldListItem={editFieldListItem}
+              />
+            ) : (
+              <ListSongTag
+                key={i}
+                tagName={key}
+                tagData={song[key as ListTags]}
+              />
+            )
           );
         })}
       </Stack>
       {/*** Spacer *******************/}
-      <Box sx={{height:"32px", width:"100%"}} />
+      <Box sx={{ height: "32px", width: "100%" }} />
       {/*** Row 2 of Items ***********/}
-      <Stack direction="row" 
-        sx={{justifyContent:'space-between'}} 
-      >
+      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
         {Object.entries(tagInfoRow2).map(([key, value], i) => {
           return <SingleSongTag key={i} tagName={key} tagData={value} />;
         })}
-      </Stack>   
+      </Stack>
     </Box>
   );
 };
-
 
 const DayRange = () => {
   const firstDay = dayjs("2006-01-01");
@@ -320,7 +327,6 @@ const DayRange = () => {
     </LocalizationProvider>
   );
 };
-
 
 // Song stats and plays per CM
 const Statistics = ({ stats, playsPerCM }: songStatsProp) => {
@@ -364,7 +370,6 @@ const Statistics = ({ stats, playsPerCM }: songStatsProp) => {
   );
 };
 
-
 // History of dates played and which CMs
 const History = ({ history }: historyProp) => {
   return (
@@ -397,7 +402,6 @@ const History = ({ history }: historyProp) => {
   );
 };
 
-
 // The box to the right that contains Stats and History
 const PlayStats = ({ stats, playsPerCM, history }: PlayStatsProp) => {
   return (
@@ -411,7 +415,6 @@ const PlayStats = ({ stats, playsPerCM, history }: PlayStatsProp) => {
   );
 };
 
-
 // The Main Song Page component
 const SongPage = () => {
   const { id } = useParams(); // Get ID of song from URL
@@ -423,27 +426,26 @@ const SongPage = () => {
   const [songForm, setSongForm] = useState<Song>(new Song());
 
   const { song, stats, playsPerCM, history } = data;
-  
 
   /*** Form Modification Handlers ********************************************/
-  const editSongForm = (formField:string, value:string[]) => {
+  const editSongForm = (formField: string, value: string[]) => {
     console.log(`Set song form - ${formField} - ${value}`);
     setSongForm({
       ...songForm,
-      [formField]: value
-    })
-  }
+      [formField]: value,
+    });
+  };
 
-  const addFieldListItem = (name:ListTags, index:number) => {
+  const addFieldListItem = (name: ListTags, index: number) => {
     // Go here when you press the plus icon
     // Doing it this way because splice edits in-place and returns deleted items
     const listField: string[] = songForm[name];
     listField.splice(index + 1, 0, "");
     editSongForm(name, listField);
-  }
-  
-  const removeFieldListItem = (name:ListTags, index:number) => {
-    console.log(`Remove Field List Item - ${name} - ${index}`)
+  };
+
+  const removeFieldListItem = (name: ListTags, index: number) => {
+    console.log(`Remove Field List Item - ${name} - ${index}`);
     // Doing it this way because splice edits in-place and returns deleted items
     const listField: string[] = songForm[name];
     if (songForm[name].length > 1) {
@@ -451,28 +453,28 @@ const SongPage = () => {
     }
     // Change the state
     editSongForm(name, listField);
-  }
+  };
 
-  const editFieldListItem = (name:ListTags, index:number, value:string) => {
-    console.log(`Edit Field List Item - ${name} - ${index}`)
+  const editFieldListItem = (name: ListTags, index: number, value: string) => {
+    console.log(`Edit Field List Item - ${name} - ${index}`);
     const listField: string[] = songForm[name];
     listField[index] = value;
     // Change the state
     editSongForm(name, listField);
-  }
+  };
 
   /*** Button Click Handlers ********************************************/
   const cancelEditMode: React.MouseEventHandler = () => {
     setSongForm(JSON.parse(JSON.stringify(song)));
     setEditMode(false);
-  }
+  };
 
   const submitHandler = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Submit Form");
     setSongForm(JSON.parse(JSON.stringify(song)));
     setEditMode(false);
-  }
+  };
 
   /*** useEffect Function ********************************************/
   useEffect(() => {
@@ -480,7 +482,7 @@ const SongPage = () => {
     fetch(`/song/${id}`)
       .then(res => res.json())
       .then(dataIn => {
-        setData(dataIn); 
+        setData(dataIn);
         setSongForm(JSON.parse(JSON.stringify(dataIn.song))); // Needs a "Deep Copy"
       })
       .then(() => setReady(true)); // set this at end so it doesn't try to render prematurely
@@ -489,31 +491,27 @@ const SongPage = () => {
   /*** Component Returned ********************************************/
   if (ready) {
     return (
-      <Box 
-        sx={{mx:6, my:3}}
+      <Box
+        sx={{ mx: 6, my: 3 }}
         component={isEditMode ? "form" : "div"}
         onSubmit={submitHandler}
       >
         <SongTitle sheet={song.sheet[0]} title={song.title} />
-        <Box sx={{width:"100%", height:"32px"}}/>
-        <Stack 
-          direction="row" 
-          display="flex"
-          spacing={16}
-        >
-          <SongInfo 
-            song={isEditMode ? songForm : song} 
+        <Box sx={{ width: "100%", height: "32px" }} />
+        <Stack direction="row" display="flex" spacing={16}>
+          <SongInfo
+            song={isEditMode ? songForm : song}
             isEditMode={isEditMode}
             removeFieldListItem={removeFieldListItem}
-            addFieldListItem={addFieldListItem} 
+            addFieldListItem={addFieldListItem}
             editFieldListItem={editFieldListItem}
           />
-          <Box sx={{flexGrow:1}} />
+          <Box sx={{ flexGrow: 1 }} />
           <PlayStats stats={stats} playsPerCM={playsPerCM} history={history} />
         </Stack>
-        <Box sx={{width:"100%", height:"32px"}}/>
+        <Box sx={{ width: "100%", height: "32px" }} />
         <Box>
-          {isEditMode ?
+          {isEditMode ? (
             <Stack spacing={4} direction="row">
               <Button
                 variant="contained"
@@ -533,9 +531,9 @@ const SongPage = () => {
               >
                 {"Submit Edit"}
               </Button>
-              <Box sx={{flexGrow:1}}/>
+              <Box sx={{ flexGrow: 1 }} />
             </Stack>
-            :
+          ) : (
             <Button
               variant="contained"
               onClick={() => setEditMode(true)}
@@ -545,7 +543,7 @@ const SongPage = () => {
             >
               {"Edit Song"}
             </Button>
-          }
+          )}
         </Box>
       </Box>
     );
