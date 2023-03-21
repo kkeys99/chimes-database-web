@@ -12,10 +12,10 @@ class Song {
     arranger,
     genre,
     requests,
-    keysig,
-    timesig,
+    key,
+    time_sig,
     tempo,
-    added,
+    date_added,
     available,
     played
   ) {
@@ -26,11 +26,11 @@ class Song {
     this.arranger = arranger;
     this.genre = [...genre];
     this.requests = requests;
-    this.keysig = [...keysig];
-    this.timesig = [...timesig];
+    this.key = [...key];
+    this.time_sig = [...time_sig];
     this.tempo = [...tempo];
-    this.added = [...added];
-    this.available = [...available];
+    this.date_added = date_added;
+    this.available = available; // Temp
     this.played = played;
   }
 }
@@ -70,8 +70,8 @@ const myGirl = new Song(
   ["Key"],
   ["Time"],
   ["Tempo"],
-  ["Date Added"],
-  ["1/1/2001"],
+  "Date Added",
+  "1/1/2001",
   0
 );
 all_songs.push(myGirl);
@@ -87,8 +87,8 @@ const cantTake = new Song(
   ["Key"],
   ["Time"],
   ["Tempo"],
-  ["Date Added"],
-  ["1/1/2001"],
+  "Date Added",
+  "1/1/2001",
   0
 );
 all_songs.push(cantTake);
@@ -104,8 +104,8 @@ const cheapThrills = new Song(
   ["Key"],
   ["Time"],
   ["Tempo"],
-  ["Date Added"],
-  ["1/1/2001"],
+  "Date Added",
+  "1/1/2001",
   0
 );
 all_songs.push(cheapThrills);
@@ -121,8 +121,8 @@ const inTheMood = new Song(
   ["Key"],
   ["Time"],
   ["Tempo"],
-  ["Date Added"],
-  ["1/1/2001"],
+  "Date Added",
+  "1/1/2001",
   0
 );
 all_songs.push(inTheMood);
@@ -138,8 +138,8 @@ const whenYouWish = new Song(
   ["Key"],
   ["Time"],
   ["Tempo"],
-  ["Date Added"],
-  ["1/1/2001"],
+  "Date Added",
+  "1/1/2001",
   0
 );
 all_songs.push(whenYouWish);
@@ -155,8 +155,8 @@ const moonlight = new Song(
   ["Key"],
   ["Time"],
   ["Tempo"],
-  ["Date Added"],
-  ["1/1/2001"],
+  "Date Added",
+  "1/1/2001",
   0
 );
 all_songs.push(moonlight);
@@ -172,8 +172,8 @@ const sentimental = new Song(
   ["Key"],
   ["Time"],
   ["Tempo"],
-  ["Date Added"],
-  ["1/1/2001"],
+  "Date Added",
+  "1/1/2001",
   0
 );
 all_songs.push(sentimental);
@@ -189,8 +189,8 @@ const cityOfStars = new Song(
   ["Key"],
   ["Time"],
   ["Tempo"],
-  ["Date Added"],
-  ["1/1/2001"],
+  "Date Added",
+  "1/1/2001",
   0
 );
 all_songs.push(cityOfStars);
@@ -206,8 +206,8 @@ const misty = new Song(
   ["Key"],
   ["Time"],
   ["Tempo"],
-  ["Date Added"],
-  ["1/1/2001"],
+  "Date Added",
+  "1/1/2001",
   0
 );
 all_songs.push(misty);
@@ -223,8 +223,8 @@ const btmv = new Song(
   ["Key"],
   ["Time"],
   ["Tempo"],
-  ["Date Added"],
-  ["1/1/2001"],
+  "Date Added",
+  "1/1/2001",
   0
 );
 all_songs.push(btmv);
@@ -240,8 +240,8 @@ const testdrive = new Song(
   ["Key"],
   ["Time"],
   ["Tempo"],
-  ["Date Added"],
-  ["1/1/2001"],
+  "Date Added",
+  "1/1/2001",
   0
 );
 all_songs.push(testdrive);
@@ -257,8 +257,8 @@ const rach = new Song(
   ["Key"],
   ["Time"],
   ["Tempo"],
-  ["Date Added"],
-  ["1/1/2001"],
+  "Date Added",
+  "1/1/2001",
   0
 );
 all_songs.push(rach);
