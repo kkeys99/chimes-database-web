@@ -14,19 +14,57 @@ export class Note {
 }
 
 export class Song {
+  id: number;
+  location: string = "";
+  title: string = "";
+  composer: string = "";
+  arranger: string = "";
+  genre: string = "";
+  requests: number = 0;
+  keySignature: string = "";
+  timeSignature: string = "";
+  tempo: string = "";
+  dateAdded: string = "";
+  constructor(
+    id: number = 0,
+    sheet: string = "",
+    title: string = "",
+    composer: string = "",
+    arranger: string = "",
+    genre: string = "",
+    requests: number = 0,
+    keySignature: string = "",
+    timeSignature: string = "",
+    tempo: string = "",
+    dateAdded: string = "",
+  ) {
+    this.id = id;
+    this.location = sheet;
+    this.title = title;
+    this.composer = composer;
+    this.arranger = arranger;
+    this.genre = genre;
+    this.requests = requests;
+    this.keySignature = keySignature;
+    this.timeSignature = timeSignature;
+    this.tempo = tempo;
+    this.dateAdded = dateAdded;
+  }
+}
+
+
+// Non backend
+export class SongDisplay {
   _id: number;
   sheet: string[] = [""];
   title: string = "";
   composer: string[] = [""];
   arranger: string[] = [""];
   genre: string[] = [""];
-  requests: number = 0;
   key: string[] = [""];
   time_sig: string[] = [""];
   tempo: string[] = [""];
   date_added: string = "";
-  available: string = "";
-  played: number = 0;
   constructor(
     id: number = 0,
     sheet: string[] = [""],
@@ -34,13 +72,10 @@ export class Song {
     composer: string[] = [""],
     arranger: string[] = [""],
     genre: string[] = [""],
-    requests: number = 0,
     key: string[] = [""],
     time_sig: string[] = [""],
     tempo: string[] = [""],
     date_added: string = "",
-    available: string = "",
-    played: number = 0
   ) {
     this._id = id;
     this.sheet = sheet;
@@ -48,13 +83,10 @@ export class Song {
     this.composer = composer;
     this.arranger = arranger;
     this.genre = genre;
-    this.requests = requests;
     this.key = key;
     this.time_sig = time_sig;
     this.tempo = tempo;
     this.date_added = date_added;
-    this.available = available;
-    this.played = played;
   }
 }
 
@@ -77,7 +109,7 @@ export class Concert {
 //----------------------------------------
 // CM Page
 //----------------------------------------
-export interface resultTableRowData extends Song {
+export interface resultTableRowData extends SongDisplay {
   you: number;
 }
 

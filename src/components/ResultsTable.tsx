@@ -199,15 +199,17 @@ const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
                     border: "hidden",
                   }}
                 >
+                  {/* TODO ADD THESE BACK
                   <FormattedCell text={rowData.available} />
                   {!props.lite && <FormattedCell text={rowData.played} />}
                   <FormattedCell text={rowData.you} />
                   <FormattedCell text={rowData.sheet} />
+                  */}
                   <FormattedCell text={rowData.title} />
                   {!props.lite && <FormattedCell text={rowData.composer} />}
                   {!props.lite && <FormattedCell text={rowData.arranger} />}
                   {!props.lite && <FormattedCell text={rowData.genre} />}
-                  {!props.lite && <FormattedCell text={rowData.requests} />}
+                  {/*!props.lite && <FormattedCell text={rowData.requests} />*/}
                   {!props.lite && <FormattedCell text={rowData.key} />}
                   {!props.lite && <FormattedCell text={rowData.time_sig} />}
                   {!props.lite && <FormattedCell text={rowData.tempo} />}

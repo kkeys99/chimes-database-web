@@ -24,11 +24,12 @@ import { makeStyles } from "@material-ui/styles";
 import { IconButton } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { songFieldToDisplay } from "../shared/utils";
+import { songFieldToDisplay, songToDisplayObj } from "../shared/utils";
 import CustomDatePicker from "../components/CustomDatePicker";
 
 import {
   Song,
+  SongDisplay,
   songStats,
   songPageData,
   songHistory,
@@ -39,7 +40,7 @@ import { Dayjs } from "dayjs";
 //https://stackoverflow.com/questions/51419176/how-to-get-a-subset-of-keyof-t-whose-value-tk-are-callable-functions-in-typ
 // Making a type of list fields so checking for length doesn't error out when you remove items
 type KeyOfType<T, U> = { [P in keyof T]: T[P] extends U ? P : never }[keyof T];
-type ListTags = KeyOfType<Song, string[]>;
+type ListTags = KeyOfType<SongDisplay, string[]>;
 
 interface SongTitleProps {
   sheet: string;
@@ -47,7 +48,7 @@ interface SongTitleProps {
 }
 
 interface SongInfoProps {
-  song: Song;
+  song: SongDisplay;
   isEditMode: boolean;
   removeFieldListItem: Function;
   addFieldListItem: Function;
@@ -55,12 +56,12 @@ interface SongInfoProps {
 }
 
 interface SingleSongTagProp {
-  tagName: keyof Song | string; // temp hack for now
+  tagName: keyof SongDisplay | string; // temp hack for now
   tagData: string;
 }
 
 interface SongTagProp {
-  tagName: keyof Song;
+  tagName: keyof SongDisplay;
   tagData: string[];
 }
 
@@ -104,7 +105,9 @@ const SongTitle = ({ sheet, title }: SongTitleProps) => {
 const ListSongTag = ({ tagName, tagData }: SongTagProp) => {
   return (
     <Box flexShrink={0}>
-      <Typography variant="h2">{songFieldToDisplay(tagName)}</Typography>
+      <Typography variant="h2">
+        {songFieldToDisplay(tagName)}
+      </Typography>
       <List dense={true}>
         {tagData &&
           tagData.map(element => {
@@ -122,7 +125,9 @@ const ListSongTag = ({ tagName, tagData }: SongTagProp) => {
 const SingleSongTag = ({ tagName, tagData }: SingleSongTagProp) => {
   return (
     <Box flexShrink={0}>
-      <Typography variant="h2">{songFieldToDisplay(tagName)}</Typography>
+      <Typography variant="h2">
+        {songFieldToDisplay(tagName)}
+      </Typography>
       {/* Hacks! This is a list of one item just so the spacing can be the same as list fields */}
       <List dense={true}>
         <ListItem dense disableGutters>
@@ -243,7 +248,7 @@ const SongInfo = ({
   editFieldListItem,
 }: SongInfoProps) => {
   console.log(`Rendering SongInfo in Edit Mode ${isEditMode}`);
-  const tagInfoRow1: (keyof Song)[] = [
+  const tagInfoRow1: (keyof SongDisplay)[] = [
     "sheet",
     "composer",
     "arranger",
@@ -420,15 +425,17 @@ const SongPage = () => {
   const { id } = useParams(); // Get ID of song from URL
 
   /*** State Variables ********************************************/
-  const [data, setData] = useState<songPageData>({} as songPageData);
+  const [data, setData] = useState<SongDisplay>({} as SongDisplay); //<songPageData>({} as songPageData);
   const [isEditMode, setEditMode] = useState(false);
   const [ready, setReady] = useState(false); // This prevents trying to access empty data before fetching is done.
-  const [songForm, setSongForm] = useState<Song>(new Song());
+  const [songForm, setSongForm] = useState<SongDisplay>(new SongDisplay());
 
-  const { song, stats, playsPerCM, history } = data;
+  //const { song, stats, playsPerCM, history } = data;
+  const song = data;
 
   /*** Form Modification Handlers ********************************************/
   const editSongForm = (formField: string, value: string[]) => {
+    // Changes the state variable. Below functions call this.
     console.log(`Set song form - ${formField} - ${value}`);
     setSongForm({
       ...songForm,
@@ -437,10 +444,10 @@ const SongPage = () => {
   };
 
   const addFieldListItem = (name: ListTags, index: number) => {
-    // Go here when you press the plus icon
     // Doing it this way because splice edits in-place and returns deleted items
     const listField: string[] = songForm[name];
     listField.splice(index + 1, 0, "");
+    // Change the state
     editSongForm(name, listField);
   };
 
@@ -476,14 +483,15 @@ const SongPage = () => {
     setEditMode(false);
   };
 
-  /*** useEffect Function ********************************************/
+  /*** useEffect to fetch Song *****************************************/
   useEffect(() => {
     console.log("Fetching Song");
     fetch(`/song/${id}`)
       .then(res => res.json())
       .then(dataIn => {
-        setData(dataIn);
-        setSongForm(JSON.parse(JSON.stringify(dataIn.song))); // Needs a "Deep Copy"
+        const temp = songToDisplayObj(dataIn); 
+        setData( temp );
+        setSongForm(JSON.parse(JSON.stringify(temp))); // Needs a "Deep Copy"
       })
       .then(() => setReady(true)); // set this at end so it doesn't try to render prematurely
   }, []);
@@ -494,7 +502,7 @@ const SongPage = () => {
       <Box
         sx={{ mx: 6, my: 3 }}
         component={isEditMode ? "form" : "div"}
-        onSubmit={submitHandler}
+        onSubmit={submitHandler} // Not sure if this is the best way but div shouldn't have a way to submit
       >
         <SongTitle sheet={song.sheet[0]} title={song.title} />
         <Box sx={{ width: "100%", height: "32px" }} />
@@ -507,7 +515,7 @@ const SongPage = () => {
             editFieldListItem={editFieldListItem}
           />
           <Box sx={{ flexGrow: 1 }} />
-          <PlayStats stats={stats} playsPerCM={playsPerCM} history={history} />
+          {/*<PlayStats stats={stats} playsPerCM={playsPerCM} history={history} />*/}
         </Stack>
         <Box sx={{ width: "100%", height: "32px" }} />
         <Box>
@@ -533,7 +541,9 @@ const SongPage = () => {
               </Button>
               <Box sx={{ flexGrow: 1 }} />
             </Stack>
-          ) : (
+          ) // if isEditMode 
+          :
+          (
             <Button
               variant="contained"
               onClick={() => setEditMode(true)}
@@ -544,8 +554,8 @@ const SongPage = () => {
               {"Edit Song"}
             </Button>
           )}
-        </Box>
-      </Box>
+        </Box> {/*  Buttons */}
+      </Box> // Container
     );
   } else {
     return (

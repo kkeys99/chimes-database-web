@@ -19,6 +19,8 @@ interface HomePageProps {
 function Home({ logEdit }: HomePageProps) {
   const [data, setData] = useState({ concerts: [] });
 
+  console.log(data);
+
   useEffect(() => {
     fetch("/home")
       .then(res => res.json())

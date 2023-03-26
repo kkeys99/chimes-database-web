@@ -330,7 +330,6 @@ const ConcertLogger = ({
       // if so, include that logic here.
       return;
     }
-
     // Doing it this way because splice edits in-place and returns deleted items
     const songList: songEntry[] = logForm.songs;
     songList.splice(index, 1);

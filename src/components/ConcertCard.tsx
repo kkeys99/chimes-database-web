@@ -81,10 +81,10 @@ const ConcertCard = ({ concert, logEdit }: Props) => {
                     display="inline"
                     variant="body2"
                     color="secondary.main"
-                    href={`/song/${performance.song._id}`}
+                    href={`/song/${performance.song.id}`}
                     underline="hover"
                   >
-                    {`${performance.song.sheet[0]} - ${performance.song.title}`}
+                    {/*`${performance.song.sheet[0]} - ${performance.song.title}`*/}
                   </MuiLink>
                   <Typography display="inline" variant="body2">
                     {` (${performance.performers.join(", ")})`}

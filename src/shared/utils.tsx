@@ -2,6 +2,8 @@
 Some utility functions that can be reused
 */
 
+import { Song, SongDisplay } from "../typing/types";
+
 export function date2string(date: string) {
   const monthDict: any = {
     "1": "January",
@@ -47,4 +49,26 @@ export function songFieldToDisplay(field: string) {
     }
   }
   return result_str;
+}
+
+// Function that separates delimited tags and returns them in a list
+export function splitDelimitedTag(data: string) {
+  return data.split("|");
+}
+
+// Filter out the unneeded fields in DB entity and convert delimited fields to list
+export function songToDisplayObj(song: Song) {
+  const displaySong: SongDisplay = {
+    _id: song.id,
+    sheet: splitDelimitedTag(song.location),
+    title: song.title,
+    composer: splitDelimitedTag(song.composer),
+    arranger: splitDelimitedTag(song.arranger),
+    genre: splitDelimitedTag(song.genre),
+    key: splitDelimitedTag(song.keySignature),
+    time_sig: splitDelimitedTag(song.timeSignature),
+    tempo: splitDelimitedTag(song.tempo),
+    date_added: song.dateAdded,
+  }
+  return displaySong;
 }
