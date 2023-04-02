@@ -6,9 +6,6 @@ import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { Dayjs } from "dayjs";
 
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
 import ConcertGrid from "../components/ConcertGrid";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -42,30 +39,28 @@ function Home({ logEdit }: HomePageProps) {
 
   useEffect(() => {
     console.log("Fetching concert:")
-    console.log(`/concert/year/${toYear}/month/${toMonth}/day/${toDay}?previous=month`)
-    fetch(`/concert/year/${toYear}/month/${toMonth}/day/${toDay}?previous=month`)
+    console.log(`/concert/year/${toYear}/month/${toMonth+1}/day/${toDay}?previous=month`)
+    fetch(`/concert/year/${toYear}/month/${toMonth+1}/day/${toDay}?previous=month`)
+      // month+1 because dayjs indexes months from 0
       .then(res => res.json())
       .then(data => setData(data));
-  }, []);
+  }, [dateTo, dateFrom]);
 
   console.log(data);
+  console.log(dateTo);
+  console.log(concertsByDate);
 
   return (
     <Box sx={{ ml: "280px", mr: "24px", pl: "24px", pt: "12px", pb: "12px" }}>
       {/* Date Range pushed out to the right */}
       <Stack direction="row" sx={{pb:3}}>
         <Box flexGrow={1} />
-        <LocalizationProvider
-          dateAdapter={AdapterDayjs}
-          localeText={{ start: "", end: "" }}
-        >
           <Stack direction="row" sx={{ display: "flex", height: "28px" }}>
             <Box sx={{ mx: 4 }}> from </Box>
             <CustomDatePicker light={false} date={dateFrom} setDate={setFrom} />
             <Box sx={{ mx: 4 }}> to </Box>
             <CustomDatePicker light={false} date={dateTo} setDate={setTo} />
           </Stack>
-        </LocalizationProvider>
       </Stack>
       <Stack direction="row">
         <Box flexGrow={1} />

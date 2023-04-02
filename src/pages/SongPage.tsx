@@ -15,9 +15,6 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import CircleIcon from "@mui/icons-material/Circle";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import Bookmark from "../assets/bookmark.svg";
 import { makeStyles } from "@material-ui/styles";
@@ -319,17 +316,12 @@ const DayRange = () => {
   const [dateTo, setTo] = useState<Dayjs>(dayjs());
 
   return (
-    <LocalizationProvider
-      dateAdapter={AdapterDayjs}
-      localeText={{ start: "", end: "" }}
-    >
       <Stack direction="row" sx={{ display: "flex", height: "28px" }}>
         <Box sx={{ mx: 4 }}> from </Box>
         <CustomDatePicker light={false} date={dateFrom} setDate={setFrom} />
         <Box sx={{ mx: 4 }}> to </Box>
         <CustomDatePicker light={false} date={dateTo} setDate={setTo} />
       </Stack>
-    </LocalizationProvider>
   );
 };
 

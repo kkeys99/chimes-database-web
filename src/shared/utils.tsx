@@ -1,32 +1,9 @@
 /*
 Some utility functions that can be reused
 */
-
+import dayjs from "dayjs";
+import { Dayjs } from "dayjs";
 import { Song, SongDisplay, Concert } from "../typing/types";
-
-export function date2string(date: string) {
-  const monthDict: any = {
-    "1": "January",
-    "2": "February",
-    "3": "March",
-    "4": "April",
-    "5": "May",
-    "6": "June",
-    "7": "July",
-    "8": "August",
-    "9": "September",
-    "10": "October",
-    "11": "November",
-    "12": "December",
-  };
-
-  const mdy_split = date.split("/");
-  const month = mdy_split[0];
-  const day = mdy_split[1];
-  const year = mdy_split[2];
-
-  return monthDict[month].concat(" ", day, ", ", year);
-}
 
 // Convert song tag attribute name to what is shown on screen
 export function songFieldToDisplay(field: string) {
@@ -57,6 +34,7 @@ export function splitDelimitedTag(data: string) {
 }
 
 // Filter out the unneeded fields in DB entity and convert delimited fields to list
+// Changing attribute names so they can work in songFieldToDisplay
 export function songToDisplayObj(song: Song) {
   const displaySong: SongDisplay = {
     _id: song.id,
@@ -75,19 +53,19 @@ export function songToDisplayObj(song: Song) {
 
 // Use this to convert hash key to date display - SUPER JANKY MAKE IT BETTER
 export function dateHashToDisplayStr(dateHash: number): string {
-  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   const dateStr = dateHash.toString();
   const year = dateStr.substring(0, 4);
-  const month = dateStr.substring(4, 6);
+  const month = dateStr.substring(4, 6); // month is already adjusted to 1-indexed value
   const day = dateStr.substring(6);
-  return `${monthNames[parseInt(month)]} ${day}, ${year}`
+  const dateObj = dayjs(`${year}-${month}-${day}`, "YYYY-MM-DD", true);
+  return dateObj.format("MMMM D, YYYY");
 }
 
-// Use this for sorting dates
+// Use this for sorting/indexing concert data by dates
 export function dateToHash(date: Date): number {
   return (
     date.getFullYear() * 10000 +
-    (date.getMonth()+1) * 100 +
+    (date.getMonth()+1) * 100 + // plus 1 because months index from 0
     date.getDate()
   );
 }

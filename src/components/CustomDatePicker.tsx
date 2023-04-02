@@ -60,14 +60,17 @@ const CustomDatePicker = ({
   };
 
   return (
+    <LocalizationProvider
+      dateAdapter={AdapterDayjs}
+      localeText={{ start: "", end: "" }}
+    >
     <DatePicker
       disableFuture
       disabled={disabled}
       open={open} // TODO - enable calendar popup. This seems difficult for now.
       onClose={() => {
-        console.log("onClose");
         setOpen(false);
-        setAnchorEl(null);
+        //setAnchorEl(null);
         setClosing(true);
       }}
       value={date}
@@ -109,6 +112,7 @@ const CustomDatePicker = ({
         },
       }} // slotProps
     />
+    </LocalizationProvider>
   );
 };
 
