@@ -98,12 +98,12 @@ export class Performance {
 }
 
 export class Concert {
-  _id: number = 0;
+  id: number = 0;
   type: string = "";
   date: Date = new Date();
   bellsAdjusted: boolean = false;
-  notes: Note[] = [new Note()];
-  performances: Performance[] = [new Performance()];
+  notes: string = "";
+  performances: Performance[] = [];
 }
 
 //----------------------------------------

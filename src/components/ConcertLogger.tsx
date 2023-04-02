@@ -229,7 +229,7 @@ const ConcertLogger = ({
   useEffect(() => {
     // Referenced this because I don't really know what I'm doing here lol
     //https://stackoverflow.com/questions/49725012/handling-response-status-using-fetch-in-react-js
-    if (isEditMode && (!concertFetched || editID != editedConcert?._id)) {
+    if (isEditMode && (!concertFetched || editID != editedConcert?.id)) {
       console.log("Fetching concert");
       fetch(`/concert/${editID}`)
         .then(res => {

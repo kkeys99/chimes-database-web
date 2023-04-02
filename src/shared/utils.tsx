@@ -2,7 +2,7 @@
 Some utility functions that can be reused
 */
 
-import { Song, SongDisplay } from "../typing/types";
+import { Song, SongDisplay, Concert } from "../typing/types";
 
 export function date2string(date: string) {
   const monthDict: any = {
@@ -71,4 +71,37 @@ export function songToDisplayObj(song: Song) {
     date_added: song.dateAdded,
   }
   return displaySong;
+}
+
+// Use this to convert hash key to date display - SUPER JANKY MAKE IT BETTER
+export function dateHashToDisplayStr(dateHash: number): string {
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+  const dateStr = dateHash.toString();
+  const year = dateStr.substring(0, 4);
+  const month = dateStr.substring(4, 6);
+  const day = dateStr.substring(6);
+  return `${monthNames[parseInt(month)]} ${day}, ${year}`
+}
+
+// Use this for sorting dates
+export function dateToHash(date: Date): number {
+  return (
+    date.getFullYear() * 10000 +
+    (date.getMonth()+1) * 100 +
+    date.getDate()
+  );
+}
+
+export function sortConcertsByDate(concerts: Concert[]) {
+  let concertsByDate: {[key: number]: Concert[]} = {};
+  concerts.map((concert) => {
+    const dateHash = dateToHash( new Date(concert.date) );
+    if (dateHash in concertsByDate) {
+      concertsByDate[dateHash].push(concert);
+    }
+    else {
+      concertsByDate[dateHash] = [concert];
+    }
+  })
+  return concertsByDate;
 }
