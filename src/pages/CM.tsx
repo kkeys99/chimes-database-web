@@ -10,7 +10,7 @@ import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import ButtonBase from "@mui/material/ButtonBase";
 // Custom Components
-import ResultsTable from "../components/ResultsTable";
+import { ResultsTable } from "../components/ResultsTable";
 import ConcertGrid from "../components/ConcertGrid";
 import { Song, resultTableRowData } from "../typing/types";
 import { sortConcertsByDate } from "../shared/utils";

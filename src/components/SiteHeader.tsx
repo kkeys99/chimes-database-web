@@ -11,9 +11,13 @@ import { ReactComponent as BellIcon } from "../assets/bell.svg";
 import CornellLogo from "../assets/cornell_logo.svg";
 
 import { Link as MuiLink } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
 
 const SiteHeader = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+
   return (
     <AppBar
       position="fixed"
@@ -24,6 +28,7 @@ const SiteHeader = () => {
       <Toolbar disableGutters variant="dense">
         <Box component="img" src={CornellLogo} sx={{ mr: 6 }} />
         <Typography
+          //onClick={() => navigate("/")}
           component={MuiLink}
           href="/"
           color="#ffffff"

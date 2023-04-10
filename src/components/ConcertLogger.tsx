@@ -308,7 +308,7 @@ const ConcertLogger = ({
       date: newValue, // Date picker will take care of dayjs
     });
   };
-  console.log(`Re-rendering Logger w date ${logForm.date}`);
+
   const cancelEditHandler: React.MouseEventHandler = () => {
     cancelEdit();
     setLog(defaultLog);

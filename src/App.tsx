@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import theme from "./theme";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,11 +10,11 @@ import SiteHeader from "./components/SiteHeader";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CM from "./pages/CM";
 import Home from "./pages/Home";
+import SearchResults from "./pages/SearchResults";
 import ConcertLogger from "./components/ConcertLogger";
 
 import { Button, Box, Typography } from "@mui/material";
 import SongPage from "./pages/SongPage";
-import { LegendToggleOutlined } from "@mui/icons-material";
 
 const App = () => {
   /*** Concert Logger ************************************/
@@ -24,7 +24,6 @@ const App = () => {
   const [logEditID, setLogEditID] = useState<number | null>(null);
 
   // Callback functions
-
   const logButtonClickHandler: React.MouseEventHandler = () => {
     // Toggle the open state
     logOpen ? setLogOpen(false) : setLogOpen(true);
@@ -52,27 +51,74 @@ const App = () => {
   const buttonOffsetY = "40px";
   const buttonOffsetX = "8px";
 
+  /*** Search *******************************************/
+  const [searchBy, setSearchBy] = useState("all");
+  const [searchData, setSearchData] = useState(""); // Controlled search bar input
+  const [newSearch, setNewSearch] = useState(false); // What to actually send to the backend
+  const [actualSearch, setActualSearch] = useState("");
+
+  const changeSearchInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setSearchData(e.target.value);
+  }
+
+  const makeNewSearch: React.MouseEventHandler = (e) => {
+    setNewSearch(true);
+    setActualSearch(searchData);
+  }
+
+  const searchDone = () => {
+    setNewSearch(false);
+  }
+
+  const navBarProps = {
+    searchBy: searchBy,
+    searchByChangeHandler: () => {return},
+    searchInput: searchData,
+    searchInputChangeHandler: changeSearchInput,
+    makeNewSearch: makeNewSearch,
+  }
+
+  // Memoize this so that searchResults doesn't re-render every time
+  // Since searchResults is a memoized component
+  const searchResultsProps = useMemo(() => (
+    {
+      searchBy: searchBy,
+      searchData: actualSearch,
+      newSearch: newSearch,
+      searchDone: searchDone,
+    }
+  ), [searchBy, actualSearch, newSearch]); //searchDone off sensitivity fixes things
+  
+  console.log(searchResultsProps);
+
   /*** Return Component***********************************/
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box minWidth={1200}> {/* A Containter box to make body scroll sideways */}
+      <Router >
         <SiteHeader />
-        <NavBar />
+        <NavBar {...navBarProps} />
 
         {/* Div to push everything else down because header is fixed positioning */}
         {/* There must be a way to make it cleaner but this hacky thing works for now */}
         <div style={{ height: 224, }} />
-        <Router >
-          <Routes>
-            <Route path="/" element={<Home logEdit={handleLogEdit} />} />
-            <Route
-              path="/CMs/:initials"
-              element={<CM logEdit={handleLogEdit} />}
-            />
-            <Route path="/song/:id" element={<SongPage />} />
-          </Routes>
-        </Router>
+        
+        <Routes>
+          <Route path="/" 
+            element={<Home logEdit={handleLogEdit} />} 
+          />
+          <Route path="/CMs/:initials"
+            element={<CM logEdit={handleLogEdit} />}
+          />
+          <Route path="/song/:id" 
+            element={<SongPage />} 
+          />
+          <Route path="/search" 
+            element={<SearchResults {...searchResultsProps} />}
+          />
+        </Routes>
+      </Router>
 
         {/* The Button to slide the Concert Log in and out*/}
         <Box

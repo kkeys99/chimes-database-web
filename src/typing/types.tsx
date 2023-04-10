@@ -107,10 +107,16 @@ export class Concert {
 }
 
 //----------------------------------------
-// CM Page
+// Results Table
 //----------------------------------------
 export interface resultTableRowData extends SongDisplay {
-  you: number;
+  available?: Dayjs; //  TODO MAKE THIS REQUIRED WHEN ITS ENABLED
+  you?: number;
+}
+
+export interface searchByFieldRowData {
+  tag: string;
+  count: number;
 }
 
 //---------------------------------------

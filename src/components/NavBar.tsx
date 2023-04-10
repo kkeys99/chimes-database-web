@@ -12,6 +12,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FilledInput from "@mui/material/FilledInput";
 import { cms } from "../constants";
 import { useTheme } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 import { Link as MuiLink } from "@mui/material";
 
@@ -41,18 +42,27 @@ const CMList = () => {
   );
 };
 
-const SearchInput = () => {
-  const theme = useTheme();
 
+
+const SearchInput = (props: SearchBarProps) => {
+  const theme = useTheme();
+  const navigate = useNavigate();
   return (
-    <FormControl variant="filled" size="small" sx={{ mr: 10 }}>
+    <FormControl 
+      variant="filled" size="small" sx={{ mr: 10 }} 
+    >
       <InputLabel style={{ color: theme.palette.success.dark }}>
         Search
       </InputLabel>
       <FilledInput
+        value={props.searchInput}
+        onChange={props.searchInputChangeHandler}
         endAdornment={
           <InputAdornment position="end">
-            <IconButton>
+            <IconButton onClick={() => {
+              props.makeNewSearch();
+              navigate('/search');
+            }} >
               <SearchIcon />
             </IconButton>
           </InputAdornment>
@@ -64,7 +74,9 @@ const SearchInput = () => {
   );
 };
 
-const SearchBar = () => {
+interface SearchBarProps extends NavBarProps {}; // Alias for better naming
+
+const SearchBar = (props: SearchBarProps) => {
   const tags = [
     "Sheet",
     "Composer",
@@ -77,7 +89,7 @@ const SearchBar = () => {
   ];
   return (
     <Toolbar disableGutters variant="dense" sx={{ justifyContent: "center" }}>
-      <SearchInput />
+      <SearchInput {...props}/>
       <Stack direction="row" spacing={6}>
         {tags.map(tag => {
           return (
@@ -91,7 +103,15 @@ const SearchBar = () => {
   );
 };
 
-const NavBar = () => {
+interface NavBarProps {
+  searchBy: string;
+  searchByChangeHandler: Function; // maybe get a better type for this
+  searchInput: string;
+  searchInputChangeHandler: React.ChangeEventHandler<HTMLInputElement>;
+  makeNewSearch: Function;
+}
+
+const NavBar = (props: NavBarProps) => {
   const theme = useTheme();
   return (
     <AppBar
@@ -106,7 +126,7 @@ const NavBar = () => {
     >
       <Stack spacing={2}>
         <CMList />
-        <SearchBar />
+        <SearchBar {...props} />
       </Stack>
     </AppBar>
   );

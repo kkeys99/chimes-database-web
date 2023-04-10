@@ -33,6 +33,11 @@ export function splitDelimitedTag(data: string) {
   return data.split("|");
 }
 
+function dateToDisplaySlash(date: string) {
+  const asDate = dayjs(date);
+  return asDate.format("M/D/YYYY");
+}
+
 // Filter out the unneeded fields in DB entity and convert delimited fields to list
 // Changing attribute names so they can work in songFieldToDisplay
 export function songToDisplayObj(song: Song) {
@@ -46,7 +51,7 @@ export function songToDisplayObj(song: Song) {
     key: splitDelimitedTag(song.keySignature),
     time_sig: splitDelimitedTag(song.timeSignature),
     tempo: splitDelimitedTag(song.tempo),
-    date_added: song.dateAdded,
+    date_added: dateToDisplaySlash(song.dateAdded),
   }
   return displaySong;
 }
