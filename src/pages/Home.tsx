@@ -2,7 +2,7 @@ import * as React from "react";
 import theme from "../theme";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import dayjs from "dayjs";
 import { Dayjs } from "dayjs";
 
@@ -20,7 +20,7 @@ interface HomePageProps {
   logEdit: Function;
 }
 
-function Home({ logEdit }: HomePageProps) {
+const Home = memo( function Home({ logEdit }: HomePageProps) {
   
   const tempSearchDate = "2013-05-05";
   
@@ -46,10 +46,6 @@ function Home({ logEdit }: HomePageProps) {
       .then(data => setData(data));
   }, [dateTo, dateFrom]);
 
-  console.log(data);
-  console.log(dateTo);
-  console.log(concertsByDate);
-
   return (
     <Box sx={{ ml: "280px", mr: "24px", pl: "24px", pt: "12px", pb: "12px" }}>
       {/* Date Range pushed out to the right */}
@@ -72,6 +68,6 @@ function Home({ logEdit }: HomePageProps) {
       <ConcertGrid concertsByDate={concertsByDate} logEdit={logEdit} />
     </Box>
   );
-}
+});
 
 export default Home;

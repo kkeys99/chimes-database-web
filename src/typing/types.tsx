@@ -106,6 +106,17 @@ export class Concert {
   performances: Performance[] = [];
 }
 
+export class Person {
+  id: number = 0;
+  initials: string = "";
+  fullName: string = "";
+  class: string ="";
+  type: string = "";
+  netid: string = "";
+  activeYears: string = "";
+  isCurrent: boolean = false;
+}
+
 //----------------------------------------
 // Results Table
 //----------------------------------------

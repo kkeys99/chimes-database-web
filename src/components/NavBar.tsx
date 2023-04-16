@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import FormControl from "@mui/material/FormControl";
 import Stack from "@mui/material/Stack";
@@ -16,21 +17,34 @@ import { useNavigate } from "react-router-dom";
 
 import { Link as MuiLink } from "@mui/material";
 
+import { Person } from "../typing/types";
+
 const CMList = () => {
+
+  const [currentCMs, setCurrentCMs] = useState<Person[]>([]);
+
+  useEffect((() => {
+    fetch(`/person/current`)
+      .then(res => res.json())
+      .then(data => setCurrentCMs(data));
+  }), []);
+
+  console.log(currentCMs);
+
   return (
     <Toolbar disableGutters variant="dense" sx={{ justifyContent: "center" }}>
       <Stack direction="row" spacing={6}>
-        {cms.map(initials => {
+        {currentCMs.map(cm => {
           return (
             //
             <MuiLink
-              href={`/CMs/${initials}`}
+              href={`/CMs/${cm.initials}`}
               color="primary.dark"
               variant="h2"
               fontWeight="bold"
               underline="hover"
             >
-              {initials}
+              {cm.initials}
             </MuiLink>
           );
         })}

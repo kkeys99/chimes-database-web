@@ -78,8 +78,21 @@ const App = () => {
     makeNewSearch: makeNewSearch,
   }
 
-  // Memoize this so that searchResults doesn't re-render every time
-  // Since searchResults is a memoized component
+  /*** Memoized Props ***********************************/
+  // This will improve performance by not having the direct children
+  // Re-render every time the search bar is edited. Search bar state is
+  // controlled from here, that's why. Maybe there's a better architecture
+  // or design pattern for this but I don't know right now.
+  // Child components are memoized so they don't re render if props don't change
+
+  // Memoize because I've observed const functions make memoized components re-render
+  // If this is really the only prop, consider useCallback() for logEdit
+  const homePageProps = useMemo(() => (
+    {
+      logEdit: handleLogEdit
+    }
+  ), []); // Empty sensitivity because this function shouldn't change.
+
   const searchResultsProps = useMemo(() => (
     {
       searchBy: searchBy,
@@ -89,36 +102,34 @@ const App = () => {
     }
   ), [searchBy, actualSearch, newSearch]); //searchDone off sensitivity fixes things
   
-  console.log(searchResultsProps);
-
   /*** Return Component***********************************/
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box minWidth={1200}> {/* A Containter box to make body scroll sideways */}
-      <Router >
-        <SiteHeader />
-        <NavBar {...navBarProps} />
+        <Router >
+          <SiteHeader />
+          <NavBar {...navBarProps} />
 
-        {/* Div to push everything else down because header is fixed positioning */}
-        {/* There must be a way to make it cleaner but this hacky thing works for now */}
-        <div style={{ height: 224, }} />
-        
-        <Routes>
-          <Route path="/" 
-            element={<Home logEdit={handleLogEdit} />} 
-          />
-          <Route path="/CMs/:initials"
-            element={<CM logEdit={handleLogEdit} />}
-          />
-          <Route path="/song/:id" 
-            element={<SongPage />} 
-          />
-          <Route path="/search" 
-            element={<SearchResults {...searchResultsProps} />}
-          />
-        </Routes>
-      </Router>
+          {/* Div to push everything else down because header is fixed positioning */}
+          {/* There must be a way to make it cleaner but this hacky thing works for now */}
+          <div style={{ height: 224, }} />
+          
+          <Routes>
+            <Route path="/" 
+              element={<Home {...homePageProps} />} 
+            />
+            <Route path="/CMs/:initials"
+              element={<CM logEdit={handleLogEdit} />}
+            />
+            <Route path="/song/:id" 
+              element={<SongPage />} 
+            />
+            <Route path="/search" 
+              element={<SearchResults {...searchResultsProps} />}
+            />
+          </Routes>
+        </Router>
 
         {/* The Button to slide the Concert Log in and out*/}
         <Box
