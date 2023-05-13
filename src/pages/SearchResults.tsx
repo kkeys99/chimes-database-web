@@ -1,7 +1,7 @@
 import * as React from "react";
 import theme from "../theme";
 import CssBaseline from "@mui/material/CssBaseline";
-import { useParams } from "react-router-dom";
+import { useSearchParams, useLocation, createSearchParams } from "react-router-dom";
 import { useState, useEffect, memo } from "react";
 import dayjs from "dayjs";
 import { Dayjs } from "dayjs";
@@ -16,22 +16,30 @@ import { Song, SongDisplay, resultTableRowData } from "../typing/types";
 import { songToDisplayObj } from "../shared/utils";
 
 interface SearchResultsProps {
-    searchBy: string;
-    searchData: string;
     newSearch: boolean;
     searchDone: Function;
 }
 
-const SearchResults = memo( function SearchResults({searchBy, searchData, newSearch, searchDone} : SearchResultsProps) {
+const SearchResults = memo( function SearchResults({newSearch, searchDone} : SearchResultsProps) {
+
+    const location = useLocation();
+    const searchParams = createSearchParams(location.search);
+    //const [searchParams, setSearchParams] = useSearchParams();
+    /* NOTE: For some reason, using the useSearchParams hook would make this re-render
+     * every time the search bar was edited. I don't yet know why this is.
+     * Using useLocation's search attribute seems to do the trick.
+    */
 
     const [returnedSongs, setReturnedSongs] = useState<SongDisplay []>([]);
     const numResults = returnedSongs.length;
     
-    console.log(`Re-rendering Search Results with props ${searchBy} ${searchData} ${newSearch} ${searchDone}`);
+    console.log(`Re-rendering Search Results with props ${newSearch} ${searchDone}`);
+    console.log(searchParams.toString());
     
     useEffect(() => {
         newSearch &&
-        fetch(`song/search?title=${searchData}`)
+        fetch(`song/search?${searchParams.get("searchBy")}=${searchParams.get("q")}`)
+        //fetch(`song/search?${searchParams["searchBy"]}=${searchParams["q"]}`)
         .then(res => res.json())
         .then(data => {
             // Convert to songDisplay
@@ -43,7 +51,7 @@ const SearchResults = memo( function SearchResults({searchBy, searchData, newSea
             setReturnedSongs(resAsSongDisplay);
         });
         searchDone();
-    }, [newSearch, searchDone]);
+    }, [newSearch]);
 
     return(
         <Box sx={{px: 6}}>

@@ -13,6 +13,7 @@ import SvgIcon from "@mui/material/SvgIcon";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { Link as MuiLink } from "@mui/material";
 
 import { resultTableRowData, searchByFieldRowData, Song } from "../typing/types";
 import { useState } from "react";
@@ -72,13 +73,13 @@ function getCompareFunction(
 }
 
 /*****************************************************************************
- * FormattedCell
+ * TextCell
  *
  * Description:
  *   Table cell with formatting so we don't have to repeat this formatting
  *   everywhere in the ResultsTable
  *****************************************************************************/
-const FormattedCell = (props: { text: any }) => {
+const TextCell = (props: { text: any }) => {
   return (
     <TableCell align="center">
       {/* This is cumbersome!!! Try styled */}
@@ -102,6 +103,22 @@ const TagCell = (props: {tags: string[]}) => {
     </TableCell>
   );
 }
+
+const LinkCell = (props: { text: any, href: string }) => {
+  return (
+    <TableCell align="center">
+      {/* This is cumbersome!!! Try styled */}
+      <MuiLink 
+        color="primary.dark" 
+        variant="h2"
+        href={props.href}
+        underline="hover"
+      >
+        {props.text}
+      </MuiLink>
+    </TableCell>
+  );
+};
 
 /*****************************************************************************
  * SortButton UNUSED
@@ -240,20 +257,20 @@ const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
                   }}
                 >
                   {/* TODO ADD THESE BACK
-                  <FormattedCell text={rowData.available} />
-                  {!props.lite && <FormattedCell text={rowData.played} />}
-                  <FormattedCell text={rowData.you} />
+                  <TextCell text={rowData.available} />
+                  {!props.lite && <TextCell text={rowData.played} />}
+                  <TextCell text={rowData.you} />
                   */}
-                  <FormattedCell text={rowData.sheet[0]} />
-                  <FormattedCell text={rowData.title} />
+                  <TextCell text={rowData.sheet[0]} />
+                  <LinkCell text={rowData.title} href={`/song/${rowData._id}`}/>
                   {!props.lite && <TagCell tags={rowData.composer} />}
                   {!props.lite && <TagCell tags={rowData.arranger} />}
                   {!props.lite && <TagCell tags={rowData.genre} />}
-                  {/*!props.lite && <FormattedCell text={rowData.requests} />*/}
+                  {/*!props.lite && <TextCell text={rowData.requests} />*/}
                   {!props.lite && <TagCell tags={rowData.key} />}
                   {!props.lite && <TagCell tags={rowData.time_sig} />}
                   {!props.lite && <TagCell tags={rowData.tempo} />}
-                  {!props.lite && <FormattedCell text={rowData.date_added} />}
+                  {!props.lite && <TextCell text={rowData.date_added} />}
                 </TableRow>
               ))}
         </TableBody>
@@ -311,8 +328,8 @@ const SearchByFieldResults = ({field, data} : SearchByFieldProps) => {
                     border: "hidden",
                   }}
                 >
-                  <FormattedCell text={rowData.tag} />
-                  <FormattedCell text={rowData.count} />
+                  <TextCell text={rowData.tag} />
+                  <TextCell text={rowData.count} />
                 </TableRow>
             ))
           }

@@ -75,7 +75,6 @@ const SearchInput = (props: SearchBarProps) => {
           <InputAdornment position="end">
             <IconButton onClick={() => {
               props.makeNewSearch();
-              navigate('/search');
             }} >
               <SearchIcon />
             </IconButton>
