@@ -67,7 +67,9 @@ function ConcertGridRow({ date, rowConcerts, logEdit }: ConcertGridRowProps) {
           const concert = typeToConcertMap[type];
           if (concert === undefined) {
             return (
-              <Box />
+              <Box >
+                <Typography sx={{ pb: "12px" }}>{type}</Typography>
+              </Box>
             );
           }
           else {
