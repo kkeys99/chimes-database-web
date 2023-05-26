@@ -1,6 +1,5 @@
 import * as React from "react";
 import theme from "../theme";
-import CssBaseline from "@mui/material/CssBaseline";
 import { useParams } from "react-router-dom";
 import { useState, useEffect, memo } from "react";
 import dayjs from "dayjs";
