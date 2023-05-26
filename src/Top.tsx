@@ -17,6 +17,8 @@ import ConcertLogger from "./components/ConcertLogger";
 
 import { Button, Box, Typography } from "@mui/material";
 import SongPage from "./pages/SongPage";
+import Dashboard from "./pages/Dashboard";
+
 
 // This component contains state that is handled across different pages
 // This naming is what you get when an RTL engineer learns frontend lol
@@ -133,6 +135,7 @@ const Top = () => {
           path="/search"
           element={<SearchResults {...searchResultsProps} />}
         />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
       {/* The Button to slide the Concert Log in and out*/}
       <Box

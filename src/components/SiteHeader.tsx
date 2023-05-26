@@ -50,7 +50,7 @@ const SiteHeader = () => {
             ml: 2.5,
           }}
         >
-          KJC
+          CM
         </Avatar>
       </Toolbar>
     </AppBar>
