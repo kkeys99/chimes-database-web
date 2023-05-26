@@ -52,7 +52,7 @@ export function songToDisplayObj(song: Song) {
     time_sig: splitDelimitedTag(song.timeSignature),
     tempo: splitDelimitedTag(song.tempo),
     date_added: dateToDisplaySlash(song.dateAdded),
-  }
+  };
   return displaySong;
 }
 
@@ -70,21 +70,20 @@ export function dateHashToDisplayStr(dateHash: number): string {
 export function dateToHash(date: Date): number {
   return (
     date.getFullYear() * 10000 +
-    (date.getMonth()+1) * 100 + // plus 1 because months index from 0
+    (date.getMonth() + 1) * 100 + // plus 1 because months index from 0
     date.getDate()
   );
 }
 
 export function sortConcertsByDate(concerts: Concert[]) {
-  let concertsByDate: {[key: number]: Concert[]} = {};
-  concerts.map((concert) => {
-    const dateHash = dateToHash( new Date(concert.date) );
+  let concertsByDate: { [key: number]: Concert[] } = {};
+  concerts.map(concert => {
+    const dateHash = dateToHash(new Date(concert.date));
     if (dateHash in concertsByDate) {
       concertsByDate[dateHash].push(concert);
-    }
-    else {
+    } else {
       concertsByDate[dateHash] = [concert];
     }
-  })
+  });
   return concertsByDate;
 }

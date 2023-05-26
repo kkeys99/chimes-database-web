@@ -13,7 +13,6 @@ import CornellLogo from "../assets/cornell_logo.svg";
 import { Link as MuiLink } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-
 const SiteHeader = () => {
   const theme = useTheme();
   const navigate = useNavigate();

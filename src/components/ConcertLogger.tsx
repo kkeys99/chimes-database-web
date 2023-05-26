@@ -238,8 +238,7 @@ const ConcertLogger = ({
           if (!res.ok) {
             console.log("Got an error code");
             throw new Error();
-          } 
-          else {
+          } else {
             return res.json();
           }
         })

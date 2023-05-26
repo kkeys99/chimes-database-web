@@ -5,11 +5,11 @@ import { Concert } from "../typing/types";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import {dateHashToDisplayStr} from "../shared/utils";
+import { dateHashToDisplayStr } from "../shared/utils";
 import { isConstructorDeclaration } from "typescript";
 
 interface ConcertGridProps {
-  concertsByDate: {[key: number] : Concert[]};
+  concertsByDate: { [key: number]: Concert[] };
   logEdit: Function;
 }
 
@@ -31,17 +31,16 @@ interface ConcertGridRowProps {
  *   more than 3 concerts, they will be equally sized.
  *****************************************************************************/
 function ConcertGridRow({ date, rowConcerts, logEdit }: ConcertGridRowProps) {
-
   // This determines how many invisible boxes to put in the row so that things line up
   let extraBoxes = [];
   for (let i = rowConcerts.length; i < 3; i++) {
     extraBoxes.push(i);
   }
- 
+
   // This is very dummy and only temporary - make this more robust for specialty concerts
   const possibleConcertTypes = ["morning", "afternoon", "evening"];
-  let typeToConcertMap: {[type: string]: Concert} = {};
-  rowConcerts.map((concert) => {
+  let typeToConcertMap: { [type: string]: Concert } = {};
+  rowConcerts.map(concert => {
     if (possibleConcertTypes.includes(concert.type)) {
       typeToConcertMap[concert.type] = concert;
     }
@@ -49,33 +48,32 @@ function ConcertGridRow({ date, rowConcerts, logEdit }: ConcertGridRowProps) {
 
   return (
     <Box
-      sx={{ 
+      sx={{
         pb: "24px",
       }}
     >
       <Typography sx={{ pb: "12px" }} variant="h2">
         {date}
       </Typography>
-      <Box display="grid"
-        sx={{ 
+      <Box
+        display="grid"
+        sx={{
           //https://css-tricks.com/equal-columns-with-flexbox-its-more-complicated-than-you-might-think/
-          gridAutoFlow:"column", gridAutoColumns:"1fr",
-          columnGap:3
+          gridAutoFlow: "column",
+          gridAutoColumns: "1fr",
+          columnGap: 3,
         }}
       >
         {possibleConcertTypes.map((type, i) => {
           const concert = typeToConcertMap[type];
           if (concert === undefined) {
             return (
-              <Box >
+              <Box>
                 <Typography sx={{ pb: "12px" }}>{type}</Typography>
               </Box>
             );
-          }
-          else {
-            return(
-              <ConcertCard concert={concert} logEdit={logEdit} />
-            );
+          } else {
+            return <ConcertCard concert={concert} logEdit={logEdit} />;
           }
         })}
       </Box>
@@ -90,21 +88,18 @@ function ConcertGridRow({ date, rowConcerts, logEdit }: ConcertGridRowProps) {
  *   Contains the whole concert grid for that page.
  *****************************************************************************/
 const ConcertGrid = ({ concertsByDate, logEdit }: ConcertGridProps) => {
-  
   // A custom sort function that sorts in DESCENDING order
   const descSort = (a: string, b: string) => {
-    if ( a < b ) {
-      return 1
+    if (a < b) {
+      return 1;
+    } else if (a > b) {
+      return -1;
+    } else {
+      return 0;
     }
-    else if (a > b) {
-      return -1
-    }
-    else {
-      return 0
-    }
-  }
-  
-console.log(concertsByDate)
+  };
+
+  console.log(concertsByDate);
 
   // Sort the Dates so that we look up the concerts object in custom order
   const sortedDates = Object.keys(concertsByDate).sort(descSort);
@@ -112,13 +107,13 @@ console.log(concertsByDate)
   // Returned object - all the rows of concerts
   return (
     <Box>
-      {sortedDates.map((dateHash) => {
-        return(
-        <ConcertGridRow
-          date={dateHashToDisplayStr(parseInt(dateHash))}
-          rowConcerts={concertsByDate[parseInt(dateHash)]}
-          logEdit={logEdit}
-        />
+      {sortedDates.map(dateHash => {
+        return (
+          <ConcertGridRow
+            date={dateHashToDisplayStr(parseInt(dateHash))}
+            rowConcerts={concertsByDate[parseInt(dateHash)]}
+            logEdit={logEdit}
+          />
         );
       })}
     </Box>

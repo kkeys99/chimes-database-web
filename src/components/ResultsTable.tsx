@@ -15,17 +15,16 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Link as MuiLink } from "@mui/material";
 
-import { resultTableRowData, searchByFieldRowData, Song } from "../typing/types";
+import {
+  resultTableRowData,
+  searchByFieldRowData,
+  Song,
+} from "../typing/types";
 import { useState } from "react";
 
 /*****************************************************************************/
 
-const playingStatsFields = [
-  "Available", 
-  "You",
-  "Sheet", 
-  "Song"
-];
+const playingStatsFields = ["Available", "You", "Sheet", "Song"];
 const playingStatsFieldsFull = [
   //"Available",
   //"Played",
@@ -90,7 +89,7 @@ const TextCell = (props: { text: any }) => {
   );
 };
 
-const TagCell = (props: {tags: string[]}) => {
+const TagCell = (props: { tags: string[] }) => {
   return (
     <TableCell align="center">
       {props.tags.map((text, index) => {
@@ -102,14 +101,14 @@ const TagCell = (props: {tags: string[]}) => {
       })}
     </TableCell>
   );
-}
+};
 
-const LinkCell = (props: { text: any, href: string }) => {
+const LinkCell = (props: { text: any; href: string }) => {
   return (
     <TableCell align="center">
       {/* This is cumbersome!!! Try styled */}
-      <MuiLink 
-        color="primary.dark" 
+      <MuiLink
+        color="primary.dark"
         variant="h2"
         href={props.href}
         underline="hover"
@@ -159,8 +158,11 @@ interface HeaderCellProps {
   sortButtonOnClick: Function;
 }
 
-const HeaderCell = ({field, fieldToDisplay, sortButtonOnClick} : HeaderCellProps) => {
-
+const HeaderCell = ({
+  field,
+  fieldToDisplay,
+  sortButtonOnClick,
+}: HeaderCellProps) => {
   return (
     <TableCell align="center">
       <Stack direction="row" justifyContent={"center"}>
@@ -204,8 +206,8 @@ const HeaderCell = ({field, fieldToDisplay, sortButtonOnClick} : HeaderCellProps
         </ButtonGroup>
       </Stack>
     </TableCell>
-  )
-}
+  );
+};
 
 /*****************************************************************************
  * ResultsTable
@@ -237,9 +239,9 @@ const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
         <TableHead>
           <TableRow>
             {headerFields.map(field => (
-              <HeaderCell 
-                field={field} 
-                fieldToDisplay={(text: string) => text} 
+              <HeaderCell
+                field={field}
+                fieldToDisplay={(text: string) => text}
                 sortButtonOnClick={sortButtonOnClick}
               />
             ))}
@@ -262,7 +264,10 @@ const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
                   <TextCell text={rowData.you} />
                   */}
                   <TextCell text={rowData.sheet[0]} />
-                  <LinkCell text={rowData.title} href={`/song/${rowData._id}`}/>
+                  <LinkCell
+                    text={rowData.title}
+                    href={`/song/${rowData._id}`}
+                  />
                   {!props.lite && <TagCell tags={rowData.composer} />}
                   {!props.lite && <TagCell tags={rowData.arranger} />}
                   {!props.lite && <TagCell tags={rowData.genre} />}
@@ -290,8 +295,7 @@ interface SearchByFieldProps {
   field: string;
   data: searchByFieldRowData[];
 }
-const SearchByFieldResults = ({field, data} : SearchByFieldProps) => {
-
+const SearchByFieldResults = ({ field, data }: SearchByFieldProps) => {
   const [orderBy, setOrderBy] = useState("sheet");
   const [sortDirection, setSortDirection] = useState("asc");
 
@@ -309,19 +313,19 @@ const SearchByFieldResults = ({field, data} : SearchByFieldProps) => {
         <TableHead>
           <TableRow>
             {headerFields.map(field => (
-              <HeaderCell 
-                field={field} 
-                fieldToDisplay={(text: string) => text} 
+              <HeaderCell
+                field={field}
+                fieldToDisplay={(text: string) => text}
                 sortButtonOnClick={sortButtonOnClick}
               />
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {data &&  // Only try to render body contents if data exists
+          {data && // Only try to render body contents if data exists
             data
-            //.sort(getCompareFunction(sortDirection, orderBy)) // TODO Get this to work with diff types
-            .map((rowData, index) => (
+              //.sort(getCompareFunction(sortDirection, orderBy)) // TODO Get this to work with diff types
+              .map((rowData, index) => (
                 <TableRow
                   sx={{
                     bgcolor: !(index % 2) ? "primary.contrastText" : "#FFFFFF",
@@ -331,12 +335,11 @@ const SearchByFieldResults = ({field, data} : SearchByFieldProps) => {
                   <TextCell text={rowData.tag} />
                   <TextCell text={rowData.count} />
                 </TableRow>
-            ))
-          }
+              ))}
         </TableBody>
       </Table>
     </TableContainer>
-  )
-}
+  );
+};
 
-export { ResultsTable, SearchByFieldResults};
+export { ResultsTable, SearchByFieldResults };

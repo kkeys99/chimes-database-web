@@ -36,7 +36,7 @@ export class Song {
     keySignature: string = "",
     timeSignature: string = "",
     tempo: string = "",
-    dateAdded: string = "",
+    dateAdded: string = ""
   ) {
     this.id = id;
     this.location = sheet;
@@ -51,7 +51,6 @@ export class Song {
     this.dateAdded = dateAdded;
   }
 }
-
 
 // Non backend
 export class SongDisplay {
@@ -75,7 +74,7 @@ export class SongDisplay {
     key: string[] = [""],
     time_sig: string[] = [""],
     tempo: string[] = [""],
-    date_added: string = "",
+    date_added: string = ""
   ) {
     this._id = id;
     this.sheet = sheet;
@@ -110,7 +109,7 @@ export class Person {
   id: number = 0;
   initials: string = "";
   fullName: string = "";
-  class: string ="";
+  class: string = "";
   type: string = "";
   netid: string = "";
   activeYears: string = "";

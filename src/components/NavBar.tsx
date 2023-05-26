@@ -20,14 +20,13 @@ import { Link as MuiLink } from "@mui/material";
 import { Person } from "../typing/types";
 
 const CMList = () => {
-
   const [currentCMs, setCurrentCMs] = useState<Person[]>([]);
 
-  useEffect((() => {
+  useEffect(() => {
     fetch(`/person/current`)
       .then(res => res.json())
       .then(data => setCurrentCMs(data));
-  }), []);
+  }, []);
 
   console.log(currentCMs);
 
@@ -56,15 +55,11 @@ const CMList = () => {
   );
 };
 
-
-
 const SearchInput = (props: SearchBarProps) => {
   const theme = useTheme();
   const navigate = useNavigate();
   return (
-    <FormControl 
-      variant="filled" size="small" sx={{ mr: 10 }} 
-    >
+    <FormControl variant="filled" size="small" sx={{ mr: 10 }}>
       <InputLabel style={{ color: theme.palette.success.dark }}>
         Search
       </InputLabel>
@@ -73,9 +68,11 @@ const SearchInput = (props: SearchBarProps) => {
         onChange={props.searchInputChangeHandler}
         endAdornment={
           <InputAdornment position="end">
-            <IconButton onClick={() => {
-              props.makeNewSearch();
-            }} >
+            <IconButton
+              onClick={() => {
+                props.makeNewSearch();
+              }}
+            >
               <SearchIcon />
             </IconButton>
           </InputAdornment>
@@ -87,7 +84,7 @@ const SearchInput = (props: SearchBarProps) => {
   );
 };
 
-interface SearchBarProps extends NavBarProps {}; // Alias for better naming
+interface SearchBarProps extends NavBarProps {} // Alias for better naming
 
 const SearchBar = (props: SearchBarProps) => {
   const tags = [
@@ -102,7 +99,7 @@ const SearchBar = (props: SearchBarProps) => {
   ];
   return (
     <Toolbar disableGutters variant="dense" sx={{ justifyContent: "center" }}>
-      <SearchInput {...props}/>
+      <SearchInput {...props} />
       <Stack direction="row" spacing={6}>
         {tags.map(tag => {
           return (

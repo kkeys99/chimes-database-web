@@ -10,7 +10,6 @@ import SiteHeader from "./components/SiteHeader";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
-
 import CM from "./pages/CM";
 import Home from "./pages/Home";
 import SearchResults from "./pages/SearchResults";
@@ -22,7 +21,6 @@ import SongPage from "./pages/SongPage";
 // This component contains state that is handled across different pages
 // This naming is what you get when an RTL engineer learns frontend lol
 const Top = () => {
-
   /*** Concert Logger ************************************/
   // State variables
   const [logOpen, setLogOpen] = useState(false);
@@ -66,28 +64,30 @@ const Top = () => {
   const navigate = useNavigate();
 
   // Callback functions
-  const changeSearchInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const changeSearchInput: React.ChangeEventHandler<HTMLInputElement> = e => {
     setSearchData(e.target.value);
-  }
+  };
 
-  const makeNewSearch: React.MouseEventHandler = (e) => {
+  const makeNewSearch: React.MouseEventHandler = e => {
     setNewSearch(true);
     const urlQueryStr = `?searchBy=${searchBy}&q=${searchData}`; // there must be a better library-way to do this
     navigate(`/search${urlQueryStr}`);
-  }
+  };
 
   const searchDone = () => {
     setNewSearch(false);
-  }
+  };
 
   // Props that go to the nav bar. It's pretty quick so don't need to memoize for now
   const navBarProps = {
     searchBy: searchBy,
-    searchByChangeHandler: () => {return},
+    searchByChangeHandler: () => {
+      return;
+    },
     searchInput: searchData,
     searchInputChangeHandler: changeSearchInput,
     makeNewSearch: makeNewSearch,
-  }
+  };
 
   /*** Memoized Props ***********************************/
   // This will improve performance by not having the direct children
@@ -99,45 +99,41 @@ const Top = () => {
   // Memoize because I've observed const functions make memoized components re-render
   // This is due to referential inequality
   // If this is really the only prop, consider useCallback() for logEdit
-  const homePageProps = useMemo(() => (
-    {
-      logEdit: handleLogEdit
-    }
-  ), []); // Empty sensitivity to prevent referential inequality because this is a function and practically won't change.
+  const homePageProps = useMemo(
+    () => ({
+      logEdit: handleLogEdit,
+    }),
+    []
+  ); // Empty sensitivity to prevent referential inequality because this is a function and practically won't change.
 
-  const searchResultsProps = useMemo(() => (
-    {
+  const searchResultsProps = useMemo(
+    () => ({
       newSearch: newSearch,
       searchDone: searchDone,
-    }
-  ), [newSearch]); // searchDone must be off sensitivity because of referential inequality
-                                          // alternatively, consider the useCallback() hook
-  
+    }),
+    [newSearch]
+  ); // searchDone must be off sensitivity because of referential inequality
+  // alternatively, consider the useCallback() hook
+
   /*** Return Component***********************************/
   return (
-    <Box minWidth={1200}> {/* A Container box to make body scroll sideways */}
+    <Box minWidth={1200}>
+      {" "}
+      {/* A Container box to make body scroll sideways */}
       <SiteHeader />
       <NavBar {...navBarProps} />
-
       {/* Div to push everything else down because header is fixed positioning */}
       {/* There must be a way to make it cleaner but this hacky thing works for now */}
-      <div style={{ height: 224, }} />
-      
+      <div style={{ height: 224 }} />
       <Routes>
-        <Route path="/" 
-          element={<Home {...homePageProps} />} 
-        />
-        <Route path="/CMs/:initials"
-          element={<CM logEdit={handleLogEdit} />}
-        />
-        <Route path="/song/:id" 
-          element={<SongPage />} 
-        />
-        <Route path="/search" 
+        <Route path="/" element={<Home {...homePageProps} />} />
+        <Route path="/CMs/:initials" element={<CM logEdit={handleLogEdit} />} />
+        <Route path="/song/:id" element={<SongPage />} />
+        <Route
+          path="/search"
           element={<SearchResults {...searchResultsProps} />}
         />
       </Routes>
-      
       {/* The Button to slide the Concert Log in and out*/}
       <Box
         sx={{

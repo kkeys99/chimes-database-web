@@ -37,7 +37,10 @@ const ConcertCard = ({ concert, logEdit }: Props) => {
   return (
     <Box>
       <Typography sx={{ pb: "12px" }}>{concert.type}</Typography>
-      <Card raised={false} sx={{ bgcolor: "primary.contrastText", boxShadow:"none"}}>
+      <Card
+        raised={false}
+        sx={{ bgcolor: "primary.contrastText", boxShadow: "none" }}
+      >
         <CardContent sx={{ position: "relative", p: 5 }}>
           <Stack
             direction="row"
@@ -48,14 +51,14 @@ const ConcertCard = ({ concert, logEdit }: Props) => {
             <Typography variant="body2" fontWeight="light" flexGrow={1}>
               {concert.notes}
             </Typography>
-            {/*** Bell and Edit Icons ***********************************/}     
-            {concert.bellsAdjusted &&
+            {/*** Bell and Edit Icons ***********************************/}
+            {concert.bellsAdjusted && (
               <SvgIcon
                 inheritViewBox
                 component={BellIcon}
                 sx={{ height: "20px", width: "20px" }}
               />
-            }
+            )}
             <SvgIcon
               inheritViewBox
               component={EditIcon}

@@ -102,9 +102,7 @@ const SongTitle = ({ sheet, title }: SongTitleProps) => {
 const ListSongTag = ({ tagName, tagData }: SongTagProp) => {
   return (
     <Box flexShrink={0}>
-      <Typography variant="h2">
-        {songFieldToDisplay(tagName)}
-      </Typography>
+      <Typography variant="h2">{songFieldToDisplay(tagName)}</Typography>
       <List dense={true}>
         {tagData &&
           tagData.map(element => {
@@ -122,9 +120,7 @@ const ListSongTag = ({ tagName, tagData }: SongTagProp) => {
 const SingleSongTag = ({ tagName, tagData }: SingleSongTagProp) => {
   return (
     <Box flexShrink={0}>
-      <Typography variant="h2">
-        {songFieldToDisplay(tagName)}
-      </Typography>
+      <Typography variant="h2">{songFieldToDisplay(tagName)}</Typography>
       {/* Hacks! This is a list of one item just so the spacing can be the same as list fields */}
       <List dense={true}>
         <ListItem dense disableGutters>
@@ -316,12 +312,12 @@ const DayRange = () => {
   const [dateTo, setTo] = useState<Dayjs>(dayjs());
 
   return (
-      <Stack direction="row" sx={{ display: "flex", height: "28px" }}>
-        <Box sx={{ mx: 4 }}> from </Box>
-        <CustomDatePicker light={false} date={dateFrom} setDate={setFrom} />
-        <Box sx={{ mx: 4 }}> to </Box>
-        <CustomDatePicker light={false} date={dateTo} setDate={setTo} />
-      </Stack>
+    <Stack direction="row" sx={{ display: "flex", height: "28px" }}>
+      <Box sx={{ mx: 4 }}> from </Box>
+      <CustomDatePicker light={false} date={dateFrom} setDate={setFrom} />
+      <Box sx={{ mx: 4 }}> to </Box>
+      <CustomDatePicker light={false} date={dateTo} setDate={setTo} />
+    </Stack>
   );
 };
 
@@ -481,8 +477,8 @@ const SongPage = () => {
     fetch(`/song/${id}`)
       .then(res => res.json())
       .then(dataIn => {
-        const temp = songToDisplayObj(dataIn); 
-        setData( temp );
+        const temp = songToDisplayObj(dataIn);
+        setData(temp);
         setSongForm(JSON.parse(JSON.stringify(temp))); // Needs a "Deep Copy"
       })
       .then(() => setReady(true)); // set this at end so it doesn't try to render prematurely
@@ -533,9 +529,8 @@ const SongPage = () => {
               </Button>
               <Box sx={{ flexGrow: 1 }} />
             </Stack>
-          ) // if isEditMode 
-          :
-          (
+          ) : (
+            // if isEditMode
             <Button
               variant="contained"
               onClick={() => setEditMode(true)}
@@ -546,7 +541,8 @@ const SongPage = () => {
               {"Edit Song"}
             </Button>
           )}
-        </Box> {/*  Buttons */}
+        </Box>{" "}
+        {/*  Buttons */}
       </Box> // Container
     );
   } else {
