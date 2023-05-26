@@ -60,55 +60,59 @@ const CustomDatePicker = ({
   };
 
   return (
-    <DatePicker
-      disableFuture
-      disabled={disabled}
-      open={open} // TODO - enable calendar popup. This seems difficult for now.
-      onClose={() => {
-        console.log("onClose");
-        setOpen(false);
-        setAnchorEl(null);
-        setClosing(true);
-      }}
-      value={date}
-      onChange={dateChangeHandler}
-      slotProps={{
-        textField: {
-          sx: {
-            backgroundColor: light
-              ? theme.palette.primary.contrastText
-              : theme.palette.info.main,
-            borderRadius: "4px",
-            "& .MuiInputBase-input": {
-              height: "20px",
-              width: "120px",
-              position: "relative",
-              padding: "4px 8px",
-              fontSize: theme.typography.body1,
-              borderRadius: "4px",
-            },
-            // Got this from stack overflow
-            // https://stackoverflow.com/questions/66563420/how-to-remove-border-of-material-uis-datepicker
-            // Not sure how it worked seeing how notched is false in InputProps
-            "& .MuiOutlinedInput-notchedOutline": {
-              border: "none",
-            },
-          }, // sx
-          InputProps: {
-            // props for OutlinedInput
-            //endAdornment:null, // it still works without this???
-            notched: false,
-            onFocus: focusHandler, // enable calendar popup
+    <LocalizationProvider
+      dateAdapter={AdapterDayjs}
+      localeText={{ start: "", end: "" }}
+    >
+      <DatePicker
+        disableFuture
+        disabled={disabled}
+        open={open} // TODO - enable calendar popup. This seems difficult for now.
+        onClose={() => {
+          setOpen(false);
+          //setAnchorEl(null);
+          setClosing(true);
+        }}
+        value={date}
+        onChange={dateChangeHandler}
+        slotProps={{
+          textField: {
             sx: {
-              height: "28px", // For some reason this was more than the stack
-            },
-          }, // InputProps
-        }, // textField
-        popper: {
-          anchorEl: anchorEl,
-        },
-      }} // slotProps
-    />
+              backgroundColor: light
+                ? theme.palette.primary.contrastText
+                : theme.palette.info.main,
+              borderRadius: "4px",
+              "& .MuiInputBase-input": {
+                height: "20px",
+                width: "120px",
+                position: "relative",
+                padding: "4px 8px",
+                fontSize: theme.typography.body1,
+                borderRadius: "4px",
+              },
+              // Got this from stack overflow
+              // https://stackoverflow.com/questions/66563420/how-to-remove-border-of-material-uis-datepicker
+              // Not sure how it worked seeing how notched is false in InputProps
+              "& .MuiOutlinedInput-notchedOutline": {
+                border: "none",
+              },
+            }, // sx
+            InputProps: {
+              // props for OutlinedInput
+              //endAdornment:null, // it still works without this???
+              notched: false,
+              onFocus: focusHandler, // enable calendar popup
+              sx: {
+                height: "28px", // For some reason this was more than the stack
+              },
+            }, // InputProps
+          }, // textField
+          popper: {
+            anchorEl: anchorEl,
+          },
+        }} // slotProps
+      />
+    </LocalizationProvider>
   );
 };
 

@@ -30,34 +30,35 @@ const ConcertCard = ({ concert, logEdit }: Props) => {
 
   const handleEditClick: any = () => {
     console.log("Clicked Edit Button");
-    logEdit(concert._id);
+    logEdit(concert.id);
     return;
   };
 
   return (
     <Box>
       <Typography sx={{ pb: "12px" }}>{concert.type}</Typography>
-      <Card sx={{ bgcolor: "primary.contrastText" }}>
+      <Card
+        raised={false}
+        sx={{ bgcolor: "primary.contrastText", boxShadow: "none" }}
+      >
         <CardContent sx={{ position: "relative", p: 5 }}>
-          <Typography maxWidth={300} variant="body2" fontWeight="light">
-            <Typography display="inline" variant="body2">
-              Private:
-            </Typography>{" "}
-            look at my awesome note hehehe i need to make sure this doesn't
-            overlap anything that would be no bueno
-          </Typography>
-
-          {/*** Bell and Edit Icons ***********************************/}
           <Stack
             direction="row"
             spacing={2}
-            sx={{ position: "absolute", top: 12, right: 12 }}
+            //sx={{ top: 12, right: 12 }}
+            display="flex"
           >
-            <SvgIcon
-              inheritViewBox
-              component={BellIcon}
-              sx={{ height: "20px", width: "20px" }}
-            />
+            <Typography variant="body2" fontWeight="light" flexGrow={1}>
+              {concert.notes}
+            </Typography>
+            {/*** Bell and Edit Icons ***********************************/}
+            {concert.bellsAdjusted && (
+              <SvgIcon
+                inheritViewBox
+                component={BellIcon}
+                sx={{ height: "20px", width: "20px" }}
+              />
+            )}
             <SvgIcon
               inheritViewBox
               component={EditIcon}
@@ -73,6 +74,7 @@ const ConcertCard = ({ concert, logEdit }: Props) => {
           </Stack>
 
           {/*** Concert Songs List *********************************/}
+          {/* TODO - UNCOMMENT THIS WHEN PERFORMANCES IN DB
           <List dense sx={{ ml: 7, listStyleType: "disc" }}>
             {concert.performances.map(performance => {
               return (
@@ -81,7 +83,7 @@ const ConcertCard = ({ concert, logEdit }: Props) => {
                     display="inline"
                     variant="body2"
                     color="secondary.main"
-                    href={`/song/${performance.song._id}`}
+                    href={`/song/${performance.song.id}`}
                     underline="hover"
                   >
                     {`${performance.song.sheet[0]} - ${performance.song.title}`}
@@ -93,6 +95,7 @@ const ConcertCard = ({ concert, logEdit }: Props) => {
               );
             })}
           </List>
+          */}
         </CardContent>
       </Card>
     </Box>

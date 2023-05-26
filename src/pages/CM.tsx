@@ -10,9 +10,10 @@ import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import ButtonBase from "@mui/material/ButtonBase";
 // Custom Components
-import ResultsTable from "../components/ResultsTable";
+import { ResultsTable } from "../components/ResultsTable";
 import ConcertGrid from "../components/ConcertGrid";
 import { Song, resultTableRowData } from "../typing/types";
+import { sortConcertsByDate } from "../shared/utils";
 
 // Header of the CM Page
 function CMPageHeader(props: {
@@ -150,18 +151,11 @@ function CMPageConcerts(props: {
 
   console.log(data);
 
-  let bodyComponent;
-  if (data.concerts.length > 0) {
-    bodyComponent = (
-      <ConcertGrid concerts={data.concerts} logEdit={props.logEdit} />
-    );
-  } else {
-    bodyComponent = <>No Concerts Found</>;
-  }
+  const concertsByDate = sortConcertsByDate(data.concerts);
 
   return (
     <Box sx={{ pt: "12px", pb: "12px", pl: "24px", pr: "24px" }}>
-      {bodyComponent}
+      <ConcertGrid concertsByDate={concertsByDate} logEdit={props.logEdit} />
     </Box>
   );
 }

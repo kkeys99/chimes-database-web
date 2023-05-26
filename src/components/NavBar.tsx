@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import FormControl from "@mui/material/FormControl";
 import Stack from "@mui/material/Stack";
@@ -12,24 +13,37 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FilledInput from "@mui/material/FilledInput";
 import { cms } from "../constants";
 import { useTheme } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 import { Link as MuiLink } from "@mui/material";
 
+import { Person } from "../typing/types";
+
 const CMList = () => {
+  const [currentCMs, setCurrentCMs] = useState<Person[]>([]);
+
+  useEffect(() => {
+    fetch(`/person/current`)
+      .then(res => res.json())
+      .then(data => setCurrentCMs(data));
+  }, []);
+
+  console.log(currentCMs);
+
   return (
     <Toolbar disableGutters variant="dense" sx={{ justifyContent: "center" }}>
       <Stack direction="row" spacing={6}>
-        {cms.map(initials => {
+        {currentCMs.map(cm => {
           return (
             //
             <MuiLink
-              href={`/CMs/${initials}`}
+              href={`/CMs/${cm.initials}`}
               color="primary.dark"
               variant="h2"
               fontWeight="bold"
               underline="hover"
             >
-              {initials}
+              {cm.initials}
             </MuiLink>
           );
         })}
@@ -41,18 +55,24 @@ const CMList = () => {
   );
 };
 
-const SearchInput = () => {
+const SearchInput = (props: SearchBarProps) => {
   const theme = useTheme();
-
+  const navigate = useNavigate();
   return (
     <FormControl variant="filled" size="small" sx={{ mr: 10 }}>
       <InputLabel style={{ color: theme.palette.success.dark }}>
         Search
       </InputLabel>
       <FilledInput
+        value={props.searchInput}
+        onChange={props.searchInputChangeHandler}
         endAdornment={
           <InputAdornment position="end">
-            <IconButton>
+            <IconButton
+              onClick={() => {
+                props.makeNewSearch();
+              }}
+            >
               <SearchIcon />
             </IconButton>
           </InputAdornment>
@@ -64,7 +84,9 @@ const SearchInput = () => {
   );
 };
 
-const SearchBar = () => {
+interface SearchBarProps extends NavBarProps {} // Alias for better naming
+
+const SearchBar = (props: SearchBarProps) => {
   const tags = [
     "Sheet",
     "Composer",
@@ -77,7 +99,7 @@ const SearchBar = () => {
   ];
   return (
     <Toolbar disableGutters variant="dense" sx={{ justifyContent: "center" }}>
-      <SearchInput />
+      <SearchInput {...props} />
       <Stack direction="row" spacing={6}>
         {tags.map(tag => {
           return (
@@ -91,7 +113,15 @@ const SearchBar = () => {
   );
 };
 
-const NavBar = () => {
+interface NavBarProps {
+  searchBy: string;
+  searchByChangeHandler: Function; // maybe get a better type for this
+  searchInput: string;
+  searchInputChangeHandler: React.ChangeEventHandler<HTMLInputElement>;
+  makeNewSearch: Function;
+}
+
+const NavBar = (props: NavBarProps) => {
   const theme = useTheme();
   return (
     <AppBar
@@ -106,7 +136,7 @@ const NavBar = () => {
     >
       <Stack spacing={2}>
         <CMList />
-        <SearchBar />
+        <SearchBar {...props} />
       </Stack>
     </AppBar>
   );

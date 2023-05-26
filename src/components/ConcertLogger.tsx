@@ -26,8 +26,6 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CustomDatePicker from "./CustomDatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { styled } from "@mui/material/styles";
 import { IconButton } from "@mui/material";
@@ -223,13 +221,17 @@ const ConcertLogger = ({
   const theme = useTheme();
   const inputFontSize = theme.typography.body2;
 
+  /***** Handling Edit Mode ****************************/
   const [editedConcert, setEditedConcert] = useState<Concert | null>(null);
   const [concertFetched, setConcertFetched] = useState(false);
 
   useEffect(() => {
     // Referenced this because I don't really know what I'm doing here lol
     //https://stackoverflow.com/questions/49725012/handling-response-status-using-fetch-in-react-js
-    if (isEditMode && (!concertFetched || editID != editedConcert?._id)) {
+    if (isEditMode && (!concertFetched || editID != editedConcert?.id)) {
+      // Enter this condition if we are in edit mode and
+      // We don't have a concert to edit OR
+      // We are changing which concert to edit
       console.log("Fetching concert");
       fetch(`/concert/${editID}`)
         .then(res => {
@@ -262,8 +264,10 @@ const ConcertLogger = ({
         .catch(error => {
           console.log(error);
         });
-    } else if (!isEditMode && concertFetched) {
-      // Reset Fetched and clear the form
+    } // if (isEditMode && (!concertFetched || editID != editedConcert?.id))
+    else if (!isEditMode && concertFetched) {
+      // Reset Fetched and clear the form if
+      // We are leaving edit mode (editMode is off and we have a concert fetched)
       setConcertFetched(false);
       setLog(defaultLog);
     }
@@ -275,7 +279,7 @@ const ConcertLogger = ({
     elevation: 1,
   };
 
-  // Form related things //
+  /***** Form Related things ****************************/
   const emptySong = () => {
     const newSong: songEntry = {
       title: "",
@@ -294,6 +298,7 @@ const ConcertLogger = ({
     publicNote: "",
   };
 
+  // State variable
   const [logForm, setLog] = useState(defaultLog);
 
   const dateChangeHandler = (newValue: Dayjs) => {
@@ -302,7 +307,7 @@ const ConcertLogger = ({
       date: newValue, // Date picker will take care of dayjs
     });
   };
-  console.log(`Re-rendering Logger w date ${logForm.date}`);
+
   const cancelEditHandler: React.MouseEventHandler = () => {
     cancelEdit();
     setLog(defaultLog);
@@ -330,7 +335,6 @@ const ConcertLogger = ({
       // if so, include that logic here.
       return;
     }
-
     // Doing it this way because splice edits in-place and returns deleted items
     const songList: songEntry[] = logForm.songs;
     songList.splice(index, 1);
@@ -375,6 +379,7 @@ const ConcertLogger = ({
     // Maybe logic that will trigger a pop-up will go here, reacting to a return code?
   };
 
+  /***** Return Component ****************************/
   return (
     <Drawer
       sx={{ width: drawerWidth, ".& MuiDrawer-paper": { border: "none" } }}
@@ -399,29 +404,22 @@ const ConcertLogger = ({
         onSubmit={submitHandler}
       >
         <FormControl>
-          {" "}
           {/* Do this to maintain state for required fields */}
           <Typography color="primary.dark" variant="h2">
             {isEditMode ? "Edit Concert" : "Log Concert"}
           </Typography>
           {/*** DATE ********************************/}
-          <LocalizationProvider
-            dateAdapter={AdapterDayjs}
-            localeText={{ start: "", end: "" }}
-          >
-            <FormGroup row sx={{ pt: 4, pb: 0.5, display: "flex", gap: 2 }}>
-              <Typography color="primary.dark" variant="body1">
-                Date:
-              </Typography>
-
-              <CustomDatePicker
-                light={true}
-                date={logForm.date}
-                setDate={dateChangeHandler}
-                disabled={isEditMode}
-              />
-            </FormGroup>
-          </LocalizationProvider>
+          <FormGroup row sx={{ pt: 4, pb: 0.5, display: "flex", gap: 2 }}>
+            <Typography color="primary.dark" variant="body1">
+              Date:
+            </Typography>
+            <CustomDatePicker
+              light={true}
+              date={logForm.date}
+              setDate={dateChangeHandler}
+              disabled={isEditMode}
+            />
+          </FormGroup>
           {/*** CONCERT TYPE *********************************/}
           <FormGroup row sx={{ pt: 4, pb: 0.5, display: "flex", gap: 2 }}>
             <Typography color="primary.dark" variant="body1">
