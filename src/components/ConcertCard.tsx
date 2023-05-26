@@ -39,34 +39,36 @@ const ConcertCard = ({ concert, logEdit }: Props) => {
       <Typography sx={{ pb: "12px" }}>{concert.type}</Typography>
       <Card raised={false} sx={{ bgcolor: "primary.contrastText", boxShadow:"none"}}>
         <CardContent sx={{ position: "relative", p: 5 }}>
-        <Stack
+          <Stack
             direction="row"
             spacing={2}
-            sx={{ top: 12, right: 12 }}
+            //sx={{ top: 12, right: 12 }}
             display="flex"
           >
-          <Typography variant="body2" fontWeight="light" flexGrow={1}>
-            {concert.notes}
-          </Typography>
-          {/*** Bell and Edit Icons ***********************************/}     
-          <SvgIcon
-            inheritViewBox
-            component={BellIcon}
-            sx={{ height: "20px", width: "20px" }}
-          />
-          <SvgIcon
-            inheritViewBox
-            component={EditIcon}
-            onClick={handleEditClick}
-            sx={{
-              height: "20px",
-              width: "20px",
-              ":hover": {
-                cursor: "pointer",
-              },
-            }}
-          />
-        </Stack>
+            <Typography variant="body2" fontWeight="light" flexGrow={1}>
+              {concert.notes}
+            </Typography>
+            {/*** Bell and Edit Icons ***********************************/}     
+            {concert.bellsAdjusted &&
+              <SvgIcon
+                inheritViewBox
+                component={BellIcon}
+                sx={{ height: "20px", width: "20px" }}
+              />
+            }
+            <SvgIcon
+              inheritViewBox
+              component={EditIcon}
+              onClick={handleEditClick}
+              sx={{
+                height: "20px",
+                width: "20px",
+                ":hover": {
+                  cursor: "pointer",
+                },
+              }}
+            />
+          </Stack>
 
           {/*** Concert Songs List *********************************/}
           {/* TODO - UNCOMMENT THIS WHEN PERFORMANCES IN DB

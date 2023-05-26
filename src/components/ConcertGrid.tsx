@@ -104,6 +104,8 @@ const ConcertGrid = ({ concertsByDate, logEdit }: ConcertGridProps) => {
     }
   }
   
+console.log(concertsByDate)
+
   // Sort the Dates so that we look up the concerts object in custom order
   const sortedDates = Object.keys(concertsByDate).sort(descSort);
 
