@@ -59,11 +59,11 @@ const SearchInput = (props: SearchBarProps) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const keyDownHandler: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+  const keyDownHandler: React.KeyboardEventHandler<HTMLInputElement> = e => {
     if (e.key == "Enter") {
       props.makeNewSearch();
     }
-  }
+  };
 
   return (
     <FormControl variant="filled" size="small" sx={{ mr: 10 }}>
