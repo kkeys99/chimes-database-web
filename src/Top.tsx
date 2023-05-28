@@ -19,7 +19,6 @@ import { Button, Box, Typography } from "@mui/material";
 import SongPage from "./pages/SongPage";
 import Dashboard from "./pages/Dashboard";
 
-
 // This component contains state that is handled across different pages
 // This naming is what you get when an RTL engineer learns frontend lol
 const Top = () => {
