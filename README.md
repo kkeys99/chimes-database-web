@@ -19,25 +19,29 @@ This is a Node.js project.
 ## Usage
 
 In order for the app to run, there must be a Frontend process and a Backend process.
-* The Backend process holds the Database itself and fields HTTP Requests using a REST API.
-* The Frontend process holds the webpages and makes HTTP Requests to the Backend process.
+
+- The Backend process holds the Database itself and fields HTTP Requests using a REST API.
+- The Frontend process holds the webpages and makes HTTP Requests to the Backend process.
 
 ### Prerequisites
-* **Node.js and NPM (Node Package Manager)** - [Install Link](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
+- **Node.js and NPM (Node Package Manager)** - [Install Link](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
 ### 1 - Run the Frontend Process
 
 Setup:
+
 1. Clone this repo to your local workspace
 2. Run the command `npm install` (this installs dependent Node.js packages/libraries)
 
 Run:
+
 1. Run the command `npm run start` to start the frontend process
 2. Navigate to http://localhost:3000/ in your browser of choice
 
-That's it! 
+That's it!
 
-*However*, there must be a process running for the backend in order for you to see any data. If not, your page will lack content. This is set up by a proxy to port 3030  in the ways described [in this article](https://dev.to/salarc123/how-to-connect-a-react-frontend-with-a-nodejs-express-backend-50i9). To run the backend, choose *one* of the following options:
+_However_, there must be a process running for the backend in order for you to see any data. If not, your page will lack content. This is set up by a proxy to port 3030 in the ways described [in this article](https://dev.to/salarc123/how-to-connect-a-react-frontend-with-a-nodejs-express-backend-50i9). To run the backend, choose _one_ of the following options:
 
 ### 2.1- Backend Option 1 - Development w Local Backend (Recommended)
 
