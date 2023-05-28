@@ -6,8 +6,13 @@ import { useState, useEffect, memo } from "react";
 import Box from "@mui/material/Box";
 
 const Dashboard = () => {
-  /*** Return Component ***/
-  return <Box>Coming Soon ...</Box>;
-};
+
+    /*** Return Component ***/
+    return (
+        <Box>
+            Coming Soon ...
+        </Box>
+    )
+}
 
 export default Dashboard;
