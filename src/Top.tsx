@@ -8,7 +8,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import NavBar from "./components/NavBar";
 import SiteHeader from "./components/SiteHeader";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 
 import CM from "./pages/CM";
 import Home from "./pages/Home";
@@ -22,11 +22,20 @@ import Dashboard from "./pages/Dashboard";
 // This component contains state that is handled across different pages
 // This naming is what you get when an RTL engineer learns frontend lol
 const Top = () => {
+
+  const location = useLocation();
+  const currentPage = location.pathname.split("/")[1];
+
+  // Component Control
+  const disableConcertLogger = (currentPage === "dashboard");
+  const disableNavbar = (currentPage === "dashboard");
+
   /*** Concert Logger ************************************/
   // State variables
   const [logOpen, setLogOpen] = useState(false);
   const [logEditMode, setLogEditMode] = useState(false);
   const [logEditID, setLogEditID] = useState<number | null>(null);
+
 
   // Callback functions
   const logButtonClickHandler: React.MouseEventHandler = () => {
@@ -49,6 +58,7 @@ const Top = () => {
   };
 
   /*** Log Tab Button ************************************/
+
   // Style and position variables
   const buttonHeight = 34;
   const buttonMargin = 4;
@@ -122,10 +132,12 @@ const Top = () => {
       {" "}
       {/* A Container box to make body scroll sideways */}
       <SiteHeader />
+      { !disableNavbar &&
       <NavBar {...navBarProps} />
+      }
       {/* Div to push everything else down because header is fixed positioning */}
       {/* There must be a way to make it cleaner but this hacky thing works for now */}
-      <div style={{ height: 224 }} />
+      <div style={{ height: (!disableNavbar) ? 224 : 96 }} />
       <Routes>
         <Route path="/" element={<Home {...homePageProps} />} />
         <Route path="/CMs/:initials" element={<CM logEdit={handleLogEdit} />} />
@@ -136,7 +148,8 @@ const Top = () => {
         />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
-      {/* The Button to slide the Concert Log in and out*/}
+      {/* The Button to slide the Concert Log in and out*/
+      (!disableConcertLogger) &&
       <Box
         sx={{
           overflow: "hidden", // This makes button box-shadow not appear outside of box
@@ -185,6 +198,8 @@ const Top = () => {
           Log
         </Button>
       </Box>
+      }
+      { !disableConcertLogger &&
       <ConcertLogger
         open={logOpen}
         isEditMode={logEditMode}
@@ -192,6 +207,7 @@ const Top = () => {
         setEditMode={setLogEditMode}
         cancelEdit={cancelEdit}
       />
+      }
     </Box> // Container
   );
 };
