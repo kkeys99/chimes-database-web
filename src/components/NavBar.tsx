@@ -58,6 +58,13 @@ const CMList = () => {
 const SearchInput = (props: SearchBarProps) => {
   const theme = useTheme();
   const navigate = useNavigate();
+
+  const keyDownHandler: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key == "Enter") {
+      props.makeNewSearch();
+    }
+  }
+
   return (
     <FormControl variant="filled" size="small" sx={{ mr: 10 }}>
       <InputLabel style={{ color: theme.palette.success.dark }}>
@@ -65,6 +72,7 @@ const SearchInput = (props: SearchBarProps) => {
       </InputLabel>
       <FilledInput
         value={props.searchInput}
+        onKeyDown={keyDownHandler}
         onChange={props.searchInputChangeHandler}
         endAdornment={
           <InputAdornment position="end">
