@@ -13,13 +13,15 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FilledInput from "@mui/material/FilledInput";
 import { cms } from "../constants";
 import { useTheme } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { Link as MuiLink } from "@mui/material";
 
 import { Person } from "../typing/types";
 
 const CMList = () => {
+
+  const location = useLocation();
   const [currentCMs, setCurrentCMs] = useState<Person[]>([]);
 
   useEffect(() => {
@@ -29,8 +31,6 @@ const CMList = () => {
       .then(data => setCurrentCMs(data));
   }, []);
 
-  console.log(currentCMs);
-
   return (
     <Toolbar disableGutters variant="dense" sx={{ justifyContent: "center" }}>
       <Stack direction="row" spacing={6}>
@@ -38,8 +38,9 @@ const CMList = () => {
           return (
             //
             <MuiLink
-              href={`/CMs/${cm.initials}`}
-              color="primary.dark"
+              href={`/cm/${cm.initials}`}
+              color={(location.pathname.split("/")[2]==cm.initials) ? 
+                "primary.main" : "primary.dark"}
               variant="h2"
               fontWeight="bold"
               underline="hover"
