@@ -136,7 +136,7 @@ const Top = () => {
       <div style={{ height: !disableNavbar ? 224 : 96 }} />
       <Routes>
         <Route path="/" element={<Home {...homePageProps} />} />
-        <Route path="/CMs/:initials" element={<CM logEdit={handleLogEdit} />} />
+        <Route path="/cm/:initials" element={<CM logEdit={handleLogEdit} />} />
         <Route path="/song/:id" element={<SongPage />} />
         <Route
           path="/search"

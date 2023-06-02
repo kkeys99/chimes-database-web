@@ -133,8 +133,8 @@ export class Person {
     Object.assign(this, opts);
   }
 
-  get nameAndYear() {
-    return `${this.fullName} '${this.class}`;
+  get nameInitialsAndYear() {
+    return `${this.fullName} (${this.initials} '${this.class})`;
   }
 }
 

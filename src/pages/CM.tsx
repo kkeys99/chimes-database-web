@@ -243,8 +243,6 @@ function CM(props: { logEdit: Function }) {
       .then(data => setThisCM(new Person(data[0])));
   }, []);
 
-  console.log(thisCM.nameAndYear);
-
   const name: string = thisCM.fullName;
 
   // Switch body components based on state
@@ -281,7 +279,7 @@ function CM(props: { logEdit: Function }) {
   return (
     <Box sx={{ pt: "12px", pb: "12px", pl: "24px", pr: "24px" }}>
       <CMPageHeader
-        displayName={thisCM.nameAndYear}
+        displayName={thisCM.nameInitialsAndYear}
         currentPage={subPage}
         renderSubPage={setSubPage}
       />
