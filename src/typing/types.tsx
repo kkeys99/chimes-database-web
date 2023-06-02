@@ -105,15 +105,37 @@ export class Concert {
   performances: Performance[] = [];
 }
 
+interface PersonFields {
+  id: number;
+  initials: string;
+  firstName: string;
+  fullName: string;
+  class: string;
+  type: string;
+  netid: string;
+  location: string;
+  activeYears: string;
+  isCurrent: boolean;
+}
+
 export class Person {
   id: number = 0;
   initials: string = "";
+  firstName: string = "";
   fullName: string = "";
   class: string = "";
   type: string = "";
   netid: string = "";
+  location: string = "";
   activeYears: string = "";
   isCurrent: boolean = false;
+  constructor(opts: PersonFields) {
+    Object.assign(this, opts);
+  }
+
+  get nameAndYear() {
+    return `${this.fullName} '${this.class}`;
+  }
 }
 
 //----------------------------------------
