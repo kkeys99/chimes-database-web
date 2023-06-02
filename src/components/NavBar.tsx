@@ -20,7 +20,6 @@ import { Link as MuiLink } from "@mui/material";
 import { Person } from "../typing/types";
 
 const CMList = () => {
-
   const location = useLocation();
   const [currentCMs, setCurrentCMs] = useState<Person[]>([]);
 
@@ -39,8 +38,11 @@ const CMList = () => {
             //
             <MuiLink
               href={`/cm/${cm.initials}`}
-              color={(location.pathname.split("/")[2]==cm.initials) ? 
-                "primary.main" : "primary.dark"}
+              color={
+                location.pathname.split("/")[2] == cm.initials
+                  ? "primary.main"
+                  : "primary.dark"
+              }
               variant="h2"
               fontWeight="bold"
               underline="hover"
