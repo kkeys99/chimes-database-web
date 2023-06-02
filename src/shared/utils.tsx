@@ -56,7 +56,7 @@ export function songToDisplayObj(song: Song) {
   return displaySong;
 }
 
-export function songListToSongDisplayList(songList: Song[]){
+export function songListToSongDisplayList(songList: Song[]) {
   let songDisplayList: SongDisplay[] = songList.map((song: Song) => {
     return songToDisplayObj(song);
   });

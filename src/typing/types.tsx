@@ -106,7 +106,7 @@ export class Concert {
 }
 
 interface PersonFields {
-  id: number ;
+  id: number;
   initials: string;
   firstName: string;
   fullName: string;
@@ -129,9 +129,7 @@ export class Person {
   location: string = "";
   activeYears: string = "";
   isCurrent: boolean = false;
-  constructor(
-    opts: PersonFields
-  ) {
+  constructor(opts: PersonFields) {
     Object.assign(this, opts);
   }
 

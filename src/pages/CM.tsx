@@ -15,7 +15,6 @@ import ConcertGrid from "../components/ConcertGrid";
 import { Person, Song, SongDisplay, resultTableRowData } from "../typing/types";
 import { sortConcertsByDate, songListToSongDisplayList } from "../shared/utils";
 
-
 // Header of the CM Page
 function CMPageHeader(props: {
   displayName: string;
@@ -169,11 +168,12 @@ function CMPageArrangements(props: { initials: string | undefined }) {
     fetch(`/song/search?arranger=${props.initials}`)
       .then(res => res.json())
       .then(data => {
-         // Convert to songDisplay
-        const resAsSongDisplay = songListToSongDisplayList(data)
+        // Convert to songDisplay
+        const resAsSongDisplay = songListToSongDisplayList(data);
         // Calculate "you"
         // "you" not implemented yet
-        setData(resAsSongDisplay)});
+        setData(resAsSongDisplay);
+      });
   }, []);
 
   return (
