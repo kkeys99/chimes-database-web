@@ -56,6 +56,13 @@ export function songToDisplayObj(song: Song) {
   return displaySong;
 }
 
+export function songListToSongDisplayList(songList: Song[]){
+  let songDisplayList: SongDisplay[] = songList.map((song: Song) => {
+    return songToDisplayObj(song);
+  });
+  return songDisplayList;
+}
+
 // Use this to convert hash key to date display - SUPER JANKY MAKE IT BETTER
 export function dateHashToDisplayStr(dateHash: number): string {
   const dateStr = dateHash.toString();

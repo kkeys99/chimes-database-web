@@ -17,7 +17,7 @@ import Typography from "@mui/material/Typography";
 import { ResultsTable, SearchByFieldResults } from "../components/ResultsTable";
 // Custom Types
 import { Song, SongDisplay, resultTableRowData } from "../typing/types";
-import { songToDisplayObj } from "../shared/utils";
+import { songListToSongDisplayList } from "../shared/utils";
 
 interface SearchResultsProps {
   newSearch: boolean;
@@ -53,9 +53,7 @@ const SearchResults = memo(function SearchResults({
         .then(res => res.json())
         .then(data => {
           // Convert to songDisplay
-          let resAsSongDisplay: SongDisplay[] = data.map((song: Song) => {
-            return songToDisplayObj(song);
-          });
+          const resAsSongDisplay = songListToSongDisplayList(data);
           // Calculate "you"
           // "you" not implemented yet
           setReturnedSongs(resAsSongDisplay);

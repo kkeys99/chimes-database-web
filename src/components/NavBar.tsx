@@ -23,6 +23,7 @@ const CMList = () => {
   const [currentCMs, setCurrentCMs] = useState<Person[]>([]);
 
   useEffect(() => {
+    console.log("NavBar useEffect");
     fetch(`/person/current`)
       .then(res => res.json())
       .then(data => setCurrentCMs(data));

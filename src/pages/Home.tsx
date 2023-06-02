@@ -36,6 +36,8 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
 
   const concertsByDate = sortConcertsByDate(data);
 
+  console.log("Re-render Home");
+
   useEffect(() => {
     console.log("Fetching concert:");
     console.log(

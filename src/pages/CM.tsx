@@ -12,12 +12,13 @@ import ButtonBase from "@mui/material/ButtonBase";
 // Custom Components
 import { ResultsTable } from "../components/ResultsTable";
 import ConcertGrid from "../components/ConcertGrid";
-import { Song, resultTableRowData } from "../typing/types";
-import { sortConcertsByDate } from "../shared/utils";
+import { Person, Song, SongDisplay, resultTableRowData } from "../typing/types";
+import { sortConcertsByDate, songListToSongDisplayList } from "../shared/utils";
+
 
 // Header of the CM Page
 function CMPageHeader(props: {
-  name: string;
+  displayName: string;
   currentPage: string;
   renderSubPage: any;
 }) {
@@ -37,7 +38,7 @@ function CMPageHeader(props: {
         fontWeight="bold"
         sx={{ pb: "12px" }}
       >
-        {props.name}
+        {props.displayName}
       </Typography>
       <Stack
         direction="row"
@@ -162,19 +163,22 @@ function CMPageConcerts(props: {
 
 // Container for the "Arrangements" Tab
 function CMPageArrangements(props: { initials: string | undefined }) {
-  const [data, setData] = useState({ arrangements: [] });
+  const [data, setData] = useState<resultTableRowData[]>([]);
 
   useEffect(() => {
-    fetch(`/CMs/${props.initials}/arrangements`)
+    fetch(`/song/search?arranger=${props.initials}`)
       .then(res => res.json())
-      .then(data => setData(data));
+      .then(data => {
+         // Convert to songDisplay
+        const resAsSongDisplay = songListToSongDisplayList(data)
+        // Calculate "you"
+        // "you" not implemented yet
+        setData(resAsSongDisplay)});
   }, []);
-
-  let arr_data: resultTableRowData[] = [];
 
   return (
     <Box sx={{ pt: "12px", pb: "12px", pl: "24px", pr: "24px" }}>
-      <ResultsTable data={data.arrangements} lite={false} />
+      <ResultsTable data={data} lite={false} />
     </Box>
   );
 }
@@ -220,7 +224,7 @@ function CMPageRequests(props: { initials: string | undefined }) {
 
 // Container for the Body of the CM Page
 function CM(props: { logEdit: Function }) {
-  const [data, setData] = useState({ text: "" });
+  const [thisCM, setThisCM] = useState<Person>({} as Person);
 
   // Setter gets passed to header component
   // and used for on-click listener.
@@ -234,12 +238,14 @@ function CM(props: { logEdit: Function }) {
   const { initials } = useParams();
 
   useEffect(() => {
-    fetch(`/CMs/${initials}/initials`)
+    fetch(`/person/initials/${initials}`)
       .then(res => res.json())
-      .then(data => setData(data));
+      .then(data => setThisCM(new Person(data[0])));
   }, []);
 
-  const name: string = data.text;
+  console.log(thisCM.nameAndYear);
+
+  const name: string = thisCM.fullName;
 
   // Switch body components based on state
   let bodyComponent;
@@ -275,7 +281,7 @@ function CM(props: { logEdit: Function }) {
   return (
     <Box sx={{ pt: "12px", pb: "12px", pl: "24px", pr: "24px" }}>
       <CMPageHeader
-        name={name}
+        displayName={thisCM.nameAndYear}
         currentPage={subPage}
         renderSubPage={setSubPage}
       />
