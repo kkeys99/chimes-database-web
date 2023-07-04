@@ -12,9 +12,9 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        {/* 
-          * The "Top" Component is wrapped in Router so that it can use
-          * state variables that have react-router-dom hooks
+        {/*
+         * The "Top" Component is wrapped in Router so that it can use
+         * state variables that have react-router-dom hooks
          */}
         <Top />
       </Router>

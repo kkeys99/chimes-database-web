@@ -122,8 +122,8 @@ const SongLogger = ({
   const inputFontSize = theme.typography.body2;
 
   // Error Flags
-  const titleError = checkErrors && song.title === '';
-  const cmError = checkErrors && song.CM === '';
+  const titleError = checkErrors && song.title === "";
+  const cmError = checkErrors && song.CM === "";
 
   // TODO add click and drag functionality
 
@@ -257,7 +257,7 @@ const ConcertLogger = ({
           setLog({
             date: dayjs(data.date),
             concertType: data.type,
-            bellsAdjusted: (data.bellsAdjusted === true), // set to false if it is any falsy value, including undefined
+            bellsAdjusted: data.bellsAdjusted === true, // set to false if it is any falsy value, including undefined
             songs: [emptySong()], // need to have an entry in order for form to populate
             // TODO - Add back in and test when ready
             //songs: (data.performances.length > 0) ? data.performances.map((perf: Performance) => {
@@ -375,28 +375,25 @@ const ConcertLogger = ({
     let nonEmptySongs;
     if (logForm.songs.length === 1) {
       nonEmptySongs = logForm.songs.filter(song => {
-        return (song.title !== '') && (song.CM !== '')
+        return song.title !== "" && song.CM !== "";
       });
-    }
-    else {
-     nonEmptySongs = logForm.songs;
+    } else {
+      nonEmptySongs = logForm.songs;
     }
     console.log(nonEmptySongs);
-    const finalForm: concertLogFields = {...logForm,
-      songs: nonEmptySongs
-    }
+    const finalForm: concertLogFields = { ...logForm, songs: nonEmptySongs };
     return finalForm;
   }
 
   const errorCheck = (log: concertLogFields) => {
     let errorPresent = false;
     log.songs.forEach(song => {
-      if (song.title  === '' || song.CM === '') {
+      if (song.title === "" || song.CM === "") {
         errorPresent = true;
       }
     });
     return errorPresent;
-  }
+  };
 
   const submitHandler = (e: React.FormEvent) => {
     // This is the handler for when the form is submitted
@@ -426,7 +423,7 @@ const ConcertLogger = ({
       // What to do when submit on edit mode
       //
     }
-  
+
     // Maybe logic that will trigger a pop-up will go here, reacting to a return code?
     //
 
