@@ -1,14 +1,14 @@
+// React and hooks
 import * as React from "react";
 import { useState, useEffect } from "react";
+// Dayjs
 import dayjs from "dayjs";
 import { Dayjs } from "dayjs";
-
-import { useTheme } from "@mui/material/styles";
-
+// Mui imports
+import { useTheme, styled } from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Toolbar from "@mui/material/Toolbar";
 import Drawer from "@mui/material/Drawer";
 import Checkbox from "@mui/material/Checkbox";
 import FormGroup from "@mui/material/FormGroup";
@@ -26,10 +26,8 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CustomDatePicker from "./CustomDatePicker";
-
-import { styled } from "@mui/material/styles";
 import { IconButton } from "@mui/material";
-
+// Custom types
 import {
   concertLogFields,
   songEntry,
@@ -37,9 +35,11 @@ import {
   Performance,
 } from "../typing/types";
 
+/* Constants ****************************************/
 const drawerWidth = 256;
+const concertTypes = ["morning", "afternoon", "evening", "specialty"];
 
-const concertTypes = ["Morning", "Afternoon", "Evening", "Specialty"];
+/* Prop Interfaces ***********************************/
 
 interface ConcertLoggerProps {
   open: boolean;
@@ -61,7 +61,10 @@ interface SongLoggerProps {
   addSong: Function; // Handlers from the top-level Logger
   deleteSong: Function;
   editSong: Function;
+  checkErrors: boolean;
 }
+
+/* Components ***********************************/
 
 // This was necessary for having more control over the shape of the selector
 // In the default way, the words were not sitting inside the box.
@@ -113,9 +116,14 @@ const SongLogger = ({
   addSong,
   deleteSong,
   editSong,
+  checkErrors,
 }: SongLoggerProps) => {
   const theme = useTheme();
   const inputFontSize = theme.typography.body2;
+
+  // Error Flags
+  const titleError = checkErrors && song.title === '';
+  const cmError = checkErrors && song.CM === '';
 
   // TODO add click and drag functionality
 
@@ -160,6 +168,7 @@ const SongLogger = ({
 
       {/* Song Title text field*/}
       <TextField
+        error={titleError}
         onChange={titleChangeHandler}
         name="title"
         value={song.title}
@@ -168,13 +177,14 @@ const SongLogger = ({
         sx={{ py: 1, width: "96px", flexShrink: 0 }}
         variant="filled"
         InputProps={{
-          disableUnderline: true,
+          disableUnderline: !titleError,
           sx: { borderRadius: "4px", py: 1, px: 2, fontSize: inputFontSize },
         }}
       />
 
       {/* CM Selector */}
       <Select
+        error={cmError}
         name={"CM"}
         value={song.CM}
         onChange={cmChangeHandler}
@@ -221,14 +231,14 @@ const ConcertLogger = ({
   const theme = useTheme();
   const inputFontSize = theme.typography.body2;
 
-  /***** Handling Edit Mode ****************************/
-  const [editedConcert, setEditedConcert] = useState<Concert | null>(null);
-  const [concertFetched, setConcertFetched] = useState(false);
+  const [checkErrors, setCheckErrors] = useState(false);
 
+  // Will only happen on changes to editMode or editID
   useEffect(() => {
+    console.log("ConcertLogger useEffect");
     // Referenced this because I don't really know what I'm doing here lol
     //https://stackoverflow.com/questions/49725012/handling-response-status-using-fetch-in-react-js
-    if (isEditMode && (!concertFetched || editID != editedConcert?.id)) {
+    if (isEditMode) {
       // Enter this condition if we are in edit mode and
       // We don't have a concert to edit OR
       // We are changing which concert to edit
@@ -244,34 +254,34 @@ const ConcertLogger = ({
         })
         .then(data => {
           console.log(data);
-          setEditedConcert(data.concert);
-          setConcertFetched(true);
           setLog({
-            date: dayjs(data.concert.date),
-            concertType: data.concert.type,
-            bellsAdjusted: data.concert.bellsAdjusted,
-            songs: data.concert.performances.map((perf: Performance) => {
-              return {
-                title: perf.song.title,
-                CM: perf.performers[0], // TODO fix this
-                request: perf.isRequest,
-              };
-            }),
-            privateNote: "",
-            publicNote: "", // TODO fix this
+            date: dayjs(data.date),
+            concertType: data.type,
+            bellsAdjusted: (data.bellsAdjusted === true), // set to false if it is any falsy value, including undefined
+            songs: [emptySong()], // need to have an entry in order for form to populate
+            // TODO - Add back in and test when ready
+            //songs: (data.performances.length > 0) ? data.performances.map((perf: Performance) => {
+            //  return {
+            //    title: perf.song.title,
+            //    CM: perf.performers[0], // TODO fix this
+            //    request: perf.isRequest,
+            //  };
+            //}) :
+            // [emptySong()],
+            privateNote: data.notes,
+            publicNote: "", // TODO add support for this when ready
           });
         })
         .catch(error => {
           console.log(error);
         });
-    } // if (isEditMode && (!concertFetched || editID != editedConcert?.id))
-    else if (!isEditMode && concertFetched) {
-      // Reset Fetched and clear the form if
+    } // if isEditMode
+    else {
+      // Clear the form if
       // We are leaving edit mode (editMode is off and we have a concert fetched)
-      setConcertFetched(false);
       setLog(defaultLog);
     }
-  });
+  }, [isEditMode, editID]);
 
   // Props passed into the Paper component of the Drawer
   const paperProps = {
@@ -291,7 +301,7 @@ const ConcertLogger = ({
 
   const defaultLog: concertLogFields = {
     date: dayjs(),
-    concertType: "Morning",
+    concertType: concertTypes[0],
     bellsAdjusted: false,
     songs: [emptySong()],
     privateNote: "",
@@ -359,24 +369,70 @@ const ConcertLogger = ({
     });
   };
 
+  // Process the form and return processed form
+  function processForm(): concertLogFields {
+    // Return an empty list if there is one blank entry
+    let nonEmptySongs;
+    if (logForm.songs.length === 1) {
+      nonEmptySongs = logForm.songs.filter(song => {
+        return (song.title !== '') && (song.CM !== '')
+      });
+    }
+    else {
+     nonEmptySongs = logForm.songs;
+    }
+    console.log(nonEmptySongs);
+    const finalForm: concertLogFields = {...logForm,
+      songs: nonEmptySongs
+    }
+    return finalForm;
+  }
+
+  const errorCheck = (log: concertLogFields) => {
+    let errorPresent = false;
+    log.songs.forEach(song => {
+      if (song.title  === '' || song.CM === '') {
+        errorPresent = true;
+      }
+    });
+    return errorPresent;
+  }
+
   const submitHandler = (e: React.FormEvent) => {
     // This is the handler for when the form is submitted
     console.log("Submitting Form");
     // This will prevent the page from refreshing
     e.preventDefault();
+    // Process the form and check for errors
+    // Make sure empty songs don't go through
+    // This will be a separate variable as the state variable to ensure changes are actually caught on submit.
+    const finalForm: concertLogFields = processForm();
+    console.log(finalForm);
+
+    // Check final form because processForm may remove errors caught by this check
+    if (errorCheck(finalForm)) {
+      setCheckErrors(true);
+      return;
+    }
+
     if (!isEditMode) {
       // Send the actual HTTP POST request
-      fetch("/log", {
+      fetch("/concert/new", {
         method: "POST",
         headers: { "Content-type": "application/json" },
-        body: JSON.stringify(logForm),
+        body: JSON.stringify(finalForm),
       });
     } else {
       // What to do when submit on edit mode
+      //
     }
-    // Clear the form
-    setLog(defaultLog);
+  
     // Maybe logic that will trigger a pop-up will go here, reacting to a return code?
+    //
+
+    // Clear the form if submit was successful
+    setLog(defaultLog);
+    setCheckErrors(false);
   };
 
   /***** Return Component ****************************/
@@ -446,27 +502,26 @@ const ConcertLogger = ({
           {/*** ADJUSTED BELLS ****************************************/}
           <FormControlLabel
             sx={{ pt: 4, pb: 0.5 }}
+            checked={logForm.bellsAdjusted}
+            disabled={isEditMode}
             // For whatever reason, formControlLabel has a marginLeft of -11??
             control={
               <Checkbox
                 disableRipple
-                disabled={isEditMode}
                 name="bellsAdjusted"
-                value={logForm.bellsAdjusted}
-                checked={logForm.bellsAdjusted}
+                color="secondary"
                 onChange={e => {
                   setLog({
                     ...logForm,
                     bellsAdjusted: e.target.checked,
                   });
                 }}
-                color="secondary"
                 sx={{ py: 0, position: "relative" }}
               />
             }
             label="Adjusted bells"
           />
-        </FormControl>{" "}
+        </FormControl>
         {/* Need to end this here bc focus class turns notes red */}
         {/*** SONGS ****************************************************/}
         <Typography
@@ -484,6 +539,7 @@ const ConcertLogger = ({
             deleteSong={removeSongLogger}
             editSong={editSongEntry}
             bottom={index == logForm.songs.length - 1}
+            checkErrors={checkErrors}
           />
         ))}
         {/*** NOTE PRIVATE ***********************************************/}
