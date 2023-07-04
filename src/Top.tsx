@@ -39,9 +39,6 @@ const Top = () => {
   const logButtonClickHandler: React.MouseEventHandler = () => {
     // Toggle the open state
     logOpen ? setLogOpen(false) : setLogOpen(true);
-    // Fully clear edit mode
-    setLogEditMode(false);
-    setLogEditID(null);
   };
 
   const handleLogEdit = (id: number) => {
