@@ -20,7 +20,7 @@ import {
   searchByFieldRowData,
   Song,
 } from "../typing/types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 /*****************************************************************************/
 
@@ -156,13 +156,23 @@ interface HeaderCellProps {
   field: string;
   fieldToDisplay: Function;
   sortButtonOnClick: Function;
+  sortState: SortState,
+  index: number
+}
+
+enum SortState {
+  NoSort,
+  Asc,
+  Desc,
 }
 
 const HeaderCell = ({
   field,
   fieldToDisplay,
   sortButtonOnClick,
-}: HeaderCellProps) => {
+  sortState,
+  index
+}: HeaderCellProps) => {    
   return (
     <TableCell align="center">
       <Stack direction="row" justifyContent={"center"}>
@@ -181,26 +191,28 @@ const HeaderCell = ({
             sx={{ p: 0, height: 12, width: 12 }}
             disableRipple
             onClick={() => {
-              sortButtonOnClick(field, "asc");
+              sortButtonOnClick(field, "asc", index);
             }}
           >
             <SvgIcon
               sx={{ p: 0, height: 12, width: 12 }}
               component={ArrowDropUpIcon}
               viewBox={"6 6 12 12"}
+              color = {sortState === SortState.Asc ? "primary" : "disabled"}
             />
           </IconButton>
           <IconButton
             sx={{ p: 0, height: 12, width: 12 }}
             disableRipple
             onClick={() => {
-              sortButtonOnClick(field, "desc");
+              sortButtonOnClick(field, "desc", index);
             }}
           >
             <SvgIcon
               sx={{ p: 0, height: 12, width: 12 }}
               component={ArrowDropDownIcon}
               viewBox={"6 6 12 12"}
+              color = {sortState === SortState.Desc ? "primary" : "disabled"}
             />
           </IconButton>
         </ButtonGroup>
@@ -227,20 +239,55 @@ const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
     ? playingStatsFields
     : playingStatsFieldsFull;
 
-  // Pass this into the Sort buttons to update sorting State variables
-  const sortButtonOnClick = (field: string, order: string) => {
+  const [sortStates, setSortStates] = useState<SortState[]>([]);
+
+  // Pass this into the Sort buttons to update sorting State variables 
+  const sortButtonOnClick = (field: string, order: string, index: number) => {
+    const defaultStates: SortState[] = [...sortStates].map((state) => SortState.NoSort);
+
+    switch (order) {
+      case 'asc':
+        setSortStates(
+          defaultStates.map((state, i) => {
+            if (i === index) { return SortState.Asc };
+            return state;
+          })
+        );
+        break;
+      case 'desc':
+        setSortStates(
+          defaultStates.map((state, i) => {
+            if (i === index) { return SortState.Desc };
+            return state;
+          })
+        );
+        break;
+    }
+
     setOrderBy(getField(field.toLowerCase()));
     setSortDirection(order);
   };
+
+  useEffect(() => {
+    const tempStates: SortState[] = [];
+
+    for (let i = 0; i < headerFields.length; i++) {
+      tempStates.push(SortState.NoSort);
+    }
+
+    setSortStates(() => tempStates);
+  }, []);
 
   return (
     <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
-            {headerFields.map(field => (
+            {headerFields.map((field, index) => (
               <HeaderCell
                 field={field}
+                index={index}
+                sortState={sortStates[index]}
                 fieldToDisplay={(text: string) => text}
                 sortButtonOnClick={sortButtonOnClick}
               />
@@ -307,14 +354,18 @@ const SearchByFieldResults = ({ field, data }: SearchByFieldProps) => {
 
   const headerFields = [field, "count"];
 
+  const [sortStates, setSortStates] = useState<SortState[]>([]);
+
   return (
     <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
-            {headerFields.map(field => (
+            {headerFields.map((field, index) => (
               <HeaderCell
                 field={field}
+                index={index}
+                sortState={sortStates[index]}
                 fieldToDisplay={(text: string) => text}
                 sortButtonOnClick={sortButtonOnClick}
               />
