@@ -156,8 +156,8 @@ interface HeaderCellProps {
   field: string;
   fieldToDisplay: Function;
   sortButtonOnClick: Function;
-  sortState: SortState,
-  index: number
+  sortState: SortState;
+  index: number;
 }
 
 enum SortState {
@@ -171,8 +171,8 @@ const HeaderCell = ({
   fieldToDisplay,
   sortButtonOnClick,
   sortState,
-  index
-}: HeaderCellProps) => {    
+  index,
+}: HeaderCellProps) => {
   return (
     <TableCell align="center">
       <Stack direction="row" justifyContent={"center"}>
@@ -198,7 +198,7 @@ const HeaderCell = ({
               sx={{ p: 0, height: 12, width: 12 }}
               component={ArrowDropUpIcon}
               viewBox={"6 6 12 12"}
-              color = {sortState === SortState.Asc ? "primary" : "disabled"}
+              color={sortState === SortState.Asc ? "primary" : "disabled"}
             />
           </IconButton>
           <IconButton
@@ -212,7 +212,7 @@ const HeaderCell = ({
               sx={{ p: 0, height: 12, width: 12 }}
               component={ArrowDropDownIcon}
               viewBox={"6 6 12 12"}
-              color = {sortState === SortState.Desc ? "primary" : "disabled"}
+              color={sortState === SortState.Desc ? "primary" : "disabled"}
             />
           </IconButton>
         </ButtonGroup>
@@ -241,23 +241,29 @@ const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
 
   const [sortStates, setSortStates] = useState<SortState[]>([]);
 
-  // Pass this into the Sort buttons to update sorting State variables 
+  // Pass this into the Sort buttons to update sorting State variables
   const sortButtonOnClick = (field: string, order: string, index: number) => {
-    const defaultStates: SortState[] = [...sortStates].map((state) => SortState.NoSort);
+    const defaultStates: SortState[] = [...sortStates].map(
+      state => SortState.NoSort
+    );
 
     switch (order) {
-      case 'asc':
+      case "asc":
         setSortStates(
           defaultStates.map((state, i) => {
-            if (i === index) { return SortState.Asc };
+            if (i === index) {
+              return SortState.Asc;
+            }
             return state;
           })
         );
         break;
-      case 'desc':
+      case "desc":
         setSortStates(
           defaultStates.map((state, i) => {
-            if (i === index) { return SortState.Desc };
+            if (i === index) {
+              return SortState.Desc;
+            }
             return state;
           })
         );
