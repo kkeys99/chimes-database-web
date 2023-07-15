@@ -49,7 +49,7 @@ const playingStatsFieldsFull = [
 ];
 
 function getField(field: string): string {
-  return field == "song" ? "title" :  songDisplayFieldToVar(field);
+  return field == "song" ? "title" : songDisplayFieldToVar(field);
 }
 
 // Example from https://mui.com/material-ui/react-table/
@@ -165,7 +165,6 @@ interface HeaderCellProps {
   index: number;
 }
 
-
 const HeaderCell = ({
   field,
   fieldToDisplay,
@@ -233,7 +232,9 @@ const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
 
   // State variables for sorting. Sorts the whole table by column specified by orderBy
   const [orderBy, setOrderBy] = useState("sheet");
-  const [sortDirection, setSortDirection] = useState<SortState.Asc | SortState.Desc>(SortState.Asc);
+  const [sortDirection, setSortDirection] = useState<
+    SortState.Asc | SortState.Desc
+  >(SortState.Asc);
   const [sortStates, setSortStates] = useState<SortState[]>([]);
 
   console.log(orderBy);
@@ -243,12 +244,15 @@ const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
     ? playingStatsFields
     : playingStatsFieldsFull;
 
-
   // Pass this into the Sort buttons to update sorting State variables
-  const sortButtonOnClick = (field: string, order: SortState.Asc | SortState.Desc, index: number) => {
+  const sortButtonOnClick = (
+    field: string,
+    order: SortState.Asc | SortState.Desc,
+    index: number
+  ) => {
     // Update sort states - this field gets order, all other fields unsorted
     const updSortStates = sortStates.map((state, i) => {
-      return (i === index) ? order : SortState.NoSort;
+      return i === index ? order : SortState.NoSort;
     });
     setSortStates(updSortStates);
     // Update other sorting state variables
