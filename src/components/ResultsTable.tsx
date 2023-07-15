@@ -20,9 +20,16 @@ import {
   searchByFieldRowData,
   Song,
 } from "../typing/types";
+import { songDisplayFieldToVar } from "../shared/utils";
 import { useState, useEffect } from "react";
 
 /*****************************************************************************/
+
+enum SortState {
+  NoSort,
+  Asc,
+  Desc,
+}
 
 const playingStatsFields = ["Available", "You", "Sheet", "Song"];
 const playingStatsFieldsFull = [
@@ -35,14 +42,14 @@ const playingStatsFieldsFull = [
   "Arranger",
   "Genre",
   //"Requests",
-  "Key Sig",
+  "Key",
   "Time Sig",
   "Tempo",
   "Added",
 ];
 
 function getField(field: string): string {
-  return field == "song" ? "title" : field.replaceAll(" ", "");
+  return field == "song" ? "title" :  songDisplayFieldToVar(field);
 }
 
 // Example from https://mui.com/material-ui/react-table/
@@ -57,16 +64,14 @@ function ascendingCompare<T>(a: T, b: T, orderBy: keyof T) {
   }
 }
 
-type Order = "asc" | "desc";
-
 // This function gets the compare *function* to use, whether ascend or descend.
 // It takes in the order - asc or desc - and the key by which to sort
 // Its return type a function that takes in 2 array items and returns a number
 function getCompareFunction(
-  order: string,
+  order: SortState.Asc | SortState.Desc,
   orderBy: any
 ): (a: resultTableRowData, b: resultTableRowData) => number {
-  return order == "asc"
+  return order == SortState.Asc
     ? (a, b) => ascendingCompare(a, b, orderBy)
     : (a, b) => -ascendingCompare(a, b, orderBy);
 }
@@ -160,11 +165,6 @@ interface HeaderCellProps {
   index: number;
 }
 
-enum SortState {
-  NoSort,
-  Asc,
-  Desc,
-}
 
 const HeaderCell = ({
   field,
@@ -191,7 +191,7 @@ const HeaderCell = ({
             sx={{ p: 0, height: 12, width: 12 }}
             disableRipple
             onClick={() => {
-              sortButtonOnClick(field, "asc", index);
+              sortButtonOnClick(field, SortState.Asc, index);
             }}
           >
             <SvgIcon
@@ -205,7 +205,7 @@ const HeaderCell = ({
             sx={{ p: 0, height: 12, width: 12 }}
             disableRipple
             onClick={() => {
-              sortButtonOnClick(field, "desc", index);
+              sortButtonOnClick(field, SortState.Desc, index);
             }}
           >
             <SvgIcon
@@ -233,47 +233,30 @@ const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
 
   // State variables for sorting. Sorts the whole table by column specified by orderBy
   const [orderBy, setOrderBy] = useState("sheet");
-  const [sortDirection, setSortDirection] = useState("asc");
+  const [sortDirection, setSortDirection] = useState<SortState.Asc | SortState.Desc>(SortState.Asc);
+  const [sortStates, setSortStates] = useState<SortState[]>([]);
+
+  console.log(orderBy);
+  console.log(props.data);
 
   const headerFields: string[] = props.lite
     ? playingStatsFields
     : playingStatsFieldsFull;
 
-  const [sortStates, setSortStates] = useState<SortState[]>([]);
 
   // Pass this into the Sort buttons to update sorting State variables
-  const sortButtonOnClick = (field: string, order: string, index: number) => {
-    const defaultStates: SortState[] = [...sortStates].map(
-      state => SortState.NoSort
-    );
-
-    switch (order) {
-      case "asc":
-        setSortStates(
-          defaultStates.map((state, i) => {
-            if (i === index) {
-              return SortState.Asc;
-            }
-            return state;
-          })
-        );
-        break;
-      case "desc":
-        setSortStates(
-          defaultStates.map((state, i) => {
-            if (i === index) {
-              return SortState.Desc;
-            }
-            return state;
-          })
-        );
-        break;
-    }
-
-    setOrderBy(getField(field.toLowerCase()));
+  const sortButtonOnClick = (field: string, order: SortState.Asc | SortState.Desc, index: number) => {
+    // Update sort states - this field gets order, all other fields unsorted
+    const updSortStates = sortStates.map((state, i) => {
+      return (i === index) ? order : SortState.NoSort;
+    });
+    setSortStates(updSortStates);
+    // Update other sorting state variables
+    setOrderBy(getField(field));
     setSortDirection(order);
   };
 
+  // Initialize sortStates - empty dependency list so only happens once
   useEffect(() => {
     const tempStates: SortState[] = [];
 
@@ -350,10 +333,10 @@ interface SearchByFieldProps {
 }
 const SearchByFieldResults = ({ field, data }: SearchByFieldProps) => {
   const [orderBy, setOrderBy] = useState("sheet");
-  const [sortDirection, setSortDirection] = useState("asc");
+  const [sortDirection, setSortDirection] = useState<SortState>(SortState.Asc);
 
   // Pass this into the Sort buttons to update sorting State variables
-  const sortButtonOnClick = (field: string, order: string) => {
+  const sortButtonOnClick = (field: string, order: SortState) => {
     setOrderBy(getField(field.toLowerCase()));
     setSortDirection(order);
   };
