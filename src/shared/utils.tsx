@@ -10,7 +10,7 @@ export function songFieldToDisplay(field: string) {
   if (!field) {
     return "";
   }
-  let result_str = field.replace("_", " ");
+  let result_str = field.replaceAll("_", " ");
   result_str = result_str[0].toUpperCase() + result_str.substring(1);
   for (let i = 1; i < result_str.length; i++) {
     if (result_str[i - 1] === " ") {
@@ -26,6 +26,14 @@ export function songFieldToDisplay(field: string) {
     }
   }
   return result_str;
+}
+
+// Convert on-screen tag attribute name to variable name
+export function songDisplayFieldToVar(field: string) {
+  if (!field) {
+    return "";
+  }
+  return field.toLowerCase().replaceAll(" ", "_");
 }
 
 // Function that separates delimited tags and returns them in a list
