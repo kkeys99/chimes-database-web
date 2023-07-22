@@ -49,7 +49,7 @@ const playingStatsFieldsFull = [
 ];
 
 function getField(field: string): string {
-  return field == "song" ? "title" :  songDisplayFieldToVar(field);
+  return field == "Song" ? "title" :  songDisplayFieldToVar(field);
 }
 
 // Example from https://mui.com/material-ui/react-table/
@@ -256,16 +256,18 @@ const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
     setSortDirection(order);
   };
 
-  // Initialize sortStates - empty dependency list so only happens once
+  // Initialize sortStates - reset sort every time new search is made
   useEffect(() => {
+    // reset sortstates
     const tempStates: SortState[] = [];
-
     for (let i = 0; i < headerFields.length; i++) {
       tempStates.push(SortState.NoSort);
     }
-
     setSortStates(() => tempStates);
-  }, []);
+    // orderBy sheet ascending
+    setOrderBy("sheet");
+    setSortDirection(SortState.Asc)
+  }, [props.data]);
 
   return (
     <TableContainer>
