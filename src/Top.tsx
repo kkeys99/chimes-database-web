@@ -19,6 +19,8 @@ import { Button, Box, Typography } from "@mui/material";
 import SongPage from "./pages/SongPage";
 import Dashboard from "./pages/Dashboard";
 
+import { sessionStorageKeys } from "./constants";
+
 // This component contains state that is handled across different pages
 // This naming is what you get when an RTL engineer learns frontend lol
 const Top = () => {
@@ -31,25 +33,61 @@ const Top = () => {
 
   /*** Concert Logger ************************************/
   // State variables
-  const [logOpen, setLogOpen] = useState(false);
-  const [logEditMode, setLogEditMode] = useState(false);
+  const [logOpen, setLogOpen] = useState<boolean>(false);
+  const [logEditMode, setLogEditMode] = useState<boolean>(false);
   const [logEditID, setLogEditID] = useState<number | null>(null);
+
+  console.log("Re-render TOP");
+  console.log(sessionStorage);
+
+  // Initialize State
+  useEffect(() => {
+    // Edit mode / ID
+    const storedEditMode = sessionStorage.getItem(sessionStorageKeys.concertLog.editMode);
+    const storedEditId = sessionStorage.getItem(sessionStorageKeys.concertLog.editID);
+    if (storedEditMode === null) {
+      sessionStorage.setItem(sessionStorageKeys.concertLog.editMode, JSON.stringify(false));
+      sessionStorage.setItem(sessionStorageKeys.concertLog.editID, JSON.stringify(null));
+    }
+    else if (storedEditId !== null) {
+      const editModeBool = (storedEditMode === "true");
+      setLogEditMode(editModeBool);
+      editModeBool && setLogEditID(parseInt(storedEditId)); // ID shouldn't be null if edit mode is on, only needed if true
+    }
+
+    // Log isOpen
+    const storedOpen = sessionStorage.getItem(sessionStorageKeys.concertLog.isOpen);
+    if (storedOpen === null) {
+      sessionStorage.setItem(sessionStorageKeys.concertLog.isOpen, JSON.stringify(false));
+    }
+    else {
+      setLogOpen( (storedOpen === "true") );
+    }
+
+  }, [])
 
   // Callback functions
   const logButtonClickHandler: React.MouseEventHandler = () => {
     // Toggle the open state
-    logOpen ? setLogOpen(false) : setLogOpen(true);
+    const newLogOpen = !logOpen;
+    setLogOpen(newLogOpen);
+    sessionStorage.setItem(sessionStorageKeys.concertLog.isOpen, JSON.stringify(newLogOpen));
   };
 
   const handleLogEdit = (id: number) => {
     setLogEditID(id);
     setLogEditMode(true);
     setLogOpen(true);
+    sessionStorage.setItem(sessionStorageKeys.concertLog.editMode, JSON.stringify(true));
+    sessionStorage.setItem(sessionStorageKeys.concertLog.editID, JSON.stringify(id));
+    sessionStorage.setItem(sessionStorageKeys.concertLog.isOpen, JSON.stringify(true));
   };
 
   const cancelEdit = () => {
     setLogEditID(null);
     setLogEditMode(false);
+    sessionStorage.setItem(sessionStorageKeys.concertLog.editMode, JSON.stringify(false));
+    sessionStorage.setItem(sessionStorageKeys.concertLog.editID, JSON.stringify(null));
   };
 
   /*** Log Tab Button ************************************/

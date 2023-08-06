@@ -34,10 +34,30 @@ import {
   Concert,
   Performance,
 } from "../typing/types";
+import { sessionStorageKeys } from "../constants";
+import { cleanLeadingZerosInNumericSectionValue } from "@mui/x-date-pickers/internals/hooks/useField/useField.utils";
 
 /* Constants ****************************************/
 const drawerWidth = 256;
 const concertTypes = ["morning", "afternoon", "evening", "specialty"];
+
+const emptySong = () => {
+  const newSong: songEntry = {
+    title: "",
+    CM: "",
+    request: false,
+  };
+  return newSong;
+};
+
+const defaultLog: concertLogFields = {
+  date: dayjs(),
+  concertType: concertTypes[0],
+  bellsAdjusted: false,
+  songs: [emptySong()],
+  privateNote: "",
+  publicNote: "",
+};
 
 /* Prop Interfaces ***********************************/
 
@@ -236,6 +256,7 @@ const ConcertLogger = ({
   // Will only happen on changes to editMode or editID
   useEffect(() => {
     console.log("ConcertLogger useEffect");
+    let newLog: concertLogFields = defaultLog;
     // Referenced this because I don't really know what I'm doing here lol
     //https://stackoverflow.com/questions/49725012/handling-response-status-using-fetch-in-react-js
     if (isEditMode) {
@@ -254,7 +275,7 @@ const ConcertLogger = ({
         })
         .then(data => {
           console.log(data);
-          setLog({
+          newLog = {
             date: dayjs(data.date),
             concertType: data.type,
             bellsAdjusted: data.bellsAdjusted === true, // set to false if it is any falsy value, including undefined
@@ -270,7 +291,9 @@ const ConcertLogger = ({
             // [emptySong()],
             privateNote: data.notes,
             publicNote: "", // TODO add support for this when ready
-          });
+          }
+          setLog(newLog);
+          sessionStorage.setItem(sessionStorageKeys.concertLog.logForm, JSON.stringify(newLog));
         })
         .catch(error => {
           console.log(error);
@@ -280,6 +303,7 @@ const ConcertLogger = ({
       // Clear the form if
       // We are leaving edit mode (editMode is off and we have a concert fetched)
       setLog(defaultLog);
+      sessionStorage.setItem(sessionStorageKeys.concertLog.logForm, JSON.stringify(defaultLog));
     }
   }, [isEditMode, editID]);
 
@@ -290,26 +314,31 @@ const ConcertLogger = ({
   };
 
   /***** Form Related things ****************************/
-  const emptySong = () => {
-    const newSong: songEntry = {
-      title: "",
-      CM: "",
-      request: false,
-    };
-    return newSong;
-  };
-
-  const defaultLog: concertLogFields = {
-    date: dayjs(),
-    concertType: concertTypes[0],
-    bellsAdjusted: false,
-    songs: [emptySong()],
-    privateNote: "",
-    publicNote: "",
-  };
 
   // State variable
-  const [logForm, setLog] = useState(defaultLog);
+  const [logForm, setLog] = useState<concertLogFields>(defaultLog);
+
+  // Initialize logForm
+  useEffect((() => {
+    console.log("Initialize concertLog")
+    const storedLog = sessionStorage.getItem(sessionStorageKeys.concertLog.logForm);
+    console.log(storedLog);
+    // Process Log
+    if (storedLog === null) {
+      setLog(defaultLog);
+      sessionStorage.setItem(sessionStorageKeys.concertLog.logForm, JSON.stringify(defaultLog));
+    }
+    else {
+      const newLog = JSON.parse(storedLog);
+      const newLogAdjusted: concertLogFields = {
+        ...newLog,
+        date: dayjs(newLog.date)
+      }
+      setLog(newLogAdjusted);
+    }
+  }), []);
+
+  console.log(sessionStorage);
 
   const dateChangeHandler = (newValue: Dayjs) => {
     setLog({
@@ -429,6 +458,7 @@ const ConcertLogger = ({
 
     // Clear the form if submit was successful
     setLog(defaultLog);
+    sessionStorage.setItem(sessionStorageKeys.concertLog.logForm, JSON.stringify(defaultLog));
     setCheckErrors(false);
   };
 

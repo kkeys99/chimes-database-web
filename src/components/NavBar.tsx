@@ -35,7 +35,7 @@ const CMList = () => {
       <Stack direction="row" spacing={6}>
         {currentCMs.map(cm => {
           return (
-            //
+            // Gianluca wuz here
             <MuiLink
               href={`/cm/${cm.initials}`}
               color={
