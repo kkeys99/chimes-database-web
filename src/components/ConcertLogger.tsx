@@ -22,6 +22,8 @@ import InputBase from "@mui/material/InputBase";
 import Button from "@mui/material/Button";
 import MenuIcon from "@mui/icons-material/Menu";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -56,12 +58,14 @@ interface LogIconProps {
 
 interface SongLoggerProps {
   song: songEntry; // The song data itself
-  index: number; // The vertical position in the list
+  index: number; // The vertical position in the list "X"
   bottom: boolean; // Whether it's the bottom entry
   addSong: Function; // Handlers from the top-level Logger
   deleteSong: Function;
+  moveSong: Function;
   editSong: Function;
   checkErrors: boolean;
+  sortableList: HTMLElement;
 }
 
 /* Components ***********************************/
@@ -115,8 +119,10 @@ const SongLogger = ({
   bottom,
   addSong,
   deleteSong,
+  moveSong,
   editSong,
   checkErrors,
+  sortableList
 }: SongLoggerProps) => {
   const theme = useTheme();
   const inputFontSize = theme.typography.body2;
@@ -151,19 +157,41 @@ const SongLogger = ({
     editSong(index, song);
   };
 
+  const endDragRow = (e: React.DragEvent<HTMLElement>) => {
+    const originalRow: HTMLElement = e.currentTarget; 
+    const rowRec = originalRow.getBoundingClientRect();
+
+    if (e.clientY < rowRec.top){ 
+      const dHeight = rowRec.top - e.clientY; 
+      const dIndex = Math.floor(dHeight / rowRec.height) + 1;
+      moveSong(index, index-dIndex)
+    } else if (e.clientY > rowRec.bottom) { 
+      const dHeight = e.clientY - rowRec.bottom;
+      const dIndex = Math.floor(dHeight / rowRec.height) + 1;
+      moveSong(index, index+dIndex)
+    }
+  };
+
+  const boxSX = {
+    display: "flex", 
+    gap: "7px", 
+    py: 1,
+    // borderTop: borderType === "top" ? 'solid 1px red' : 'solid 1px transparent',
+    // borderBottom: borderType === 'bottom' ? 'solid 1px red' : 'solid 1px transparent',
+  }
+
   return (
-    <FormGroup row sx={{ display: "flex", gap: "8px", py: 1 }}>
+    <FormGroup 
+      row sx={boxSX}
+      draggable="true"
+      onDragEnd={(event) => endDragRow(event)}
+      >
       {/* Icons on the left-hand side: drag and add song */}
-      <Stack direction="column" spacing={1}>
-        <LogIcon>
-          <MenuIcon sx={{ fontSize: inputFontSize }} />
-        </LogIcon>
-        {
-          //bottom && // Only be able to add at the bottom of list - disabled for now bc we can't reorder
-          <LogIcon clickHandler={addSongHandler}>
-            <AddCircleOutlineIcon sx={{ fontSize: inputFontSize }} />
+      <Stack direction="column" spacing={0.5}>
+        {/* // bottom Only be able to add at the bottom of list - disabled for now bc we can't reorder */}
+          <LogIcon>
+            <MenuIcon sx={{ fontSize: inputFontSize, marginY: 5.5}} />
           </LogIcon>
-        }
       </Stack>
 
       {/* Song Title text field*/}
@@ -174,7 +202,7 @@ const SongLogger = ({
         value={song.title}
         multiline
         minRows={1}
-        sx={{ py: 1, width: "96px", flexShrink: 0 }}
+        sx={{ py: 4, width: "64px", flexShrink: 0 }}
         variant="filled"
         InputProps={{
           disableUnderline: !titleError,
@@ -201,15 +229,22 @@ const SongLogger = ({
       </Select>
 
       {/* Icons on the right-hand side: Request and Delete */}
+      {
+        //bottom && // Only be able to add at the bottom of list - disabled for now bc we can't reorder
+        <LogIcon clickHandler={addSongHandler}>
+          <AddCircleOutlineIcon sx={{ fontSize: inputFontSize }} />
+        </LogIcon>
+      }
+      <LogIcon clickHandler={deleteSongHandler}>
+        <DeleteIcon sx={{ fontSize: inputFontSize }} />
+      </LogIcon>
+    
       <LogIcon clickHandler={requestChangeHandler}>
         {song.request ? (
           <StarIcon sx={{ fontSize: inputFontSize }} />
         ) : (
           <StarBorderIcon sx={{ fontSize: inputFontSize }} />
         )}
-      </LogIcon>
-      <LogIcon clickHandler={deleteSongHandler}>
-        <DeleteIcon sx={{ fontSize: inputFontSize }} />
       </LogIcon>
     </FormGroup>
   );
@@ -228,6 +263,7 @@ const ConcertLogger = ({
   editID,
   cancelEdit,
 }: ConcertLoggerProps) => {
+  const sortableList = React.useRef<HTMLDivElement | null>(null);
   const theme = useTheme();
   const inputFontSize = theme.typography.body2;
 
@@ -353,6 +389,40 @@ const ConcertLogger = ({
       ...logForm,
       songs: songList,
     });
+  };
+
+  const moveSongLogger = (indexA: number, indexB: number) => {
+    // guard when indexes are out of range or the same
+    if (indexA < 0 || indexA >= logForm.songs.length || 
+      indexB < 0 || indexB >= logForm.songs.length || indexA === indexB) 
+        return;
+      
+    const songList: songEntry[] = logForm.songs;
+
+    if (indexA < indexB){
+      const itemA = songList[indexA];
+      for (let i = indexA; i < indexB; i++){
+        songList[i] = songList[i+1];
+      }
+      songList[indexB] = itemA;
+    }
+
+    if (indexA > indexB){
+      const itemA = songList[indexA];
+      for (let i = indexA; i > indexB; i--){
+        songList[i] = songList[i-1];
+      }
+      songList[indexB] = itemA;
+    }
+
+    setLog({
+      ...logForm,
+      songs: songList,
+    });
+  }
+
+  const hightlightSongLogger = (index: number) => {
+    
   };
 
   const editSongEntry = (index: number, song: songEntry) => {
@@ -528,17 +598,21 @@ const ConcertLogger = ({
         >
           Add song:
         </Typography>
-        {logForm.songs.map((song, index) => (
-          <SongLogger
-            song={song}
-            index={index}
-            addSong={addSongLogger}
-            deleteSong={removeSongLogger}
-            editSong={editSongEntry}
-            bottom={index == logForm.songs.length - 1}
-            checkErrors={checkErrors}
-          />
-        ))}
+        <div ref={sortableList}>
+          {logForm.songs.map((song, index) => (
+            <SongLogger
+              song={song}
+              index={index}
+              addSong={addSongLogger}
+              deleteSong={removeSongLogger}
+              moveSong={moveSongLogger}
+              editSong={editSongEntry}
+              bottom={index == logForm.songs.length - 1}
+              checkErrors={checkErrors}
+              sortableList={sortableList.current!}
+            />
+          ))}
+        </div>
         {/*** NOTE PRIVATE ***********************************************/}
         <FormLabel sx={{ pt: 2, pb: 0.5, color: theme.palette.primary.dark }}>
           Note (private):
