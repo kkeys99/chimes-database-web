@@ -165,6 +165,14 @@ interface HeaderCellProps {
   index: number;
 }
 
+// colors react to hover
+const buttonSX = {
+  p: 0, 
+  height: 12, 
+  width: 12,
+  "&:hover":{color: "success.dark"}
+}
+
 const HeaderCell = ({
   field,
   fieldToDisplay,
@@ -187,28 +195,28 @@ const HeaderCell = ({
         {/* Tried to modularize this, but couldn't figure out best way to pass onClick properly */}
         <ButtonGroup orientation="vertical">
           <IconButton
-            sx={{ p: 0, height: 12, width: 12 }}
+            sx={buttonSX}
             disableRipple
             onClick={() => {
               sortButtonOnClick(field, SortState.Asc, index);
             }}
           >
             <SvgIcon
-              sx={{ p: 0, height: 12, width: 12 }}
+              sx={buttonSX}
               component={ArrowDropUpIcon}
               viewBox={"6 6 12 12"}
               color={sortState === SortState.Asc ? "primary" : "disabled"}
             />
           </IconButton>
           <IconButton
-            sx={{ p: 0, height: 12, width: 12 }}
+            sx={buttonSX}
             disableRipple
             onClick={() => {
               sortButtonOnClick(field, SortState.Desc, index);
             }}
           >
             <SvgIcon
-              sx={{ p: 0, height: 12, width: 12 }}
+              sx={buttonSX}
               component={ArrowDropDownIcon}
               viewBox={"6 6 12 12"}
               color={sortState === SortState.Desc ? "primary" : "disabled"}
@@ -220,7 +228,7 @@ const HeaderCell = ({
   );
 };
 
-/*****************************************************************************
+/******************************************
  * ResultsTable
  *
  * Description:
@@ -260,18 +268,16 @@ const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
     setSortDirection(order);
   };
 
-  // Initialize sortStates - reset sort every time new search is made
+  // Initialize sortStates - empty dependency list so only happens once
   useEffect(() => {
-    // reset sortstates
     const tempStates: SortState[] = [];
+
     for (let i = 0; i < headerFields.length; i++) {
       tempStates.push(SortState.NoSort);
     }
+
     setSortStates(() => tempStates);
-    // orderBy sheet ascending
-    setOrderBy("sheet");
-    setSortDirection(SortState.Asc);
-  }, [props.data]);
+  }, []);
 
   return (
     <TableContainer>
