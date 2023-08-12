@@ -169,11 +169,11 @@ interface HeaderCellProps {
 
 // colors react to hover
 const buttonSX = {
-  p: 0, 
-  height: 12, 
+  p: 0,
+  height: 12,
   width: 12,
-  "&:hover":{color: "success.dark"}
-}
+  "&:hover": { color: "success.dark" },
+};
 
 const HeaderCell = ({
   field,
