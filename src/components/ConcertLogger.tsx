@@ -22,8 +22,8 @@ import InputBase from "@mui/material/InputBase";
 import Button from "@mui/material/Button";
 import MenuIcon from "@mui/icons-material/Menu";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -122,7 +122,7 @@ const SongLogger = ({
   moveSong,
   editSong,
   checkErrors,
-  sortableList
+  sortableList,
 }: SongLoggerProps) => {
   const theme = useTheme();
   const inputFontSize = theme.typography.body2;
@@ -158,40 +158,41 @@ const SongLogger = ({
   };
 
   const endDragRow = (e: React.DragEvent<HTMLElement>) => {
-    const originalRow: HTMLElement = e.currentTarget; 
+    const originalRow: HTMLElement = e.currentTarget;
     const rowRec = originalRow.getBoundingClientRect();
 
-    if (e.clientY < rowRec.top){ 
-      const dHeight = rowRec.top - e.clientY; 
+    if (e.clientY < rowRec.top) {
+      const dHeight = rowRec.top - e.clientY;
       const dIndex = Math.floor(dHeight / rowRec.height) + 1;
-      moveSong(index, index-dIndex)
-    } else if (e.clientY > rowRec.bottom) { 
+      moveSong(index, index - dIndex);
+    } else if (e.clientY > rowRec.bottom) {
       const dHeight = e.clientY - rowRec.bottom;
       const dIndex = Math.floor(dHeight / rowRec.height) + 1;
-      moveSong(index, index+dIndex)
+      moveSong(index, index + dIndex);
     }
   };
 
   const boxSX = {
-    display: "flex", 
-    gap: "7px", 
+    display: "flex",
+    gap: "7px",
     py: 1,
     // borderTop: borderType === "top" ? 'solid 1px red' : 'solid 1px transparent',
     // borderBottom: borderType === 'bottom' ? 'solid 1px red' : 'solid 1px transparent',
-  }
+  };
 
   return (
-    <FormGroup 
-      row sx={boxSX}
+    <FormGroup
+      row
+      sx={boxSX}
       draggable="true"
-      onDragEnd={(event) => endDragRow(event)}
-      >
+      onDragEnd={event => endDragRow(event)}
+    >
       {/* Icons on the left-hand side: drag and add song */}
       <Stack direction="column" spacing={0.5}>
         {/* // bottom Only be able to add at the bottom of list - disabled for now bc we can't reorder */}
-          <LogIcon>
-            <MenuIcon sx={{ fontSize: inputFontSize, marginY: 5.5}} />
-          </LogIcon>
+        <LogIcon>
+          <MenuIcon sx={{ fontSize: inputFontSize, marginY: 5.5 }} />
+        </LogIcon>
       </Stack>
 
       {/* Song Title text field*/}
@@ -238,7 +239,7 @@ const SongLogger = ({
       <LogIcon clickHandler={deleteSongHandler}>
         <DeleteIcon sx={{ fontSize: inputFontSize }} />
       </LogIcon>
-    
+
       <LogIcon clickHandler={requestChangeHandler}>
         {song.request ? (
           <StarIcon sx={{ fontSize: inputFontSize }} />
@@ -393,24 +394,29 @@ const ConcertLogger = ({
 
   const moveSongLogger = (indexA: number, indexB: number) => {
     // guard when indexes are out of range or the same
-    if (indexA < 0 || indexA >= logForm.songs.length || 
-      indexB < 0 || indexB >= logForm.songs.length || indexA === indexB) 
-        return;
-      
+    if (
+      indexA < 0 ||
+      indexA >= logForm.songs.length ||
+      indexB < 0 ||
+      indexB >= logForm.songs.length ||
+      indexA === indexB
+    )
+      return;
+
     const songList: songEntry[] = logForm.songs;
 
-    if (indexA < indexB){
+    if (indexA < indexB) {
       const itemA = songList[indexA];
-      for (let i = indexA; i < indexB; i++){
-        songList[i] = songList[i+1];
+      for (let i = indexA; i < indexB; i++) {
+        songList[i] = songList[i + 1];
       }
       songList[indexB] = itemA;
     }
 
-    if (indexA > indexB){
+    if (indexA > indexB) {
       const itemA = songList[indexA];
-      for (let i = indexA; i > indexB; i--){
-        songList[i] = songList[i-1];
+      for (let i = indexA; i > indexB; i--) {
+        songList[i] = songList[i - 1];
       }
       songList[indexB] = itemA;
     }
@@ -419,11 +425,9 @@ const ConcertLogger = ({
       ...logForm,
       songs: songList,
     });
-  }
-
-  const hightlightSongLogger = (index: number) => {
-    
   };
+
+  const hightlightSongLogger = (index: number) => {};
 
   const editSongEntry = (index: number, song: songEntry) => {
     // Any change to the song entry will invoke this function
