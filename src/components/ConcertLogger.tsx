@@ -36,6 +36,7 @@ import {
   Concert,
   Performance,
 } from "../typing/types";
+import { BooleanLiteral } from "typescript";
 
 /* Constants ****************************************/
 const drawerWidth = 256;
@@ -63,6 +64,10 @@ interface SongLoggerProps {
   addSong: Function; // Handlers from the top-level Logger
   deleteSong: Function;
   moveSong: Function;
+  setDraggingAny: Function;
+  setTarget: Function;
+  tgtAbove: boolean;
+  tgtBelow: boolean;
   editSong: Function;
   checkErrors: boolean;
   sortableList: HTMLElement;
@@ -120,6 +125,10 @@ const SongLogger = ({
   addSong,
   deleteSong,
   moveSong,
+  setDraggingAny,
+  setTarget,
+  tgtAbove,
+  tgtBelow,
   editSong,
   checkErrors,
   sortableList,
@@ -127,11 +136,13 @@ const SongLogger = ({
   const theme = useTheme();
   const inputFontSize = theme.typography.body2;
 
+  console.log(`SONG LOGGER ROW index: ${index} tA: ${tgtAbove} tB: ${tgtBelow}`);
+
+  const [draggable, setDraggable] = useState(false);
+
   // Error Flags
   const titleError = checkErrors && song.title === "";
   const cmError = checkErrors && song.CM === "";
-
-  // TODO add click and drag functionality
 
   const addSongHandler: React.MouseEventHandler = () => {
     addSong(index);
@@ -157,41 +168,59 @@ const SongLogger = ({
     editSong(index, song);
   };
 
-  const endDragRow = (e: React.DragEvent<HTMLElement>) => {
-    const originalRow: HTMLElement = e.currentTarget;
-    const rowRec = originalRow.getBoundingClientRect();
+  const menuButtonMouseDown: React.MouseEventHandler = () => {
+    setDraggable(true);
+  }
+  
+  const dragStart: React.DragEventHandler<HTMLDivElement> = () => {
+    setDraggingAny(true);
+    setTarget(index+0.5); // Initially, set target to underline below.
+  }
 
-    if (e.clientY < rowRec.top) {
-      const dHeight = rowRec.top - e.clientY;
-      const dIndex = Math.floor(dHeight / rowRec.height) + 1;
-      moveSong(index, index - dIndex);
-    } else if (e.clientY > rowRec.bottom) {
-      const dHeight = e.clientY - rowRec.bottom;
-      const dIndex = Math.floor(dHeight / rowRec.height) + 1;
-      moveSong(index, index + dIndex);
+  const calcTarget: React.DragEventHandler = (e: React.DragEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+
+    if (e.clientY < rect.top + (rect.height * 0.4)) {
+      setTarget(index-0.5);
     }
+    else if (e.clientY > rect.top + (rect.height * 0.6)) {
+      setTarget(index+0.5);
+    }
+  }
+
+  const endDragRow = (e: React.DragEvent<HTMLElement>) => {
+    moveSong(index);
+    setDraggingAny(false);
+    setDraggable(false);
   };
 
   const boxSX = {
     display: "flex",
     gap: "7px",
     py: 1,
-    // borderTop: borderType === "top" ? 'solid 1px red' : 'solid 1px transparent',
-    // borderBottom: borderType === 'bottom' ? 'solid 1px red' : 'solid 1px transparent',
+    borderColor: theme.palette.secondary.main,
+    borderStyle: "solid none",
+    borderTopWidth: tgtAbove ? ( (index===0) ? '2px' : '1px' ) :'0px',
+    borderBottomWidth: tgtBelow ? ( (bottom) ? '2px' : '1px' ) : '0px',
   };
 
   return (
     <FormGroup
       row
       sx={boxSX}
-      draggable="true"
+      draggable={draggable}
+      onDragStart={dragStart}
       onDragEnd={event => endDragRow(event)}
+      onDragOver={event => {calcTarget(event)}}
     >
       {/* Icons on the left-hand side: drag and add song */}
       <Stack direction="column" spacing={0.5}>
         {/* // bottom Only be able to add at the bottom of list - disabled for now bc we can't reorder */}
         <LogIcon>
-          <MenuIcon sx={{ fontSize: inputFontSize, marginY: 5.5 }} />
+          <MenuIcon 
+            sx={{ fontSize: inputFontSize, marginY: 5.5 }}
+            onMouseDown={menuButtonMouseDown}
+          />
         </LogIcon>
       </Stack>
 
@@ -269,6 +298,8 @@ const ConcertLogger = ({
   const inputFontSize = theme.typography.body2;
 
   const [checkErrors, setCheckErrors] = useState(false);
+  const [draggingAny, setDraggingAny] = useState(false);
+  const [moveTarget, setMoveTarget] = useState(0);
 
   // Will only happen on changes to editMode or editID
   useEffect(() => {
@@ -392,42 +423,27 @@ const ConcertLogger = ({
     });
   };
 
-  const moveSongLogger = (indexA: number, indexB: number) => {
-    // guard when indexes are out of range or the same
-    if (
-      indexA < 0 ||
-      indexA >= logForm.songs.length ||
-      indexB < 0 ||
-      indexB >= logForm.songs.length ||
-      indexA === indexB
-    )
-      return;
+  const moveSongLogger = (baseIndex: number) => {  
+    console.log(`Moving base ${baseIndex} to ${moveTarget}`)
 
+    // Target will be a x.5 to signify it's between two current indices
+    // We need to account for the dragged item exiting its space and adjacent one shifting in
+    // So, if we're moving UP, we ADD 0.5 to the target
+    // and if we're moving DOWN, we SUBTRACT 0.5 from the target
+    // This handles the edges too: 0 to -0.5 -> 0 to 0 , last to last+0.5 -> last
+    const actualTarget = (baseIndex > moveTarget) ? moveTarget+0.5 : moveTarget-0.5;
+
+    // Make new song list using Array.splice()
+    // Remember splice returns deleted items and edits in place
     const songList: songEntry[] = logForm.songs;
-
-    if (indexA < indexB) {
-      const itemA = songList[indexA];
-      for (let i = indexA; i < indexB; i++) {
-        songList[i] = songList[i + 1];
-      }
-      songList[indexB] = itemA;
-    }
-
-    if (indexA > indexB) {
-      const itemA = songList[indexA];
-      for (let i = indexA; i > indexB; i--) {
-        songList[i] = songList[i - 1];
-      }
-      songList[indexB] = itemA;
-    }
-
+    const movedSong: songEntry[] = songList.splice(baseIndex, 1);
+    songList.splice(actualTarget, 0, movedSong[0]);
+    // Update state
     setLog({
       ...logForm,
       songs: songList,
     });
   };
-
-  const hightlightSongLogger = (index: number) => {};
 
   const editSongEntry = (index: number, song: songEntry) => {
     // Any change to the song entry will invoke this function
@@ -610,6 +626,10 @@ const ConcertLogger = ({
               addSong={addSongLogger}
               deleteSong={removeSongLogger}
               moveSong={moveSongLogger}
+              setDraggingAny={setDraggingAny}
+              setTarget={setMoveTarget}
+              tgtAbove={draggingAny && (moveTarget===index-0.5)}
+              tgtBelow={draggingAny && (moveTarget===index+0.5)}
               editSong={editSongEntry}
               bottom={index == logForm.songs.length - 1}
               checkErrors={checkErrors}
