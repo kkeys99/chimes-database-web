@@ -196,7 +196,7 @@ const SongLogger = ({
 
   const boxSX = {
     display: "flex",
-    gap: "7px",
+    gap: "8px",
     py: 1,
     borderColor: theme.palette.secondary.main,
     borderStyle: "solid none",
@@ -214,14 +214,19 @@ const SongLogger = ({
       onDragOver={event => {calcTarget(event)}}
     >
       {/* Icons on the left-hand side: drag and add song */}
-      <Stack direction="column" spacing={0.5}>
-        {/* // bottom Only be able to add at the bottom of list - disabled for now bc we can't reorder */}
+      <Stack direction="column" spacing={1}>
         <LogIcon>
           <MenuIcon 
-            sx={{ fontSize: inputFontSize, marginY: 5.5 }}
+            sx={{ fontSize: inputFontSize }}
             onMouseDown={menuButtonMouseDown}
           />
         </LogIcon>
+        {
+        //bottom && // Only be able to add at the bottom of list - disabled for now bc we can't reorder
+        <LogIcon clickHandler={addSongHandler}>
+          <AddCircleOutlineIcon sx={{ fontSize: inputFontSize }} />
+        </LogIcon>
+        }
       </Stack>
 
       {/* Song Title text field*/}
@@ -232,7 +237,7 @@ const SongLogger = ({
         value={song.title}
         multiline
         minRows={1}
-        sx={{ py: 4, width: "64px", flexShrink: 0 }}
+        sx={{ py: 1, width: "96px", flexShrink: 0 }}
         variant="filled"
         InputProps={{
           disableUnderline: !titleError,
@@ -259,22 +264,15 @@ const SongLogger = ({
       </Select>
 
       {/* Icons on the right-hand side: Request and Delete */}
-      {
-        //bottom && // Only be able to add at the bottom of list - disabled for now bc we can't reorder
-        <LogIcon clickHandler={addSongHandler}>
-          <AddCircleOutlineIcon sx={{ fontSize: inputFontSize }} />
-        </LogIcon>
-      }
-      <LogIcon clickHandler={deleteSongHandler}>
-        <DeleteIcon sx={{ fontSize: inputFontSize }} />
-      </LogIcon>
-
       <LogIcon clickHandler={requestChangeHandler}>
         {song.request ? (
           <StarIcon sx={{ fontSize: inputFontSize }} />
         ) : (
           <StarBorderIcon sx={{ fontSize: inputFontSize }} />
         )}
+      </LogIcon>
+      <LogIcon clickHandler={deleteSongHandler}>
+        <DeleteIcon sx={{ fontSize: inputFontSize }} />
       </LogIcon>
     </FormGroup>
   );
