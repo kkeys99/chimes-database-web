@@ -136,7 +136,9 @@ const SongLogger = ({
   const theme = useTheme();
   const inputFontSize = theme.typography.body2;
 
-  console.log(`SONG LOGGER ROW index: ${index} tA: ${tgtAbove} tB: ${tgtBelow}`);
+  console.log(
+    `SONG LOGGER ROW index: ${index} tA: ${tgtAbove} tB: ${tgtBelow}`
+  );
 
   const [draggable, setDraggable] = useState(false);
 
@@ -170,23 +172,24 @@ const SongLogger = ({
 
   const menuButtonMouseDown: React.MouseEventHandler = () => {
     setDraggable(true);
-  }
-  
+  };
+
   const dragStart: React.DragEventHandler<HTMLDivElement> = () => {
     setDraggingAny(true);
-    setTarget(index+0.5); // Initially, set target to underline below.
-  }
+    setTarget(index + 0.5); // Initially, set target to underline below.
+  };
 
-  const calcTarget: React.DragEventHandler = (e: React.DragEvent<HTMLElement>) => {
+  const calcTarget: React.DragEventHandler = (
+    e: React.DragEvent<HTMLElement>
+  ) => {
     const rect = e.currentTarget.getBoundingClientRect();
 
-    if (e.clientY < rect.top + (rect.height * 0.4)) {
-      setTarget(index-0.5);
+    if (e.clientY < rect.top + rect.height * 0.4) {
+      setTarget(index - 0.5);
+    } else if (e.clientY > rect.top + rect.height * 0.6) {
+      setTarget(index + 0.5);
     }
-    else if (e.clientY > rect.top + (rect.height * 0.6)) {
-      setTarget(index+0.5);
-    }
-  }
+  };
 
   const endDragRow = (e: React.DragEvent<HTMLElement>) => {
     moveSong(index);
@@ -200,8 +203,8 @@ const SongLogger = ({
     py: 1,
     borderColor: theme.palette.secondary.main,
     borderStyle: "solid none",
-    borderTopWidth: tgtAbove ? ( (index===0) ? '2px' : '1px' ) :'0px',
-    borderBottomWidth: tgtBelow ? ( (bottom) ? '2px' : '1px' ) : '0px',
+    borderTopWidth: tgtAbove ? (index === 0 ? "2px" : "1px") : "0px",
+    borderBottomWidth: tgtBelow ? (bottom ? "2px" : "1px") : "0px",
   };
 
   return (
@@ -211,7 +214,9 @@ const SongLogger = ({
       draggable={draggable}
       onDragStart={dragStart}
       onDragEnd={event => endDragRow(event)}
-      onDragOver={event => {calcTarget(event)}}
+      onDragOver={event => {
+        calcTarget(event);
+      }}
     >
       {/* Icons on the left-hand side: drag and add song */}
       <Stack direction="column" spacing={1}>
@@ -421,15 +426,16 @@ const ConcertLogger = ({
     });
   };
 
-  const moveSongLogger = (baseIndex: number) => {  
-    console.log(`Moving base ${baseIndex} to ${moveTarget}`)
+  const moveSongLogger = (baseIndex: number) => {
+    console.log(`Moving base ${baseIndex} to ${moveTarget}`);
 
     // Target will be a x.5 to signify it's between two current indices
     // We need to account for the dragged item exiting its space and adjacent one shifting in
     // So, if we're moving UP, we ADD 0.5 to the target
     // and if we're moving DOWN, we SUBTRACT 0.5 from the target
     // This handles the edges too: 0 to -0.5 -> 0 to 0 , last to last+0.5 -> last
-    const actualTarget = (baseIndex > moveTarget) ? moveTarget+0.5 : moveTarget-0.5;
+    const actualTarget =
+      baseIndex > moveTarget ? moveTarget + 0.5 : moveTarget - 0.5;
 
     // Make new song list using Array.splice()
     // Remember splice returns deleted items and edits in place
@@ -626,8 +632,8 @@ const ConcertLogger = ({
               moveSong={moveSongLogger}
               setDraggingAny={setDraggingAny}
               setTarget={setMoveTarget}
-              tgtAbove={draggingAny && (moveTarget===index-0.5)}
-              tgtBelow={draggingAny && (moveTarget===index+0.5)}
+              tgtAbove={draggingAny && moveTarget === index - 0.5}
+              tgtBelow={draggingAny && moveTarget === index + 0.5}
               editSong={editSongEntry}
               bottom={index == logForm.songs.length - 1}
               checkErrors={checkErrors}
