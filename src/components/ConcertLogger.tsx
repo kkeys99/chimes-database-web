@@ -1,6 +1,7 @@
 // React and hooks
 import * as React from "react";
 import { useState, useEffect } from "react";
+import useSessionStorage from "../hooks/useSessionStorage";
 // Dayjs
 import dayjs from "dayjs";
 import { Dayjs } from "dayjs";
@@ -35,7 +36,7 @@ import {
   Performance,
 } from "../typing/types";
 import { sessionStorageKeys } from "../constants";
-import { cleanLeadingZerosInNumericSectionValue } from "@mui/x-date-pickers/internals/hooks/useField/useField.utils";
+
 
 /* Constants ****************************************/
 const drawerWidth = 256;
@@ -51,7 +52,7 @@ const emptySong = () => {
 };
 
 const defaultLog: concertLogFields = {
-  date: dayjs(),
+  date: dayjs().toISOString(),
   concertType: concertTypes[0],
   bellsAdjusted: false,
   songs: [emptySong()],
@@ -276,7 +277,7 @@ const ConcertLogger = ({
         .then(data => {
           console.log(data);
           newLog = {
-            date: dayjs(data.date),
+            date: data.date,
             concertType: data.type,
             bellsAdjusted: data.bellsAdjusted === true, // set to false if it is any falsy value, including undefined
             songs: [emptySong()], // need to have an entry in order for form to populate
@@ -293,7 +294,6 @@ const ConcertLogger = ({
             publicNote: "", // TODO add support for this when ready
           }
           setLog(newLog);
-          sessionStorage.setItem(sessionStorageKeys.concertLog.logForm, JSON.stringify(newLog));
         })
         .catch(error => {
           console.log(error);
@@ -303,7 +303,6 @@ const ConcertLogger = ({
       // Clear the form if
       // We are leaving edit mode (editMode is off and we have a concert fetched)
       setLog(defaultLog);
-      sessionStorage.setItem(sessionStorageKeys.concertLog.logForm, JSON.stringify(defaultLog));
     }
   }, [isEditMode, editID]);
 
@@ -316,31 +315,13 @@ const ConcertLogger = ({
   /***** Form Related things ****************************/
 
   // State variable
-  const [logForm, setLog] = useState<concertLogFields>(defaultLog);
+  const [logForm, setLog] = useSessionStorage(sessionStorageKeys.concertLog.logForm, defaultLog);
 
-  // Initialize logForm
-  useEffect((() => {
-    console.log("Initialize concertLog")
-    const storedLog = sessionStorage.getItem(sessionStorageKeys.concertLog.logForm);
-    console.log(storedLog);
-    // Process Log
-    if (storedLog === null) {
-      setLog(defaultLog);
-      sessionStorage.setItem(sessionStorageKeys.concertLog.logForm, JSON.stringify(defaultLog));
-    }
-    else {
-      const newLog = JSON.parse(storedLog);
-      const newLogAdjusted: concertLogFields = {
-        ...newLog,
-        date: dayjs(newLog.date)
-      }
-      setLog(newLogAdjusted);
-    }
-  }), []);
+  const logDateAsDayjs = dayjs(logForm.date);
 
   console.log(sessionStorage);
 
-  const dateChangeHandler = (newValue: Dayjs) => {
+  const dateChangeHandler = (newValue: string) => {
     setLog({
       ...logForm,
       date: newValue, // Date picker will take care of dayjs
@@ -498,7 +479,7 @@ const ConcertLogger = ({
             </Typography>
             <CustomDatePicker
               light={true}
-              date={logForm.date}
+              date={logDateAsDayjs}
               setDate={dateChangeHandler}
               disabled={isEditMode}
             />
