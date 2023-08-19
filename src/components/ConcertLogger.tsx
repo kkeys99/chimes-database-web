@@ -221,16 +221,16 @@ const SongLogger = ({
       {/* Icons on the left-hand side: drag and add song */}
       <Stack direction="column" spacing={1}>
         <LogIcon>
-          <MenuIcon 
+          <MenuIcon
             sx={{ fontSize: inputFontSize }}
             onMouseDown={menuButtonMouseDown}
           />
         </LogIcon>
         {
-        //bottom && // Only be able to add at the bottom of list - disabled for now bc we can't reorder
-        <LogIcon clickHandler={addSongHandler}>
-          <AddCircleOutlineIcon sx={{ fontSize: inputFontSize }} />
-        </LogIcon>
+          //bottom && // Only be able to add at the bottom of list - disabled for now bc we can't reorder
+          <LogIcon clickHandler={addSongHandler}>
+            <AddCircleOutlineIcon sx={{ fontSize: inputFontSize }} />
+          </LogIcon>
         }
       </Stack>
 
