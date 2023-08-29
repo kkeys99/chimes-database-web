@@ -16,10 +16,12 @@ import { useTheme } from "@mui/material/styles";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import { Link as MuiLink } from "@mui/material";
+import { NavLink as RouterNavLink } from "react-router-dom";
 
 import { Person } from "../typing/types";
 
 const CMList = () => {
+  const theme = useTheme();
   const location = useLocation();
   const [currentCMs, setCurrentCMs] = useState<Person[]>([]);
 
@@ -35,9 +37,11 @@ const CMList = () => {
       <Stack direction="row" spacing={6}>
         {currentCMs.map(cm => {
           return (
-            //
+            // Gianluca wuz here
+            //I want to use react-router-dom link but Typography doesn't have the underline prop
             <MuiLink
-              href={`/cm/${cm.initials}`}
+              component={RouterNavLink}
+              to={`/cm/${cm.initials}`}
               color={
                 location.pathname.split("/")[2] == cm.initials
                   ? "primary.main"

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState, useEffect, useMemo } from "react";
+import useSessionStorage from "./hooks/useSessionStorage";
 
 import theme from "./theme";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -19,11 +20,15 @@ import { Button, Box, Typography } from "@mui/material";
 import SongPage from "./pages/SongPage";
 import Dashboard from "./pages/Dashboard";
 
+import { sessionStorageKeys } from "./constants";
+
 // This component contains state that is handled across different pages
 // This naming is what you get when an RTL engineer learns frontend lol
 const Top = () => {
   const location = useLocation();
   const currentPage = location.pathname.split("/")[1];
+  console.log("render top");
+  console.log(location);
 
   // Component Control
   const disableConcertLogger = currentPage === "dashboard";
@@ -31,14 +36,27 @@ const Top = () => {
 
   /*** Concert Logger ************************************/
   // State variables
-  const [logOpen, setLogOpen] = useState(false);
-  const [logEditMode, setLogEditMode] = useState(false);
-  const [logEditID, setLogEditID] = useState<number | null>(null);
+  const [logOpen, setLogOpen] = useSessionStorage(
+    sessionStorageKeys.concertLog.isOpen,
+    false
+  );
+  const [logEditMode, setLogEditMode] = useSessionStorage(
+    sessionStorageKeys.concertLog.editMode,
+    false
+  );
+  const [logEditID, setLogEditID] = useSessionStorage<number | null>(
+    sessionStorageKeys.concertLog.editID,
+    null
+  );
+
+  console.log("Re-render TOP");
+  console.log(sessionStorage);
 
   // Callback functions
   const logButtonClickHandler: React.MouseEventHandler = () => {
     // Toggle the open state
-    logOpen ? setLogOpen(false) : setLogOpen(true);
+    const newLogOpen = !logOpen;
+    setLogOpen(newLogOpen);
   };
 
   const handleLogEdit = (id: number) => {

@@ -2,6 +2,7 @@ import * as React from "react";
 import theme from "../theme";
 import { useParams } from "react-router-dom";
 import { useState, useEffect, memo } from "react";
+import useSessionStorage from "../hooks/useSessionStorage";
 import dayjs from "dayjs";
 import { Dayjs } from "dayjs";
 
@@ -22,21 +23,24 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
   const tempSearchDate = "2013-05-05";
 
   const [data, setData] = useState([]);
-  const [dateFrom, setFrom] = useState<Dayjs>(dayjs("2006-01-01"));
-  const [dateTo, setTo] = useState<Dayjs>(
-    dayjs(tempSearchDate, "YYYY-MM-DD", true)
+  const [dateFrom, setFrom] = useState<string>(
+    dayjs("2006-01-01").toISOString()
+  );
+  const [dateTo, setTo] = useState<string>(
+    dayjs(tempSearchDate, "YYYY-MM-DD", true).toISOString()
   );
 
-  const fromYear = dateFrom.year();
-  const fromMonth = dateFrom.month();
-  const fromDaY = dateFrom.day();
-  const toYear = dateTo.year();
-  const toMonth = dateTo.month();
-  const toDay = dateTo.date();
+  const tempDateFrom = dayjs(dateFrom, "YYYY-MM-DD", true);
+  const tempDateTo = dayjs(dateTo, "YYYY-MM-DD", true);
+
+  const fromYear = tempDateFrom.year();
+  const fromMonth = tempDateFrom.month();
+  const fromDay = tempDateFrom.date();
+  const toYear = tempDateTo.year();
+  const toMonth = tempDateTo.month();
+  const toDay = tempDateTo.date();
 
   const concertsByDate = sortConcertsByDate(data);
-
-  console.log("Re-render Home");
 
   useEffect(() => {
     console.log("Fetching concert:");
@@ -58,9 +62,13 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
         <Box flexGrow={1} />
         <Stack direction="row" sx={{ display: "flex", height: "28px" }}>
           <Box sx={{ mx: 4 }}> from </Box>
-          <CustomDatePicker light={false} date={dateFrom} setDate={setFrom} />
+          <CustomDatePicker
+            light={false}
+            date={tempDateFrom}
+            setDate={setFrom}
+          />
           <Box sx={{ mx: 4 }}> to </Box>
-          <CustomDatePicker light={false} date={dateTo} setDate={setTo} />
+          <CustomDatePicker light={false} date={tempDateTo} setDate={setTo} />
         </Stack>
       </Stack>
       <Stack direction="row">

@@ -1,6 +1,7 @@
 // React and hooks
 import * as React from "react";
 import { useState, useEffect } from "react";
+import useSessionStorage from "../hooks/useSessionStorage";
 // Dayjs
 import dayjs from "dayjs";
 import { Dayjs } from "dayjs";
@@ -36,11 +37,29 @@ import {
   Concert,
   Performance,
 } from "../typing/types";
-import { BooleanLiteral } from "typescript";
+import { sessionStorageKeys } from "../constants";
 
 /* Constants ****************************************/
 const drawerWidth = 256;
 const concertTypes = ["morning", "afternoon", "evening", "specialty"];
+
+const emptySong = () => {
+  const newSong: songEntry = {
+    title: "",
+    CM: "",
+    request: false,
+  };
+  return newSong;
+};
+
+const defaultLog: concertLogFields = {
+  date: dayjs().toISOString(),
+  concertType: concertTypes[0],
+  bellsAdjusted: false,
+  songs: [emptySong()],
+  privateNote: "",
+  publicNote: "",
+};
 
 /* Prop Interfaces ***********************************/
 
@@ -304,9 +323,13 @@ const ConcertLogger = ({
   const [draggingAny, setDraggingAny] = useState(false);
   const [moveTarget, setMoveTarget] = useState(0);
 
+  console.log(
+    `Re render Logger with props: ${open}, ${isEditMode}, ${editID}, ${cancelEdit}`
+  );
   // Will only happen on changes to editMode or editID
   useEffect(() => {
     console.log("ConcertLogger useEffect");
+    let newLog: concertLogFields = defaultLog;
     // Referenced this because I don't really know what I'm doing here lol
     //https://stackoverflow.com/questions/49725012/handling-response-status-using-fetch-in-react-js
     if (isEditMode) {
@@ -325,8 +348,8 @@ const ConcertLogger = ({
         })
         .then(data => {
           console.log(data);
-          setLog({
-            date: dayjs(data.date),
+          newLog = {
+            date: data.date,
             concertType: data.type,
             bellsAdjusted: data.bellsAdjusted === true, // set to false if it is any falsy value, including undefined
             songs: [emptySong()], // need to have an entry in order for form to populate
@@ -341,17 +364,15 @@ const ConcertLogger = ({
             // [emptySong()],
             privateNote: data.notes,
             publicNote: "", // TODO add support for this when ready
-          });
+          };
+          setLog(newLog);
         })
         .catch(error => {
           console.log(error);
         });
     } // if isEditMode
-    else {
-      // Clear the form if
-      // We are leaving edit mode (editMode is off and we have a concert fetched)
-      setLog(defaultLog);
-    }
+    // NOTE: there is no else here because the form is cleared in
+    // the Cancel button handler
   }, [isEditMode, editID]);
 
   // Props passed into the Paper component of the Drawer
@@ -361,28 +382,18 @@ const ConcertLogger = ({
   };
 
   /***** Form Related things ****************************/
-  const emptySong = () => {
-    const newSong: songEntry = {
-      title: "",
-      CM: "",
-      request: false,
-    };
-    return newSong;
-  };
-
-  const defaultLog: concertLogFields = {
-    date: dayjs(),
-    concertType: concertTypes[0],
-    bellsAdjusted: false,
-    songs: [emptySong()],
-    privateNote: "",
-    publicNote: "",
-  };
 
   // State variable
-  const [logForm, setLog] = useState(defaultLog);
+  const [logForm, setLog] = useSessionStorage(
+    sessionStorageKeys.concertLog.logForm,
+    defaultLog
+  );
 
-  const dateChangeHandler = (newValue: Dayjs) => {
+  const logDateAsDayjs = dayjs(logForm.date);
+
+  console.log(sessionStorage);
+
+  const dateChangeHandler = (newValue: string) => {
     setLog({
       ...logForm,
       date: newValue, // Date picker will take care of dayjs
@@ -391,6 +402,7 @@ const ConcertLogger = ({
 
   const cancelEditHandler: React.MouseEventHandler = () => {
     cancelEdit();
+    // Clear the form here if we're leaving editMode
     setLog(defaultLog);
   };
 
@@ -523,6 +535,10 @@ const ConcertLogger = ({
 
     // Clear the form if submit was successful
     setLog(defaultLog);
+    sessionStorage.setItem(
+      sessionStorageKeys.concertLog.logForm,
+      JSON.stringify(defaultLog)
+    );
     setCheckErrors(false);
   };
 
@@ -562,7 +578,7 @@ const ConcertLogger = ({
             </Typography>
             <CustomDatePicker
               light={true}
-              date={logForm.date}
+              date={logDateAsDayjs}
               setDate={dateChangeHandler}
               disabled={isEditMode}
             />

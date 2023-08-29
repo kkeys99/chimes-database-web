@@ -162,7 +162,7 @@ export interface songEntry {
 }
 
 export interface concertLogFields {
-  date: Dayjs;
+  date: string;
   concertType: string;
   bellsAdjusted: boolean;
   songs: songEntry[];

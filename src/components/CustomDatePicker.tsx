@@ -34,7 +34,8 @@ const CustomDatePicker = ({
   //console.log(`Rerendering popper - open is ${open}`);
 
   const dateChangeHandler: any = (newValue: Date) => {
-    setDate(dayjs(newValue));
+    const updVal = dayjs(newValue).toISOString();
+    setDate(updVal);
   };
 
   const focusHandler: React.FocusEventHandler<HTMLInputElement> = event => {
