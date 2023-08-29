@@ -14,6 +14,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Link as MuiLink } from "@mui/material";
+import { Link as RouterLink} from "react-router-dom";
 
 import {
   resultTableRowData,
@@ -113,9 +114,10 @@ const LinkCell = (props: { text: any; href: string }) => {
     <TableCell align="center">
       {/* This is cumbersome!!! Try styled */}
       <MuiLink
+        component={RouterLink}
+        to={props.href}
         color="primary.dark"
         variant="h2"
-        href={props.href}
         underline="hover"
       >
         {props.text}

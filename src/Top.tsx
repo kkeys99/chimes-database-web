@@ -27,6 +27,8 @@ import { sessionStorageKeys } from "./constants";
 const Top = () => {
   const location = useLocation();
   const currentPage = location.pathname.split("/")[1];
+  console.log("render top");
+  console.log(location);
 
   // Component Control
   const disableConcertLogger = currentPage === "dashboard";

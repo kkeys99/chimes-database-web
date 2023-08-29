@@ -115,7 +115,7 @@ function CMPagePlayingStats(props: { initials: string | undefined }) {
     fetch(`/CMs/${props.initials}/stats`)
       .then(res => res.json())
       .then(data => setData(data));
-  }, []);
+  }, [props.initials]);
 
   return (
     <>
@@ -147,9 +147,7 @@ function CMPageConcerts(props: {
     fetch(`/CMs/${props.initials}/concerts`)
       .then(res => res.json())
       .then(data => setData(data));
-  }, []);
-
-  console.log(data);
+  }, [props.initials]);
 
   const concertsByDate = sortConcertsByDate(data.concerts);
 
@@ -165,6 +163,7 @@ function CMPageArrangements(props: { initials: string | undefined }) {
   const [data, setData] = useState<resultTableRowData[]>([]);
 
   useEffect(() => {
+    console.log("Fetch arrangements");
     fetch(`/song/search?arranger=${props.initials}`)
       .then(res => res.json())
       .then(data => {
@@ -174,7 +173,7 @@ function CMPageArrangements(props: { initials: string | undefined }) {
         // "you" not implemented yet
         setData(resAsSongDisplay);
       });
-  }, []);
+  }, [props.initials]);
 
   return (
     <Box sx={{ pt: "12px", pb: "12px", pl: "24px", pr: "24px" }}>
@@ -208,7 +207,7 @@ function CMPageRequests(props: { initials: string | undefined }) {
     fetch(`/CMs/${props.initials}/requests`)
       .then(res => res.json())
       .then(data => setData(data));
-  }, []);
+  }, [props.initials]);
 
   return (
     <>
@@ -237,11 +236,15 @@ function CM(props: { logEdit: Function }) {
   // This hook lets us get params from HTTP req
   const { initials } = useParams();
 
+  console.log("RERENDER - CM page");
+  console.log(initials);
+
   useEffect(() => {
+    console.log("CM Page useEffect");
     fetch(`/person/initials/${initials}`)
       .then(res => res.json())
       .then(data => setThisCM(new Person(data[0])));
-  }, []);
+  }, [initials]);
 
   const name: string = thisCM.fullName;
 

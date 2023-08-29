@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react';
 
 function getValueFromStorage<T>(key: string, initialValue: T) {
+    console.log(`Getting value from storage: ${key}`);
     const storedValue = sessionStorage.getItem(key);
     if (storedValue === null) {
         // if there is nothing in storage, simply return initial value
@@ -15,6 +16,7 @@ export default function useSessionStorage<T>(key: string, initialValue: T) {
         return getValueFromStorage(key, initialValue);
     });
 
+    // When value changes from when setValue is called externally, update storage
     useEffect(() => {
         sessionStorage.setItem(key, JSON.stringify(value));
     }, [value]);

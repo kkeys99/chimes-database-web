@@ -254,6 +254,7 @@ const ConcertLogger = ({
 
   const [checkErrors, setCheckErrors] = useState(false);
 
+  console.log(`Re render Logger with props: ${open}, ${isEditMode}, ${editID}, ${cancelEdit}`);
   // Will only happen on changes to editMode or editID
   useEffect(() => {
     console.log("ConcertLogger useEffect");
@@ -299,11 +300,8 @@ const ConcertLogger = ({
           console.log(error);
         });
     } // if isEditMode
-    else {
-      // Clear the form if
-      // We are leaving edit mode (editMode is off and we have a concert fetched)
-      setLog(defaultLog);
-    }
+    // NOTE: there is no else here because the form is cleared in
+    // the Cancel button handler
   }, [isEditMode, editID]);
 
   // Props passed into the Paper component of the Drawer
@@ -330,6 +328,7 @@ const ConcertLogger = ({
 
   const cancelEditHandler: React.MouseEventHandler = () => {
     cancelEdit();
+    // Clear the form here if we're leaving editMode
     setLog(defaultLog);
   };
 
