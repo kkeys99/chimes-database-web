@@ -3,7 +3,7 @@
  *
  * These are meant to help reduce typos in sessionStorage and localStorage calls
  * because those take in strings, and if you type in the raw string every time there
- * is no checking for it. 
+ * is no checking for it.
  */
 
 export const sessionStorageKeys = {
@@ -11,9 +11,9 @@ export const sessionStorageKeys = {
     logForm: "concertLog.logForm",
     editMode: "concertLog.editMode",
     editID: "concertLog.editID",
-    isOpen: "concertLog.isOpen"
-  }
-}
+    isOpen: "concertLog.isOpen",
+  },
+};
 
 export const cms = [
   "SJG",

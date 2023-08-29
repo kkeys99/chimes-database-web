@@ -323,7 +323,9 @@ const ConcertLogger = ({
   const [draggingAny, setDraggingAny] = useState(false);
   const [moveTarget, setMoveTarget] = useState(0);
 
-  console.log(`Re render Logger with props: ${open}, ${isEditMode}, ${editID}, ${cancelEdit}`);
+  console.log(
+    `Re render Logger with props: ${open}, ${isEditMode}, ${editID}, ${cancelEdit}`
+  );
   // Will only happen on changes to editMode or editID
   useEffect(() => {
     console.log("ConcertLogger useEffect");
@@ -362,7 +364,7 @@ const ConcertLogger = ({
             // [emptySong()],
             privateNote: data.notes,
             publicNote: "", // TODO add support for this when ready
-          }
+          };
           setLog(newLog);
         })
         .catch(error => {
@@ -382,7 +384,10 @@ const ConcertLogger = ({
   /***** Form Related things ****************************/
 
   // State variable
-  const [logForm, setLog] = useSessionStorage(sessionStorageKeys.concertLog.logForm, defaultLog);
+  const [logForm, setLog] = useSessionStorage(
+    sessionStorageKeys.concertLog.logForm,
+    defaultLog
+  );
 
   const logDateAsDayjs = dayjs(logForm.date);
 
@@ -530,7 +535,10 @@ const ConcertLogger = ({
 
     // Clear the form if submit was successful
     setLog(defaultLog);
-    sessionStorage.setItem(sessionStorageKeys.concertLog.logForm, JSON.stringify(defaultLog));
+    sessionStorage.setItem(
+      sessionStorageKeys.concertLog.logForm,
+      JSON.stringify(defaultLog)
+    );
     setCheckErrors(false);
   };
 

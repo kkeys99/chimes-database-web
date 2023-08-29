@@ -14,7 +14,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Link as MuiLink } from "@mui/material";
-import { Link as RouterLink} from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 import {
   resultTableRowData,

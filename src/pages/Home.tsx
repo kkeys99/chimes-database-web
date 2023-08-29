@@ -23,7 +23,9 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
   const tempSearchDate = "2013-05-05";
 
   const [data, setData] = useState([]);
-  const [dateFrom, setFrom] = useState<string>(dayjs("2006-01-01").toISOString());
+  const [dateFrom, setFrom] = useState<string>(
+    dayjs("2006-01-01").toISOString()
+  );
   const [dateTo, setTo] = useState<string>(
     dayjs(tempSearchDate, "YYYY-MM-DD", true).toISOString()
   );
@@ -60,7 +62,11 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
         <Box flexGrow={1} />
         <Stack direction="row" sx={{ display: "flex", height: "28px" }}>
           <Box sx={{ mx: 4 }}> from </Box>
-          <CustomDatePicker light={false} date={tempDateFrom} setDate={setFrom} />
+          <CustomDatePicker
+            light={false}
+            date={tempDateFrom}
+            setDate={setFrom}
+          />
           <Box sx={{ mx: 4 }}> to </Box>
           <CustomDatePicker light={false} date={tempDateTo} setDate={setTo} />
         </Stack>

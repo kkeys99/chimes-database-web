@@ -36,9 +36,18 @@ const Top = () => {
 
   /*** Concert Logger ************************************/
   // State variables
-  const [logOpen, setLogOpen] = useSessionStorage(sessionStorageKeys.concertLog.isOpen, false);
-  const [logEditMode, setLogEditMode] = useSessionStorage(sessionStorageKeys.concertLog.editMode, false);
-  const [logEditID, setLogEditID] = useSessionStorage<number | null>(sessionStorageKeys.concertLog.editID, null);
+  const [logOpen, setLogOpen] = useSessionStorage(
+    sessionStorageKeys.concertLog.isOpen,
+    false
+  );
+  const [logEditMode, setLogEditMode] = useSessionStorage(
+    sessionStorageKeys.concertLog.editMode,
+    false
+  );
+  const [logEditID, setLogEditID] = useSessionStorage<number | null>(
+    sessionStorageKeys.concertLog.editID,
+    null
+  );
 
   console.log("Re-render TOP");
   console.log(sessionStorage);

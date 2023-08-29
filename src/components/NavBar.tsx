@@ -40,7 +40,7 @@ const CMList = () => {
             // Gianluca wuz here
             //I want to use react-router-dom link but Typography doesn't have the underline prop
             <MuiLink
-              component={ RouterNavLink }
+              component={RouterNavLink}
               to={`/cm/${cm.initials}`}
               color={
                 location.pathname.split("/")[2] == cm.initials
