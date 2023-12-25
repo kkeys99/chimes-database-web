@@ -156,7 +156,7 @@ const SongLogger = ({
   const inputFontSize = theme.typography.body2;
 
   console.log(
-    `SONG LOGGER ROW index: ${index} tA: ${tgtAbove} tB: ${tgtBelow}`
+    `SONG LOGGER ROW index: ${index} tA: ${tgtAbove} tB: ${tgtBelow}`,
   );
 
   const [draggable, setDraggable] = useState(false);
@@ -199,7 +199,7 @@ const SongLogger = ({
   };
 
   const calcTarget: React.DragEventHandler = (
-    e: React.DragEvent<HTMLElement>
+    e: React.DragEvent<HTMLElement>,
   ) => {
     const rect = e.currentTarget.getBoundingClientRect();
 
@@ -324,7 +324,7 @@ const ConcertLogger = ({
   const [moveTarget, setMoveTarget] = useState(0);
 
   console.log(
-    `Re render Logger with props: ${open}, ${isEditMode}, ${editID}, ${cancelEdit}`
+    `Re render Logger with props: ${open}, ${isEditMode}, ${editID}, ${cancelEdit}`,
   );
   // Will only happen on changes to editMode or editID
   useEffect(() => {
@@ -386,7 +386,7 @@ const ConcertLogger = ({
   // State variable
   const [logForm, setLog] = useSessionStorage(
     sessionStorageKeys.concertLog.logForm,
-    defaultLog
+    defaultLog,
   );
 
   const logDateAsDayjs = dayjs(logForm.date);
@@ -537,7 +537,7 @@ const ConcertLogger = ({
     setLog(defaultLog);
     sessionStorage.setItem(
       sessionStorageKeys.concertLog.logForm,
-      JSON.stringify(defaultLog)
+      JSON.stringify(defaultLog),
     );
     setCheckErrors(false);
   };

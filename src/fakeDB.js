@@ -17,7 +17,7 @@ class Song {
     tempo,
     date_added,
     available,
-    played
+    played,
   ) {
     this._id = id;
     this.sheet = [...sheet];
@@ -72,7 +72,7 @@ const myGirl = new Song(
   ["Tempo"],
   "Date Added",
   "1/1/2001",
-  0
+  0,
 );
 all_songs.push(myGirl);
 
@@ -89,7 +89,7 @@ const cantTake = new Song(
   ["Tempo"],
   "Date Added",
   "1/1/2001",
-  0
+  0,
 );
 all_songs.push(cantTake);
 
@@ -106,7 +106,7 @@ const cheapThrills = new Song(
   ["Tempo"],
   "Date Added",
   "1/1/2001",
-  0
+  0,
 );
 all_songs.push(cheapThrills);
 
@@ -123,7 +123,7 @@ const inTheMood = new Song(
   ["Tempo"],
   "Date Added",
   "1/1/2001",
-  0
+  0,
 );
 all_songs.push(inTheMood);
 
@@ -140,7 +140,7 @@ const whenYouWish = new Song(
   ["Tempo"],
   "Date Added",
   "1/1/2001",
-  0
+  0,
 );
 all_songs.push(whenYouWish);
 
@@ -157,7 +157,7 @@ const moonlight = new Song(
   ["Tempo"],
   "Date Added",
   "1/1/2001",
-  0
+  0,
 );
 all_songs.push(moonlight);
 
@@ -174,7 +174,7 @@ const sentimental = new Song(
   ["Tempo"],
   "Date Added",
   "1/1/2001",
-  0
+  0,
 );
 all_songs.push(sentimental);
 
@@ -191,7 +191,7 @@ const cityOfStars = new Song(
   ["Tempo"],
   "Date Added",
   "1/1/2001",
-  0
+  0,
 );
 all_songs.push(cityOfStars);
 
@@ -208,7 +208,7 @@ const misty = new Song(
   ["Tempo"],
   "Date Added",
   "1/1/2001",
-  0
+  0,
 );
 all_songs.push(misty);
 
@@ -225,7 +225,7 @@ const btmv = new Song(
   ["Tempo"],
   "Date Added",
   "1/1/2001",
-  0
+  0,
 );
 all_songs.push(btmv);
 
@@ -242,7 +242,7 @@ const testdrive = new Song(
   ["Tempo"],
   "Date Added",
   "1/1/2001",
-  0
+  0,
 );
 all_songs.push(testdrive);
 
@@ -259,7 +259,7 @@ const rach = new Song(
   ["Tempo"],
   "Date Added",
   "1/1/2001",
-  0
+  0,
 );
 all_songs.push(rach);
 

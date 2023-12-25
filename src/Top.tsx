@@ -38,15 +38,15 @@ const Top = () => {
   // State variables
   const [logOpen, setLogOpen] = useSessionStorage(
     sessionStorageKeys.concertLog.isOpen,
-    false
+    false,
   );
   const [logEditMode, setLogEditMode] = useSessionStorage(
     sessionStorageKeys.concertLog.editMode,
-    false
+    false,
   );
   const [logEditID, setLogEditID] = useSessionStorage<number | null>(
     sessionStorageKeys.concertLog.editID,
-    null
+    null,
   );
 
   console.log("Re-render TOP");
@@ -127,7 +127,7 @@ const Top = () => {
     () => ({
       logEdit: handleLogEdit,
     }),
-    []
+    [],
   ); // Empty sensitivity to prevent referential inequality because this is a function and practically won't change.
 
   const searchResultsProps = useMemo(
@@ -135,7 +135,7 @@ const Top = () => {
       newSearch: newSearch,
       searchDone: searchDone,
     }),
-    [newSearch]
+    [newSearch],
   ); // searchDone must be off sensitivity because of referential inequality
   // alternatively, consider the useCallback() hook
 
