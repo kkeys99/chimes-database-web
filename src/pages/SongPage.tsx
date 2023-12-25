@@ -380,7 +380,7 @@ const History = ({ history }: historyProp) => {
                 ? accum.concat(curr, ", ")
                 : accum.concat(curr); // omit the "+" after the last performer
             },
-            "" // Initialize to empty string
+            "", // Initialize to empty string
           );
           const displayItem = date + ": " + performersStr;
           return (

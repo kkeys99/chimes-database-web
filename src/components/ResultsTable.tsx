@@ -70,7 +70,7 @@ function ascendingCompare<T>(a: T, b: T, orderBy: keyof T) {
 // Its return type a function that takes in 2 array items and returns a number
 function getCompareFunction(
   order: SortState.Asc | SortState.Desc,
-  orderBy: any
+  orderBy: any,
 ): (a: resultTableRowData, b: resultTableRowData) => number {
   return order == SortState.Asc
     ? (a, b) => ascendingCompare(a, b, orderBy)
@@ -250,7 +250,7 @@ const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
   const sortButtonOnClick = (
     field: string,
     order: SortState.Asc | SortState.Desc,
-    index: number
+    index: number,
   ) => {
     // Update sort states - this field gets order, all other fields unsorted
     const updSortStates = sortStates.map((state, i) => {

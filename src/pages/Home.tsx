@@ -24,10 +24,10 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
 
   const [data, setData] = useState([]);
   const [dateFrom, setFrom] = useState<string>(
-    dayjs("2006-01-01").toISOString()
+    dayjs("2006-01-01").toISOString(),
   );
   const [dateTo, setTo] = useState<string>(
-    dayjs(tempSearchDate, "YYYY-MM-DD", true).toISOString()
+    dayjs(tempSearchDate, "YYYY-MM-DD", true).toISOString(),
   );
 
   const tempDateFrom = dayjs(dateFrom, "YYYY-MM-DD", true);
@@ -45,10 +45,14 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
   useEffect(() => {
     console.log("Fetching concert:");
     console.log(
-      `/concert/year/${toYear}/month/${toMonth + 1}/day/${toDay}?previous=month`
+      `/concert/year/${toYear}/month/${
+        toMonth + 1
+      }/day/${toDay}?previous=month`,
     );
     fetch(
-      `/concert/year/${toYear}/month/${toMonth + 1}/day/${toDay}?previous=month`
+      `/concert/year/${toYear}/month/${
+        toMonth + 1
+      }/day/${toDay}?previous=month`,
     )
       // month+1 because dayjs indexes months from 0
       .then(res => res.json())

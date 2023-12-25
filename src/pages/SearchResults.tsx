@@ -40,14 +40,14 @@ const SearchResults = memo(function SearchResults({
   const numResults = returnedSongs.length;
 
   console.log(
-    `Re-rendering Search Results with props ${newSearch} ${searchDone}`
+    `Re-rendering Search Results with props ${newSearch} ${searchDone}`,
   );
   console.log(searchParams.toString());
 
   useEffect(() => {
     newSearch &&
       fetch(
-        `song/search?${searchParams.get("searchBy")}=${searchParams.get("q")}`
+        `song/search?${searchParams.get("searchBy")}=${searchParams.get("q")}`,
       )
         //fetch(`song/search?${searchParams["searchBy"]}=${searchParams["q"]}`)
         .then(res => res.json())
