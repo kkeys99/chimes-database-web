@@ -19,6 +19,7 @@ import { Link as MuiLink } from "@mui/material";
 import { NavLink as RouterNavLink } from "react-router-dom";
 
 import { Person } from "../typing/types";
+import { styleVariables, navBarStyles, headerStyles } from "../constants";
 
 const CMList = () => {
   const theme = useTheme();
@@ -33,8 +34,14 @@ const CMList = () => {
   }, []);
 
   return (
-    <Toolbar disableGutters variant="dense" sx={{ justifyContent: "center" }}>
-      <Stack direction="row" spacing={6}>
+    <Toolbar disableGutters variant="dense" 
+      sx={{ 
+        justifyContent: "center",
+        pt: navBarStyles.paddingTop,
+        height: navBarStyles.heightRow1
+       }}
+      >
+      <Stack direction="row" spacing={navBarStyles.spaceBetweenCmList}>
         {currentCMs.map(cm => {
           return (
             // Gianluca wuz here
@@ -74,7 +81,7 @@ const SearchInput = (props: SearchBarProps) => {
   };
 
   return (
-    <FormControl variant="filled" size="small" sx={{ mr: 10 }}>
+    <FormControl variant="filled" size="small" sx={{ mr: navBarStyles.spaceAfterSearch }}>
       <InputLabel style={{ color: theme.palette.success.dark }}>
         Search
       </InputLabel>
@@ -94,7 +101,10 @@ const SearchInput = (props: SearchBarProps) => {
           </InputAdornment>
         }
         disableUnderline
-        sx={{ borderRadius: 3, pr: 1 }}
+        sx={{ 
+          borderRadius: 3,
+          pr: 1 // Default seems to be 12px, I like it closer to the edge
+        }}
       />
     </FormControl>
   );
@@ -114,9 +124,14 @@ const SearchBar = (props: SearchBarProps) => {
     "Date Added",
   ];
   return (
-    <Toolbar disableGutters variant="dense" sx={{ justifyContent: "center" }}>
+    <Toolbar disableGutters variant="dense" 
+      sx={{ justifyContent: "center", pb: navBarStyles.paddingBot }}
+    >
       <SearchInput {...props} />
-      <Stack direction="row" spacing={6}>
+      {/* Tags */}
+      <Stack direction="row" 
+        spacing={navBarStyles.spaceBetweenTags}
+      >
         {tags.map(tag => {
           return (
             <Typography color="primary.dark" variant="body1">
@@ -145,12 +160,12 @@ const NavBar = (props: NavBarProps) => {
       elevation={0}
       sx={{
         bgcolor: "primary.contrastText",
-        py: 3,
-        mt: 24,
+        height: navBarStyles.totalHeight,
+        top: headerStyles.totalHeight,
         zIndex: theme.zIndex.drawer - 1,
       }}
     >
-      <Stack spacing={2}>
+      <Stack spacing={navBarStyles.spaceBetweenVertical}>
         <CMList />
         <SearchBar {...props} />
       </Stack>

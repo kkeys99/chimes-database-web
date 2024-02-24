@@ -41,6 +41,7 @@ export function splitDelimitedTag(data: string) {
   return data.split("|");
 }
 
+// Helper function that converts date string to a display-friendly string
 function dateToDisplaySlash(date: string) {
   const asDate = dayjs(date);
   return asDate.format("M/D/YYYY");

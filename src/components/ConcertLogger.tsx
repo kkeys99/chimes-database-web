@@ -38,9 +38,9 @@ import {
   Performance,
 } from "../typing/types";
 import { sessionStorageKeys } from "../constants";
+import { styleVariables } from "../constants";
 
 /* Constants ****************************************/
-const drawerWidth = 256;
 const concertTypes = ["morning", "afternoon", "evening", "specialty"];
 
 const emptySong = () => {
@@ -219,7 +219,8 @@ const SongLogger = ({
   const boxSX = {
     display: "flex",
     gap: "8px",
-    py: 1,
+    pt: tgtAbove ? (index === 0 ? 0.5 : 0.75) : 1,
+    pb: tgtBelow ? (bottom ? 0.5 : 0.75) : 1,
     borderColor: theme.palette.secondary.main,
     borderStyle: "solid none",
     borderTopWidth: tgtAbove ? (index === 0 ? "2px" : "1px") : "0px",
@@ -377,7 +378,7 @@ const ConcertLogger = ({
 
   // Props passed into the Paper component of the Drawer
   const paperProps = {
-    sx: { width: "256px", borderRight: "none", overflow: "hidden" },
+    sx: { width: styleVariables.concertLog.width, borderRight: "none", overflow: "hidden" },
     elevation: 1,
   };
 
@@ -391,7 +392,7 @@ const ConcertLogger = ({
 
   const logDateAsDayjs = dayjs(logForm.date);
 
-  console.log(sessionStorage);
+  //console.log(sessionStorage);
 
   const dateChangeHandler = (newValue: string) => {
     setLog({
@@ -545,7 +546,6 @@ const ConcertLogger = ({
   /***** Return Component ****************************/
   return (
     <Drawer
-      sx={{ width: drawerWidth, ".& MuiDrawer-paper": { border: "none" } }}
       variant="persistent"
       anchor="left"
       open={open}
