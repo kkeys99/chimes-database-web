@@ -20,7 +20,7 @@ import { Button, Box, Typography } from "@mui/material";
 import SongPage from "./pages/SongPage";
 import Dashboard from "./pages/Dashboard";
 
-import { sessionStorageKeys } from "./constants";
+import { sessionStorageKeys, styleVariables, headerStyles } from "./constants";
 
 // This component contains state that is handled across different pages
 // This naming is what you get when an RTL engineer learns frontend lol
@@ -36,6 +36,7 @@ const Top = () => {
 
   /*** Concert Logger ************************************/
   // State variables
+  // These employ useSessionStorage so they persist between refreshes
   const [logOpen, setLogOpen] = useSessionStorage(
     sessionStorageKeys.concertLog.isOpen,
     false
@@ -74,10 +75,17 @@ const Top = () => {
 
   // Style and position variables
   const buttonHeight = 34;
-  const buttonMargin = 4;
-  const posleft = logOpen ? 256 - buttonMargin : -buttonMargin;
-  const buttonOffsetY = "40px";
-  const buttonOffsetX = "8px";
+  const buttonWidth = 64;
+  const buttonMargin = 4; // needs a margin else you don't see the shadows. No bottom margin for this reason
+  const buttonPosLeft = logOpen
+    ? styleVariables.concertLog.width - buttonMargin
+    : -buttonMargin;
+  const buttonPosTop =
+    headerStyles.totalHeight +
+    styleVariables.navBar.height -
+    buttonWidth -
+    buttonHeight -
+    buttonMargin;
 
   /*** Search *******************************************/
   // State variables
@@ -148,7 +156,13 @@ const Top = () => {
       {!disableNavbar && <NavBar {...navBarProps} />}
       {/* Div to push everything else down because header is fixed positioning */}
       {/* There must be a way to make it cleaner but this hacky thing works for now */}
-      <div style={{ height: !disableNavbar ? 224 : 96 }} />
+      <div
+        style={{
+          height: !disableNavbar
+            ? headerStyles.totalHeight + styleVariables.navBar.height
+            : headerStyles.totalHeight,
+        }}
+      />
       <Routes>
         <Route path="/" element={<Home {...homePageProps} />} />
         <Route path="/cm/:initials" element={<CM logEdit={handleLogEdit} />} />
@@ -166,8 +180,8 @@ const Top = () => {
             sx={{
               overflow: "hidden", // This makes button box-shadow not appear outside of box
               position: "fixed",
-              left: posleft,
-              top: 122,
+              left: buttonPosLeft,
+              top: buttonPosTop,
               zIndex: theme.zIndex.drawer + 1,
               transform: "rotate(90deg)",
               transformOrigin: `${buttonMargin}px ${
@@ -188,6 +202,7 @@ const Top = () => {
               sx={{
                 boxShadow: 2,
                 height: buttonHeight,
+                width: buttonWidth,
                 position: "relative",
                 left: 0,
                 zIndex: theme.zIndex.drawer + 1,

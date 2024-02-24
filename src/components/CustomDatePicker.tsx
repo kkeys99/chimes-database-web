@@ -31,8 +31,11 @@ const CustomDatePicker = ({
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [closing, setClosing] = useState(false);
 
-  //console.log(`Rerendering popper - open is ${open}`);
+  // console.log(`Rerendering popper - open is ${open}`);
+  console.log(`Rerendering dat picket - date is ${date}`);
 
+  // The handler for date changes.
+  // The Input is a JS Date, and we call the parent SetState function with an ISO string.
   const dateChangeHandler: any = (newValue: Date) => {
     const updVal = dayjs(newValue).toISOString();
     setDate(updVal);

@@ -32,12 +32,14 @@ interface ConcertGridRowProps {
  *****************************************************************************/
 function ConcertGridRow({ date, rowConcerts, logEdit }: ConcertGridRowProps) {
   // This determines how many invisible boxes to put in the row so that things line up
+  // This logic is unused.
   let extraBoxes = [];
   for (let i = rowConcerts.length; i < 3; i++) {
     extraBoxes.push(i);
   }
 
-  // This is very dummy and only temporary - make this more robust for specialty concerts
+  // This is very dummy and only temporary
+  // TODO: support specialty concerts
   const possibleConcertTypes = ["morning", "afternoon", "evening"];
   let typeToConcertMap: { [type: string]: Concert } = {};
   rowConcerts.map(concert => {
@@ -65,6 +67,8 @@ function ConcertGridRow({ date, rowConcerts, logEdit }: ConcertGridRowProps) {
         }}
       >
         {possibleConcertTypes.map((type, i) => {
+          // Insert an empty box if there is NO concert of this type
+          // Otherwise, make a concert card
           const concert = typeToConcertMap[type];
           if (concert === undefined) {
             return (

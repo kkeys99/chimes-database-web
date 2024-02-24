@@ -13,6 +13,8 @@ import CornellLogo from "../assets/cornell_logo.svg";
 import { Link as MuiLink } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
+import { headerStyles } from "../constants";
+
 const SiteHeader = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -22,10 +24,19 @@ const SiteHeader = () => {
       position="fixed"
       color={"primary"}
       elevation={0}
-      sx={{ px: 5, py: 6, zIndex: theme.zIndex.drawer + 1 }} // Keeps this visible over concert log
+      sx={{
+        height: headerStyles.totalHeight,
+        px: headerStyles.paddingX,
+        py: headerStyles.paddingY,
+        zIndex: theme.zIndex.drawer + 1,
+      }} // Keeps this visible over concert log
     >
       <Toolbar disableGutters variant="dense">
-        <Box component="img" src={CornellLogo} sx={{ mr: 6 }} />
+        <Box
+          component="img"
+          src={CornellLogo}
+          sx={{ mr: headerStyles.spaceBetweenItems }}
+        />
         <Typography
           //onClick={() => navigate("/")}
           component={MuiLink}
@@ -38,16 +49,19 @@ const SiteHeader = () => {
         >
           Chimes
         </Typography>
-        <Typography variant="h2" sx={{ mx: 2.5 }}>
+        <Typography variant="h2" sx={{ mr: headerStyles.spaceBetweenItems }}>
           Dashboard
         </Typography>
-        <SvgIcon inheritViewBox component={BellIcon} sx={{ mx: 2.5 }} />
+        <SvgIcon
+          inheritViewBox
+          component={BellIcon}
+          sx={{ mr: headerStyles.spaceBetweenItems }}
+        />
         <Avatar
           sx={{
             border: 1,
             color: "primary.dark",
             bgcolor: "primary.contrastText",
-            ml: 2.5,
           }}
         >
           CM

@@ -240,10 +240,12 @@ function CM(props: { logEdit: Function }) {
   console.log(initials);
 
   useEffect(() => {
+    // Get the Person
     console.log("CM Page useEffect");
     fetch(`/person/initials/${initials}`)
       .then(res => res.json())
       .then(data => setThisCM(new Person(data[0])));
+    // Get the Played Songs
   }, [initials]);
 
   const name: string = thisCM.fullName;
