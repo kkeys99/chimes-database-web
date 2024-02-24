@@ -24,15 +24,19 @@ const SiteHeader = () => {
       position="fixed"
       color={"primary"}
       elevation={0}
-      sx={{ 
-        height: headerStyles.totalHeight, 
-        px: headerStyles.paddingX, 
-        py: headerStyles.paddingY, 
-        zIndex: theme.zIndex.drawer + 1 
+      sx={{
+        height: headerStyles.totalHeight,
+        px: headerStyles.paddingX,
+        py: headerStyles.paddingY,
+        zIndex: theme.zIndex.drawer + 1,
       }} // Keeps this visible over concert log
     >
       <Toolbar disableGutters variant="dense">
-        <Box component="img" src={CornellLogo} sx={{ mr: headerStyles.spaceBetweenItems }} />
+        <Box
+          component="img"
+          src={CornellLogo}
+          sx={{ mr: headerStyles.spaceBetweenItems }}
+        />
         <Typography
           //onClick={() => navigate("/")}
           component={MuiLink}
@@ -48,7 +52,11 @@ const SiteHeader = () => {
         <Typography variant="h2" sx={{ mr: headerStyles.spaceBetweenItems }}>
           Dashboard
         </Typography>
-        <SvgIcon inheritViewBox component={BellIcon} sx={{ mr: headerStyles.spaceBetweenItems }} />
+        <SvgIcon
+          inheritViewBox
+          component={BellIcon}
+          sx={{ mr: headerStyles.spaceBetweenItems }}
+        />
         <Avatar
           sx={{
             border: 1,

@@ -27,39 +27,40 @@ export const styleVariables = {
     height: 96,
   },
   navBar: {
-    height: 128
+    height: 128,
   },
   concertLog: {
-    width: 256
-  }
-}
+    width: 256,
+  },
+};
 
 export class headerStyles {
-    static paddingX = 5;          // 20px
-    static paddingY = 6;          // 24px
-    static contentHeight = 12;    // 48px
-    static spaceBetweenItems = 5; 
+  static paddingX = 5; // 20px
+  static paddingY = 6; // 24px
+  static contentHeight = 12; // 48px
+  static spaceBetweenItems = 5;
 
-    // Height doesn't have to be in the /4 format
-    static totalHeight = (2*this.paddingY + this.contentHeight)*4;
+  // Height doesn't have to be in the /4 format
+  static totalHeight = (2 * this.paddingY + this.contentHeight) * 4;
 }
 
 export class navBarStyles {
   // Padding and spacing in pixels / 4
   static paddingTop = 6;
-  static paddingBot = 3;    
+  static paddingBot = 3;
   static paddingX = 8;
   static spaceBetweenVertical = 6;
   static spaceBetweenCmList = 6;
-  static spaceBetweenTags = 6;  // Though spacing guide says 16px, I like 24 better
+  static spaceBetweenTags = 6; // Though spacing guide says 16px, I like 24 better
   static spaceAfterSearch = 10;
 
   // Height is in pixels
   static heightRow1 = 24;
   static heightRow2 = 48; // Not sure why but has to be this way
 
-  static totalHeight = 4*(this.paddingTop+this.paddingBot+this.spaceBetweenVertical) + (this.heightRow1 + this.heightRow2);
-
+  static totalHeight =
+    4 * (this.paddingTop + this.paddingBot + this.spaceBetweenVertical) +
+    (this.heightRow1 + this.heightRow2);
 }
 
 /*

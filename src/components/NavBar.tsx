@@ -34,13 +34,15 @@ const CMList = () => {
   }, []);
 
   return (
-    <Toolbar disableGutters variant="dense" 
-      sx={{ 
+    <Toolbar
+      disableGutters
+      variant="dense"
+      sx={{
         justifyContent: "center",
         pt: navBarStyles.paddingTop,
-        height: navBarStyles.heightRow1
-       }}
-      >
+        height: navBarStyles.heightRow1,
+      }}
+    >
       <Stack direction="row" spacing={navBarStyles.spaceBetweenCmList}>
         {currentCMs.map(cm => {
           return (
@@ -81,7 +83,11 @@ const SearchInput = (props: SearchBarProps) => {
   };
 
   return (
-    <FormControl variant="filled" size="small" sx={{ mr: navBarStyles.spaceAfterSearch }}>
+    <FormControl
+      variant="filled"
+      size="small"
+      sx={{ mr: navBarStyles.spaceAfterSearch }}
+    >
       <InputLabel style={{ color: theme.palette.success.dark }}>
         Search
       </InputLabel>
@@ -101,9 +107,9 @@ const SearchInput = (props: SearchBarProps) => {
           </InputAdornment>
         }
         disableUnderline
-        sx={{ 
+        sx={{
           borderRadius: 3,
-          pr: 1 // Default seems to be 12px, I like it closer to the edge
+          pr: 1, // Default seems to be 12px, I like it closer to the edge
         }}
       />
     </FormControl>
@@ -124,14 +130,14 @@ const SearchBar = (props: SearchBarProps) => {
     "Date Added",
   ];
   return (
-    <Toolbar disableGutters variant="dense" 
+    <Toolbar
+      disableGutters
+      variant="dense"
       sx={{ justifyContent: "center", pb: navBarStyles.paddingBot }}
     >
       <SearchInput {...props} />
       {/* Tags */}
-      <Stack direction="row" 
-        spacing={navBarStyles.spaceBetweenTags}
-      >
+      <Stack direction="row" spacing={navBarStyles.spaceBetweenTags}>
         {tags.map(tag => {
           return (
             <Typography color="primary.dark" variant="body1">

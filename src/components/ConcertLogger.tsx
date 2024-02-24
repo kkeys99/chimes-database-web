@@ -378,7 +378,11 @@ const ConcertLogger = ({
 
   // Props passed into the Paper component of the Drawer
   const paperProps = {
-    sx: { width: styleVariables.concertLog.width, borderRight: "none", overflow: "hidden" },
+    sx: {
+      width: styleVariables.concertLog.width,
+      borderRight: "none",
+      overflow: "hidden",
+    },
     elevation: 1,
   };
 

@@ -16,13 +16,13 @@ import CustomDatePicker from "../components/CustomDatePicker";
 import { sortConcertsByDate } from "../shared/utils";
 
 interface HomePageProps {
-  logEdit: Function;      // Func that puts logger in edit mode w proper editID
+  logEdit: Function; // Func that puts logger in edit mode w proper editID
 }
 
 /*************************************************************
  * Component: Home
- * 
- * - This is the component for the Home page, which has 
+ *
+ * - This is the component for the Home page, which has
  *  the concert history.
  * - It makes a fetch request to the API for the concert history
  * and passes it into the ConcertGrid component.
@@ -77,27 +77,24 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
     // TODO: Make a reusable body container
     <Box sx={{ ml: "280px", mr: "24px", mt: "12px", mb: "12px" }}>
       {/* Date Search Selector */}
-      <Stack direction="row" spacing={3}
-        display="flex" justifyContent="right"
-        sx={{ height: "28px"}}
+      <Stack
+        direction="row"
+        spacing={3}
+        display="flex"
+        justifyContent="right"
+        sx={{ height: "28px" }}
       >
         <Box> from </Box>
-        <CustomDatePicker
-          light={false}
-          date={tempDateFrom}
-          setDate={setFrom}
-        />
+        <CustomDatePicker light={false} date={tempDateFrom} setDate={setFrom} />
         <Box> to </Box>
-        <CustomDatePicker 
-          light={false} 
-          date={tempDateTo} 
-          setDate={setTo} 
-        />
+        <CustomDatePicker light={false} date={tempDateTo} setDate={setTo} />
       </Stack>
       {/* See all Concerts */}
       {/* TODO: make this into button that works */}
-      <Typography sx={{mt:3}} 
-        display="flex" justifyContent="right" 
+      <Typography
+        sx={{ mt: 3 }}
+        display="flex"
+        justifyContent="right"
         variant="h2"
       >
         See all concerts

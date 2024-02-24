@@ -77,14 +77,20 @@ const Top = () => {
   const buttonHeight = 34;
   const buttonWidth = 64;
   const buttonMargin = 4; // needs a margin else you don't see the shadows. No bottom margin for this reason
-  const buttonPosLeft = logOpen ? styleVariables.concertLog.width - buttonMargin : -buttonMargin;
-  const buttonPosTop = headerStyles.totalHeight + styleVariables.navBar.height
-                       - buttonWidth - buttonHeight - buttonMargin;
+  const buttonPosLeft = logOpen
+    ? styleVariables.concertLog.width - buttonMargin
+    : -buttonMargin;
+  const buttonPosTop =
+    headerStyles.totalHeight +
+    styleVariables.navBar.height -
+    buttonWidth -
+    buttonHeight -
+    buttonMargin;
 
   /*** Search *******************************************/
   // State variables
   const [searchBy, setSearchBy] = useState("title");
-  const [searchData, setSearchData] = useState("");           // Controlled search bar input
+  const [searchData, setSearchData] = useState(""); // Controlled search bar input
   const [newSearch, setNewSearch] = useState<boolean>(false); // Flag that we should do a new search
 
   const navigate = useNavigate();
@@ -147,14 +153,16 @@ const Top = () => {
       {" "}
       {/* A Container box to make body scroll sideways */}
       <SiteHeader />
-      {!disableNavbar && <NavBar {...navBarProps} /> }
+      {!disableNavbar && <NavBar {...navBarProps} />}
       {/* Div to push everything else down because header is fixed positioning */}
       {/* There must be a way to make it cleaner but this hacky thing works for now */}
-      <div style={{ 
-        height: !disableNavbar ? 
-          headerStyles.totalHeight + styleVariables.navBar.height : 
-          headerStyles.totalHeight }} 
-      /> 
+      <div
+        style={{
+          height: !disableNavbar
+            ? headerStyles.totalHeight + styleVariables.navBar.height
+            : headerStyles.totalHeight,
+        }}
+      />
       <Routes>
         <Route path="/" element={<Home {...homePageProps} />} />
         <Route path="/cm/:initials" element={<CM logEdit={handleLogEdit} />} />
