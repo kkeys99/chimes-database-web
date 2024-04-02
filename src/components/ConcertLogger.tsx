@@ -39,8 +39,12 @@ import {
 } from "../typing/types";
 import { sessionStorageKeys } from "../constants";
 import { styleVariables } from "../constants";
-import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
-
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "react-beautiful-dnd";
 
 /* Constants ****************************************/
 const concertTypes = ["morning", "afternoon", "evening", "specialty"];
@@ -181,16 +185,11 @@ const SongLogger = ({
   };
 
   return (
-    <FormGroup
-      row
-      sx={boxSX}
-    >
+    <FormGroup row sx={boxSX}>
       {/* Icons on the left-hand side: drag and add song */}
       <Stack direction="column" spacing={1}>
         <LogIcon>
-          <MenuIcon
-            sx={{ fontSize: inputFontSize }}
-          />
+          <MenuIcon sx={{ fontSize: inputFontSize }} />
         </LogIcon>
         {
           //bottom && // Only be able to add at the bottom of list - disabled for now bc we can't reorder
@@ -468,7 +467,6 @@ const ConcertLogger = ({
     setCheckErrors(false);
   };
 
-
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) {
       return;
@@ -483,7 +481,6 @@ const ConcertLogger = ({
       songs: items,
     });
   };
-
 
   /***** Return Component ****************************/
   return (
@@ -582,12 +579,20 @@ const ConcertLogger = ({
         </Typography>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="songs">
-            {(provided) => (
+            {provided => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {logForm.songs.map((song, index) => (
-                  <Draggable key={index} draggableId={`song-${index}`} index={index}>
-                    {(provided) => (
-                      <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                  <Draggable
+                    key={index}
+                    draggableId={`song-${index}`}
+                    index={index}
+                  >
+                    {provided => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
                         <SongLogger
                           song={song}
                           index={index}
