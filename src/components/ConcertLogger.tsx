@@ -39,6 +39,12 @@ import {
 } from "../typing/types";
 import { sessionStorageKeys } from "../constants";
 import { styleVariables } from "../constants";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "react-beautiful-dnd";
 
 /* Constants ****************************************/
 const concertTypes = ["morning", "afternoon", "evening", "specialty"];
@@ -82,11 +88,6 @@ interface SongLoggerProps {
   bottom: boolean; // Whether it's the bottom entry
   addSong: Function; // Handlers from the top-level Logger
   deleteSong: Function;
-  moveSong: Function;
-  setDraggingAny: Function;
-  setTarget: Function;
-  tgtAbove: boolean;
-  tgtBelow: boolean;
   editSong: Function;
   checkErrors: boolean;
   sortableList: HTMLElement;
@@ -143,23 +144,12 @@ const SongLogger = ({
   bottom,
   addSong,
   deleteSong,
-  moveSong,
-  setDraggingAny,
-  setTarget,
-  tgtAbove,
-  tgtBelow,
   editSong,
   checkErrors,
   sortableList,
 }: SongLoggerProps) => {
   const theme = useTheme();
   const inputFontSize = theme.typography.body2;
-
-  console.log(
-    `SONG LOGGER ROW index: ${index} tA: ${tgtAbove} tB: ${tgtBelow}`
-  );
-
-  const [draggable, setDraggable] = useState(false);
 
   // Error Flags
   const titleError = checkErrors && song.title === "";
@@ -189,62 +179,17 @@ const SongLogger = ({
     editSong(index, song);
   };
 
-  const menuButtonMouseDown: React.MouseEventHandler = () => {
-    setDraggable(true);
-  };
-
-  const dragStart: React.DragEventHandler<HTMLDivElement> = () => {
-    setDraggingAny(true);
-    setTarget(index + 0.5); // Initially, set target to underline below.
-  };
-
-  const calcTarget: React.DragEventHandler = (
-    e: React.DragEvent<HTMLElement>
-  ) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-
-    if (e.clientY < rect.top + rect.height * 0.4) {
-      setTarget(index - 0.5);
-    } else if (e.clientY > rect.top + rect.height * 0.6) {
-      setTarget(index + 0.5);
-    }
-  };
-
-  const endDragRow = (e: React.DragEvent<HTMLElement>) => {
-    moveSong(index);
-    setDraggingAny(false);
-    setDraggable(false);
-  };
-
   const boxSX = {
     display: "flex",
     gap: "8px",
-    pt: tgtAbove ? (index === 0 ? 0.5 : 0.75) : 1,
-    pb: tgtBelow ? (bottom ? 0.5 : 0.75) : 1,
-    borderColor: theme.palette.secondary.main,
-    borderStyle: "solid none",
-    borderTopWidth: tgtAbove ? (index === 0 ? "2px" : "1px") : "0px",
-    borderBottomWidth: tgtBelow ? (bottom ? "2px" : "1px") : "0px",
   };
 
   return (
-    <FormGroup
-      row
-      sx={boxSX}
-      draggable={draggable}
-      onDragStart={dragStart}
-      onDragEnd={event => endDragRow(event)}
-      onDragOver={event => {
-        calcTarget(event);
-      }}
-    >
+    <FormGroup row sx={boxSX}>
       {/* Icons on the left-hand side: drag and add song */}
       <Stack direction="column" spacing={1}>
         <LogIcon>
-          <MenuIcon
-            sx={{ fontSize: inputFontSize }}
-            onMouseDown={menuButtonMouseDown}
-          />
+          <MenuIcon sx={{ fontSize: inputFontSize }} />
         </LogIcon>
         {
           //bottom && // Only be able to add at the bottom of list - disabled for now bc we can't reorder
@@ -321,8 +266,6 @@ const ConcertLogger = ({
   const inputFontSize = theme.typography.body2;
 
   const [checkErrors, setCheckErrors] = useState(false);
-  const [draggingAny, setDraggingAny] = useState(false);
-  const [moveTarget, setMoveTarget] = useState(0);
 
   console.log(
     `Re render Logger with props: ${open}, ${isEditMode}, ${editID}, ${cancelEdit}`
@@ -443,29 +386,6 @@ const ConcertLogger = ({
     });
   };
 
-  const moveSongLogger = (baseIndex: number) => {
-    console.log(`Moving base ${baseIndex} to ${moveTarget}`);
-
-    // Target will be a x.5 to signify it's between two current indices
-    // We need to account for the dragged item exiting its space and adjacent one shifting in
-    // So, if we're moving UP, we ADD 0.5 to the target
-    // and if we're moving DOWN, we SUBTRACT 0.5 from the target
-    // This handles the edges too: 0 to -0.5 -> 0 to 0 , last to last+0.5 -> last
-    const actualTarget =
-      baseIndex > moveTarget ? moveTarget + 0.5 : moveTarget - 0.5;
-
-    // Make new song list using Array.splice()
-    // Remember splice returns deleted items and edits in place
-    const songList: songEntry[] = logForm.songs;
-    const movedSong: songEntry[] = songList.splice(baseIndex, 1);
-    songList.splice(actualTarget, 0, movedSong[0]);
-    // Update state
-    setLog({
-      ...logForm,
-      songs: songList,
-    });
-  };
-
   const editSongEntry = (index: number, song: songEntry) => {
     // Any change to the song entry will invoke this function
     // The input change callbacks themselves are located in the SongLogger component,
@@ -545,6 +465,21 @@ const ConcertLogger = ({
       JSON.stringify(defaultLog)
     );
     setCheckErrors(false);
+  };
+
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const items = Array.from(logForm.songs);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setLog({
+      ...logForm,
+      songs: items,
+    });
   };
 
   /***** Return Component ****************************/
@@ -642,25 +577,42 @@ const ConcertLogger = ({
         >
           Add song:
         </Typography>
-        <div ref={sortableList}>
-          {logForm.songs.map((song, index) => (
-            <SongLogger
-              song={song}
-              index={index}
-              addSong={addSongLogger}
-              deleteSong={removeSongLogger}
-              moveSong={moveSongLogger}
-              setDraggingAny={setDraggingAny}
-              setTarget={setMoveTarget}
-              tgtAbove={draggingAny && moveTarget === index - 0.5}
-              tgtBelow={draggingAny && moveTarget === index + 0.5}
-              editSong={editSongEntry}
-              bottom={index == logForm.songs.length - 1}
-              checkErrors={checkErrors}
-              sortableList={sortableList.current!}
-            />
-          ))}
-        </div>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="songs">
+            {provided => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {logForm.songs.map((song, index) => (
+                  <Draggable
+                    key={index}
+                    draggableId={`song-${index}`}
+                    index={index}
+                  >
+                    {provided => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <SongLogger
+                          song={song}
+                          index={index}
+                          addSong={addSongLogger}
+                          deleteSong={removeSongLogger}
+                          editSong={editSongEntry}
+                          checkErrors={checkErrors}
+                          bottom={index == logForm.songs.length - 1}
+                          sortableList={sortableList.current!}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+
         {/*** NOTE PRIVATE ***********************************************/}
         <FormLabel sx={{ pt: 2, pb: 0.5, color: theme.palette.primary.dark }}>
           Note (private):
