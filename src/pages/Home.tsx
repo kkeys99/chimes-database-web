@@ -16,7 +16,6 @@ import CustomDatePicker from "../components/CustomDatePicker";
 import { sortConcertsByDate } from "../shared/utils";
 import logger from "../shared/logger";
 
-
 interface HomePageProps {
   logEdit: Function; // Func that puts logger in edit mode w proper editID
 }
@@ -67,11 +66,13 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
   // Fetch the concert history between the search dates any time they change
   useEffect(() => {
     // month+1 because dayjs indexes months from 0 but backend expects Jan = 1
-    const fetchStr = `/concert/year/${toYear}/month/${toMonth + 1}/day/${toDay}?previous=month`;
-    
+    const fetchStr = `/concert/year/${toYear}/month/${
+      toMonth + 1
+    }/day/${toDay}?previous=month`;
+
     logger.log(name, `Fetching concert:`, logger.logLevel.DEBUG);
     logger.printObj(fetchStr, logger.logLevel.DEBUG);
-    
+
     fetch(fetchStr)
       .then(res => res.json())
       .then(data => setData(data));

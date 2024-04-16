@@ -20,7 +20,6 @@ import { Song, SongDisplay, resultTableRowData } from "../typing/types";
 import { songListToSongDisplayList } from "../shared/utils";
 import logger from "../shared/logger";
 
-
 interface SearchResultsProps {
   newSearch: boolean;
   searchDone: Function;

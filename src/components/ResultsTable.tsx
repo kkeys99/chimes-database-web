@@ -16,7 +16,6 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Link as MuiLink } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 
-
 import {
   resultTableRowData,
   searchByFieldRowData,
@@ -26,7 +25,6 @@ import { songDisplayFieldToVar } from "../shared/utils";
 import { useState, useEffect } from "react";
 
 import logger from "../shared/logger";
-
 
 /*****************************************************************************/
 
@@ -236,7 +234,7 @@ const HeaderCell = ({
 const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
   const name = "Results Table";
   logger.log(name, `Render`, logger.logLevel.INFO);
-  
+
   const DEBUG = true;
   // Consider using mui styled() to style the table rows to alternate colors and hide borders
 
@@ -250,7 +248,6 @@ const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
   logger.log(name, `OrderBy: ${orderBy}`, logger.logLevel.DEBUG);
   logger.log(name, `Data is:`, logger.logLevel.DEBUG);
   logger.printObj(props.data, logger.logLevel.DEBUG);
-
 
   const headerFields: string[] = props.lite
     ? playingStatsFields

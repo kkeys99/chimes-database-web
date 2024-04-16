@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import logger from "../shared/logger";
 
-const name = "useSessionStorage"
+const name = "useSessionStorage";
 
 function getValueFromStorage<T>(key: string, initialValue: T) {
   logger.log(name, `Getting value from storage: ${key}`, logger.logLevel.DEBUG);

@@ -229,15 +229,15 @@ function CM(props: { logEdit: Function }) {
 
   /****************************************************
    * State variables:
-   * 
+   *
    * thisCM
    * Person structure for whom this is page instance is
-   * 
+   *
    * subPage
    * Which of the sub-pages is displayed
    * Setter gets passed to header component
    * Is an index of global list intraPageFields
-   * 
+   *
    * initials
    * The initials grabbed from the URL
    * Must get them from here to make the API request
@@ -290,12 +290,20 @@ function CM(props: { logEdit: Function }) {
     }
     // Default -- should not enter this
     default: {
-      logger.log(name, `ENTERED DEFAULT ON SUBPAGE. THIS IS UNEXPECTED`, logger.logLevel.ERROR);
+      logger.log(
+        name,
+        `ENTERED DEFAULT ON SUBPAGE. THIS IS UNEXPECTED`,
+        logger.logLevel.ERROR
+      );
       bodyComponent = <CMPagePlayingStats initials={initials} />;
       break;
     }
   }
-  logger.log(name, `Sub page is ${intraPageFields[subPage]}`, logger.logLevel.DEBUG);
+  logger.log(
+    name,
+    `Sub page is ${intraPageFields[subPage]}`,
+    logger.logLevel.DEBUG
+  );
 
   return (
     <Box sx={{ pt: "12px", pb: "12px", pl: "24px", pr: "24px" }}>

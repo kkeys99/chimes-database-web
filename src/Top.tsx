@@ -35,8 +35,8 @@ const Top = () => {
   logger.printObj(location, logger.logLevel.DEBUG);
 
   // Component Control
-  const disableConcertLogger = (currentPage === "dashboard");
-  const disableNavbar = (currentPage === "dashboard");
+  const disableConcertLogger = currentPage === "dashboard";
+  const disableNavbar = currentPage === "dashboard";
 
   /*** Concert Logger ************************************/
   // State variables
