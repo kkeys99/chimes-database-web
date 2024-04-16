@@ -24,6 +24,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { songFieldToDisplay, songToDisplayObj } from "../shared/utils";
 import CustomDatePicker from "../components/CustomDatePicker";
 
+import logger from "../shared/logger";
+
+
 import {
   Song,
   SongDisplay,
@@ -410,6 +413,9 @@ const PlayStats = ({ stats, playsPerCM, history }: PlayStatsProp) => {
 
 // The Main Song Page component
 const SongPage = () => {
+  const name = "Song Page";
+  logger.log(name, `Render`, logger.logLevel.INFO);
+
   const { id } = useParams(); // Get ID of song from URL
 
   /*** State Variables ********************************************/

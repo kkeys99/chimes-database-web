@@ -16,6 +16,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Link as MuiLink } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 
+
 import {
   resultTableRowData,
   searchByFieldRowData,
@@ -23,6 +24,9 @@ import {
 } from "../typing/types";
 import { songDisplayFieldToVar } from "../shared/utils";
 import { useState, useEffect } from "react";
+
+import logger from "../shared/logger";
+
 
 /*****************************************************************************/
 
@@ -230,6 +234,10 @@ const HeaderCell = ({
  *   "Lite" mode shows a shortened list of fields.
  *****************************************************************************/
 const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
+  const name = "Results Table";
+  logger.log(name, `Render`, logger.logLevel.INFO);
+  
+  const DEBUG = true;
   // Consider using mui styled() to style the table rows to alternate colors and hide borders
 
   // State variables for sorting. Sorts the whole table by column specified by orderBy
@@ -239,8 +247,10 @@ const ResultsTable = (props: { data: resultTableRowData[]; lite: boolean }) => {
   >(SortState.Asc);
   const [sortStates, setSortStates] = useState<SortState[]>([]);
 
-  console.log(orderBy);
-  console.log(props.data);
+  logger.log(name, `OrderBy: ${orderBy}`, logger.logLevel.DEBUG);
+  logger.log(name, `Data is:`, logger.logLevel.DEBUG);
+  logger.printObj(props.data, logger.logLevel.DEBUG);
+
 
   const headerFields: string[] = props.lite
     ? playingStatsFields

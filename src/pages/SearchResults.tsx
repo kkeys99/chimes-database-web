@@ -18,6 +18,8 @@ import { ResultsTable, SearchByFieldResults } from "../components/ResultsTable";
 // Custom Types
 import { Song, SongDisplay, resultTableRowData } from "../typing/types";
 import { songListToSongDisplayList } from "../shared/utils";
+import logger from "../shared/logger";
+
 
 interface SearchResultsProps {
   newSearch: boolean;
@@ -28,6 +30,9 @@ const SearchResults = memo(function SearchResults({
   newSearch,
   searchDone,
 }: SearchResultsProps) {
+  const name = "Search Results";
+  logger.log(name, `Render`, logger.logLevel.INFO);
+
   const location = useLocation();
   const searchParams = createSearchParams(location.search);
   //const [searchParams, setSearchParams] = useSearchParams();
@@ -38,11 +43,6 @@ const SearchResults = memo(function SearchResults({
 
   const [returnedSongs, setReturnedSongs] = useState<SongDisplay[]>([]);
   const numResults = returnedSongs.length;
-
-  console.log(
-    `Re-rendering Search Results with props ${newSearch} ${searchDone}`
-  );
-  console.log(searchParams.toString());
 
   useEffect(() => {
     newSearch &&

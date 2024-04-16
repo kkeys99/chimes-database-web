@@ -21,37 +21,45 @@ import SongPage from "./pages/SongPage";
 import Dashboard from "./pages/Dashboard";
 
 import { sessionStorageKeys, styleVariables, headerStyles } from "./constants";
+import logger from "./shared/logger";
 
 // This component contains state that is handled across different pages
 // This naming is what you get when an RTL engineer learns frontend lol
 const Top = () => {
+  const name = "Top";
+  logger.log(name, "Render", logger.logLevel.INFO);
+
   const location = useLocation();
   const currentPage = location.pathname.split("/")[1];
-  console.log("render top");
-  console.log(location);
+  logger.log(name, "Location is:", logger.logLevel.DEBUG);
+  logger.printObj(location, logger.logLevel.DEBUG);
 
   // Component Control
-  const disableConcertLogger = currentPage === "dashboard";
-  const disableNavbar = currentPage === "dashboard";
+  const disableConcertLogger = (currentPage === "dashboard");
+  const disableNavbar = (currentPage === "dashboard");
 
   /*** Concert Logger ************************************/
   // State variables
   // These employ useSessionStorage so they persist between refreshes
+
+  // logOpen - whether the concertLog is open
   const [logOpen, setLogOpen] = useSessionStorage(
     sessionStorageKeys.concertLog.isOpen,
     false
   );
+  // logEditMode - whether the concertLog is in edit mode
   const [logEditMode, setLogEditMode] = useSessionStorage(
     sessionStorageKeys.concertLog.editMode,
     false
   );
+  // logEditID - which concert ID is being edited
   const [logEditID, setLogEditID] = useSessionStorage<number | null>(
     sessionStorageKeys.concertLog.editID,
     null
   );
 
-  console.log("Re-render TOP");
-  console.log(sessionStorage);
+  logger.log(name, "sessionStorage is:", logger.logLevel.DEBUG);
+  logger.printObj(sessionStorage, logger.logLevel.DEBUG);
 
   // Callback functions
   const logButtonClickHandler: React.MouseEventHandler = () => {
@@ -163,6 +171,7 @@ const Top = () => {
             : headerStyles.totalHeight,
         }}
       />
+      {/* Routes to all the different pages that could be in the body */}
       <Routes>
         <Route path="/" element={<Home {...homePageProps} />} />
         <Route path="/cm/:initials" element={<CM logEdit={handleLogEdit} />} />
@@ -189,7 +198,7 @@ const Top = () => {
               }px`,
               // copied from Drawer Paper on DOM
               // For some reason, I don't think it's perfectly aligned but pretty close.
-              //Maybe should change it all into a Slider component instead of Drawer in a subsequent commit?
+              // Maybe should change it all into a Slider component instead of Drawer in a subsequent commit?
               transition: logOpen
                 ? "left 225ms cubic-bezier(0.0, 0, 0.2, 1) 0ms"
                 : "left 195ms cubic-bezier(0.4, 0, 0.6, 1) 0ms",
