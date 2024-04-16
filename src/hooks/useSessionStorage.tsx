@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
+import logger from "../shared/logger";
+
+const name = "useSessionStorage";
 
 function getValueFromStorage<T>(key: string, initialValue: T) {
-  console.log(`Getting value from storage: ${key}`);
+  logger.log(name, `Getting value from storage: ${key}`, logger.logLevel.DEBUG);
   const storedValue = sessionStorage.getItem(key);
   if (storedValue === null) {
     // if there is nothing in storage, simply return initial value
@@ -11,6 +14,7 @@ function getValueFromStorage<T>(key: string, initialValue: T) {
   return JSON.parse(storedValue) as T;
 }
 
+// A custom hook that keeps sessionStorage in sync with state variable
 export default function useSessionStorage<T>(key: string, initialValue: T) {
   const [value, setValue] = useState(() => {
     return getValueFromStorage(key, initialValue);

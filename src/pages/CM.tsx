@@ -14,21 +14,22 @@ import { ResultsTable } from "../components/ResultsTable";
 import ConcertGrid from "../components/ConcertGrid";
 import { Person, Song, SongDisplay, resultTableRowData } from "../typing/types";
 import { sortConcertsByDate, songListToSongDisplayList } from "../shared/utils";
+import logger from "../shared/logger";
+
+const intraPageFields = [
+  "Playing stats",
+  "Concerts",
+  "Arrangements",
+  "Unplayed songs",
+  "Requests",
+];
 
 // Header of the CM Page
 function CMPageHeader(props: {
   displayName: string;
-  currentPage: string;
-  renderSubPage: any;
+  currentPage: number;
+  setSubPage: any;
 }) {
-  const intraPageFields = [
-    "Playing stats",
-    "Concerts",
-    "Arrangements",
-    "Unplayed songs",
-    "Requests",
-  ];
-
   return (
     <>
       <Typography
@@ -44,18 +45,18 @@ function CMPageHeader(props: {
         spacing={8} // This is the same as 64px because theme default spacing factor is 8
         sx={{ pb: "12px" }}
       >
-        {intraPageFields.map(field => {
+        {intraPageFields.map((pageName, index) => {
           return (
             <Typography
               component={ButtonBase}
               color={
-                props.currentPage == field ? "primary.main" : "primary.dark"
+                props.currentPage == index ? "primary.main" : "primary.dark"
               }
               variant="h2"
               fontWeight="bold"
-              onClick={() => props.renderSubPage(field)}
+              onClick={() => props.setSubPage(index)}
             >
-              {field}
+              {pageName}
             </Typography>
           );
         })}
@@ -223,70 +224,93 @@ function CMPageRequests(props: { initials: string | undefined }) {
 
 // Container for the Body of the CM Page
 function CM(props: { logEdit: Function }) {
+  const name = "CM Page";
+  logger.log(name, `Render`, logger.logLevel.INFO);
+
+  /****************************************************
+   * State variables:
+   *
+   * thisCM
+   * Person structure for whom this is page instance is
+   *
+   * subPage
+   * Which of the sub-pages is displayed
+   * Setter gets passed to header component
+   * Is an index of global list intraPageFields
+   *
+   * initials
+   * The initials grabbed from the URL
+   * Must get them from here to make the API request
+   ****************************************************/
   const [thisCM, setThisCM] = useState<Person>({} as Person);
-
-  // Setter gets passed to header component
-  // and used for on-click listener.
-  // Might be a misnomer because we also are
-  // re-rendering the header to do the color change.
-  const [subPage, setSubPage] = useState("Playing stats"); // TODO: Hard-coding this is not robust
-  // Prone to typos.
-  // Consider using indices on global var?
-
-  // This hook lets us get params from HTTP req
-  const { initials } = useParams();
-
-  console.log("RERENDER - CM page");
-  console.log(initials);
+  const [subPage, setSubPage] = useState(0);
+  const { initials } = useParams(); // This hook lets us get params from HTTP req
+  logger.log(name, `Initials: ${initials}`, logger.logLevel.INFO);
 
   useEffect(() => {
     // Get the Person
-    console.log("CM Page useEffect");
-    fetch(`/person/initials/${initials}`)
+    const fetchStr = `/person/initials/${initials}`;
+    logger.log(name, `fetching Person from DB`, logger.logLevel.DEBUG);
+    logger.printObj(fetchStr, logger.logLevel.DEBUG);
+    fetch(fetchStr)
       .then(res => res.json())
       .then(data => setThisCM(new Person(data[0])));
     // Get the Played Songs
   }, [initials]);
 
-  const name: string = thisCM.fullName;
-
   // Switch body components based on state
   let bodyComponent;
   switch (subPage) {
-    case "Playing stats": {
+    // Playing stats
+    case 0: {
       bodyComponent = <CMPagePlayingStats initials={initials} />;
       break;
     }
-    case "Concerts": {
+    // Concerts
+    case 1: {
       bodyComponent = (
         <CMPageConcerts initials={initials} logEdit={props.logEdit} />
       );
       break;
     }
-    case "Arrangements": {
+    // Arrangements
+    case 2: {
       bodyComponent = <CMPageArrangements initials={initials} />;
       break;
     }
-    case "Unplayed songs": {
+    // Unplayed songs
+    case 3: {
       bodyComponent = <CMPageUnplayedSongs initials={initials} />;
       break;
     }
-    case "Requests": {
+    // Requests
+    case 4: {
       bodyComponent = <CMPageRequests initials={initials} />;
       break;
     }
+    // Default -- should not enter this
     default: {
+      logger.log(
+        name,
+        `ENTERED DEFAULT ON SUBPAGE. THIS IS UNEXPECTED`,
+        logger.logLevel.ERROR
+      );
       bodyComponent = <CMPagePlayingStats initials={initials} />;
       break;
     }
   }
+  logger.log(
+    name,
+    `Sub page is ${intraPageFields[subPage]}`,
+    logger.logLevel.DEBUG
+  );
 
   return (
     <Box sx={{ pt: "12px", pb: "12px", pl: "24px", pr: "24px" }}>
       <CMPageHeader
         displayName={thisCM.nameInitialsAndYear}
         currentPage={subPage}
-        renderSubPage={setSubPage}
+        setSubPage={setSubPage}
       />
       {bodyComponent}
     </Box>
