@@ -46,48 +46,11 @@ interface SongTitleProps {
   title: string;
 }
 
-interface SongInfoProps {
-  song: SongDisplay;
-  isEditMode: boolean;
-  removeFieldListItem: Function;
-  addFieldListItem: Function;
-  editFieldListItem: Function;
-}
-
-interface SingleSongTagProp {
-  tagName: keyof SongDisplay | string; // temp hack for now
-  tagData: string;
-}
-
 interface SongTagProp {
   tagName: keyof SongDisplay;
   tagData: string[];
 }
 
-interface EditSongTagProp extends SongTagProp {
-  removeFieldListItem: Function;
-  addFieldListItem: Function;
-  editFieldListItem: Function;
-}
-
-interface EditSongTagItemProp extends EditSongTagProp {
-  index: number;
-}
-
-interface songStatsProp {
-  stats: songStats;
-  playsPerCM: playsPerCM;
-}
-
-interface historyProp {
-  history: songHistory;
-}
-
-interface PlayStatsProp {
-  stats: songStats;
-  playsPerCM: playsPerCM;
-  history: songHistory;
-}
 
 const SongTitle = ({ sheet, title }: SongTitleProps) => {
   return (
@@ -101,6 +64,12 @@ const SongTitle = ({ sheet, title }: SongTitleProps) => {
   );
 };
 
+/***************************************************************
+* Component: ListSongTag
+* - 
+* 
+* Props: 
+* ***************************************************************/
 const ListSongTag = ({ tagName, tagData }: SongTagProp) => {
   return (
     <Box flexShrink={0}>
@@ -119,6 +88,18 @@ const ListSongTag = ({ tagName, tagData }: SongTagProp) => {
   );
 };
 
+
+/***************************************************************
+* Component: SingleSongTag
+* - One list item of the song tag
+* 
+* Props: 
+* ***************************************************************/
+interface SingleSongTagProp {
+  tagName: keyof SongDisplay | string; // temp hack for now
+  tagData: string;
+}
+
 const SingleSongTag = ({ tagName, tagData }: SingleSongTagProp) => {
   return (
     <Box flexShrink={0}>
@@ -133,13 +114,19 @@ const SingleSongTag = ({ tagName, tagData }: SingleSongTagProp) => {
   );
 };
 
+
+/***************************************************************
+* Component: EditSongTagField
+* - A simple component that's basically a styled icon button
+* - TODO - change this to styled API maybe?
+* 
+* Props: 
+* ***************************************************************/
 interface LogIconProps {
   children: any;
   clickHandler?: React.MouseEventHandler | null;
 }
 
-// A simple component that's basically a styled icon button
-// TODO - change this to styled API maybe?
 const EditFieldIconButton = ({
   children,
   clickHandler = null,
@@ -158,6 +145,16 @@ const EditFieldIconButton = ({
     </IconButton>
   );
 };
+
+/***************************************************************
+* Component: EditSongTagField
+* - Editing one entry in the song tag
+* 
+* Props: 
+* ***************************************************************/
+interface EditSongTagItemProp extends EditSongTagProp {
+  index: number;
+}
 
 const EditSongTagField = ({
   tagName,
@@ -204,6 +201,19 @@ const EditSongTagField = ({
   );
 };
 
+/***************************************************************
+* Component: EditSongTag
+* - Comp for editing a song tag
+* - Only instantiates when page is in edit mode
+* 
+* Props: 
+* ***************************************************************/
+interface EditSongTagProp extends SongTagProp {
+  removeFieldListItem: Function;
+  addFieldListItem: Function;
+  editFieldListItem: Function;
+}
+
 const EditSongTag = ({
   tagName,
   tagData,
@@ -234,7 +244,21 @@ const EditSongTag = ({
   );
 };
 
-// The Song info - top left of page
+/***************************************************************
+* Component: SongInfo
+* - One of the direct children of SongPage
+* - Contains all song fields
+* 
+* Props: 
+* ***************************************************************/
+interface SongInfoProps {
+  song: SongDisplay;
+  isEditMode: boolean;
+  removeFieldListItem: Function;
+  addFieldListItem: Function;
+  editFieldListItem: Function;
+}
+
 const SongInfo = ({
   song,
   isEditMode,
@@ -307,6 +331,12 @@ const SongInfo = ({
   );
 };
 
+/***************************************************************
+* Component: DayRange
+* - Date Range on top right corner
+* 
+* Props: 
+* ***************************************************************/
 const DayRange = () => {
   const firstDay = dayjs("2006-01-01");
 
@@ -323,7 +353,17 @@ const DayRange = () => {
   );
 };
 
-// Song stats and plays per CM
+/***************************************************************
+* Component: Statistics
+* - Total plays, requests, plays per CM
+* 
+* Props: 
+* ***************************************************************/
+interface songStatsProp {
+  stats: songStats;
+  playsPerCM: playsPerCM;
+}
+
 const Statistics = ({ stats, playsPerCM }: songStatsProp) => {
   const { performances, requests, players } = stats;
 
@@ -365,7 +405,17 @@ const Statistics = ({ stats, playsPerCM }: songStatsProp) => {
   );
 };
 
-// History of dates played and which CMs
+/***************************************************************
+ * Component: History
+ * - To be used as child of SongPage
+ * - Contains list of all plays of the song
+ * 
+ * Props: None
+***************************************************************/ 
+interface historyProp { 
+  history: songHistory;
+}
+
 const History = ({ history }: historyProp) => {
   return (
     <Stack direction="column" mb={4} ml={12}>
@@ -397,7 +447,19 @@ const History = ({ history }: historyProp) => {
   );
 };
 
-// The box to the right that contains Stats and History
+/***************************************************************
+* Component: PlayStats
+* - The column on the right with all the stats
+* - DISABLED currently because no API for this op yet
+* 
+* Props: 
+* ***************************************************************/
+interface PlayStatsProp {
+  stats: songStats;
+  playsPerCM: playsPerCM;
+  history: songHistory;
+}
+
 const PlayStats = ({ stats, playsPerCM, history }: PlayStatsProp) => {
   return (
     <Box>
@@ -410,7 +472,13 @@ const PlayStats = ({ stats, playsPerCM, history }: PlayStatsProp) => {
   );
 };
 
-// The Main Song Page component
+
+/***************************************************************
+* Component: SongPage
+* - Top-level component for the Song pages
+* 
+* Props: None
+* ***************************************************************/
 const SongPage = () => {
   const name = "Song Page";
   logger.log(name, `Render`, logger.logLevel.INFO);
@@ -435,6 +503,8 @@ const SongPage = () => {
       [formField]: value,
     });
   };
+
+  // NOTE - Maybe consider using a reducer for the below 3 functions?
 
   const addFieldListItem = (name: ListTags, index: number) => {
     // Doing it this way because splice edits in-place and returns deleted items
@@ -535,7 +605,7 @@ const SongPage = () => {
               <Box sx={{ flexGrow: 1 }} />
             </Stack>
           ) : (
-            // if isEditMode
+            // if !isEditMode
             <Button
               variant="contained"
               onClick={() => setEditMode(true)}

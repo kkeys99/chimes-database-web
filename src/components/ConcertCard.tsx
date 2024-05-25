@@ -12,6 +12,8 @@ import { ReactComponent as BellIcon } from "../assets/bell.svg";
 import { ReactComponent as EditIcon } from "../assets/edit.svg";
 import { Note, Song, Performance, Concert } from "../typing/types";
 import { Link as MuiLink } from "@mui/material";
+import logger from "../shared/logger";
+
 
 interface Props {
   concert: Concert;
@@ -26,10 +28,13 @@ interface Props {
  *   edit button, and stuff.
  *****************************************************************************/
 const ConcertCard = ({ concert, logEdit }: Props) => {
+  const name = "ConcertCard";
+  logger.log(name, `Render`, logger.logLevel.DEBUG);
+  
   const theme = useTheme();
 
   const handleEditClick: any = () => {
-    console.log("Clicked Edit Button");
+    logger.log(name, `Clicked Edit button`, logger.logLevel.DEBUG);
     logEdit(concert.id);
     return;
   };

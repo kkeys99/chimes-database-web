@@ -1,8 +1,7 @@
-import * as React from "react";
-import theme from "../theme";
-import { useParams } from "react-router-dom";
+/*************************************************************
+ * Home Page
+ *************************************************************/ 
 import { useState, useEffect, memo } from "react";
-import useSessionStorage from "../hooks/useSessionStorage";
 import dayjs from "dayjs";
 import { Dayjs } from "dayjs";
 
@@ -16,10 +15,6 @@ import CustomDatePicker from "../components/CustomDatePicker";
 import { sortConcertsByDate } from "../shared/utils";
 import logger from "../shared/logger";
 
-interface HomePageProps {
-  logEdit: Function; // Func that puts logger in edit mode w proper editID
-}
-
 /*************************************************************
  * Component: Home
  *
@@ -28,13 +23,21 @@ interface HomePageProps {
  * - It makes a fetch request to the API for the concert history
  * and passes it into the ConcertGrid component.
  * - It also has two Date Pickers which decide the search range.
+ * 
+ * Props:
+ *   logEdit
+ *     Function that indicates Concert Logger to go into Edit Mode
  *************************************************************/
+interface HomePageProps {
+  logEdit: Function; // Func that puts logger in edit mode w proper editID
+}
+
 const Home = memo(function Home({ logEdit }: HomePageProps) {
   const name = "Home";
   logger.log(name, `Render`, logger.logLevel.INFO);
 
-  const tempSearchDate = "2013-05-05";
   const searchStart = "2006-01-01";
+  const tempSearchDate = "2013-05-05";
 
   // The concert history itself
   const [data, setData] = useState([]);
@@ -49,16 +52,16 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
   );
 
   // Search range dates as dayjs
-  const tempDateFrom = dayjs(dateFrom);
-  const tempDateTo = dayjs(dateTo);
+  const fromDateAsDayjs: Dayjs = dayjs(dateFrom);
+  const toDateAsDayjs: Dayjs = dayjs(dateTo);
 
   // Parse year, month, day out of search range dates for API call
-  const fromYear = tempDateFrom.year();
-  const fromMonth = tempDateFrom.month();
-  const fromDay = tempDateFrom.date();
-  const toYear = tempDateTo.year();
-  const toMonth = tempDateTo.month();
-  const toDay = tempDateTo.date();
+  const fromYear = fromDateAsDayjs.year();
+  const fromMonth = fromDateAsDayjs.month();
+  const fromDay = fromDateAsDayjs.date();
+  const toYear = toDateAsDayjs.year();
+  const toMonth = toDateAsDayjs.month();
+  const toDay = toDateAsDayjs.date();
 
   // Sorted concerts, will get passed to concert grid
   const concertsByDate = sortConcertsByDate(data);
@@ -66,9 +69,7 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
   // Fetch the concert history between the search dates any time they change
   useEffect(() => {
     // month+1 because dayjs indexes months from 0 but backend expects Jan = 1
-    const fetchStr = `/concert/year/${toYear}/month/${
-      toMonth + 1
-    }/day/${toDay}?previous=month`;
+    const fetchStr = `/concert/year/${toYear}/month/${toMonth+1}/day/${toDay}?previous=month`;
 
     logger.log(name, `Fetching concert:`, logger.logLevel.DEBUG);
     logger.printObj(fetchStr, logger.logLevel.DEBUG);
@@ -76,7 +77,7 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
     fetch(fetchStr)
       .then(res => res.json())
       .then(data => setData(data));
-  }, [dateTo, dateFrom]);
+  }, [dateFrom, dateTo]);
 
   return (
     // TODO: Make a reusable body container
@@ -90,9 +91,9 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
         sx={{ height: "28px" }}
       >
         <Box> from </Box>
-        <CustomDatePicker light={false} date={tempDateFrom} setDate={setFrom} />
+        <CustomDatePicker light={false} date={fromDateAsDayjs} setDate={setFrom} />
         <Box> to </Box>
-        <CustomDatePicker light={false} date={tempDateTo} setDate={setTo} />
+        <CustomDatePicker light={false} date={toDateAsDayjs} setDate={setTo} />
       </Stack>
       {/* See all Concerts */}
       {/* TODO: make this into button that works */}

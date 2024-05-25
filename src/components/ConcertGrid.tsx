@@ -1,23 +1,11 @@
-import * as React from "react";
-import Grid from "@mui/material/Grid";
+/*************************************************************
+ * Concert Grid
+ *************************************************************/
 import ConcertCard from "./ConcertCard";
 import { Concert } from "../typing/types";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
 import { dateHashToDisplayStr } from "../shared/utils";
-import { isConstructorDeclaration } from "typescript";
-
-interface ConcertGridProps {
-  concertsByDate: { [key: number]: Concert[] };
-  logEdit: Function;
-}
-
-interface ConcertGridRowProps {
-  date: string;
-  rowConcerts: Concert[];
-  logEdit: Function;
-}
 
 /*****************************************************************************
  * ConcertGridRow
@@ -30,6 +18,12 @@ interface ConcertGridRowProps {
  *   in the row so that concert cards do not exceed 1/3 the row wide. If there are
  *   more than 3 concerts, they will be equally sized.
  *****************************************************************************/
+interface ConcertGridRowProps {
+  date: string;
+  rowConcerts: Concert[];
+  logEdit: Function;
+}
+
 function ConcertGridRow({ date, rowConcerts, logEdit }: ConcertGridRowProps) {
   // This determines how many invisible boxes to put in the row so that things line up
   // This logic is unused.
@@ -91,6 +85,11 @@ function ConcertGridRow({ date, rowConcerts, logEdit }: ConcertGridRowProps) {
  * Description:
  *   Contains the whole concert grid for that page.
  *****************************************************************************/
+interface ConcertGridProps {
+  concertsByDate: { [key: number]: Concert[] };
+  logEdit: Function;
+}
+
 const ConcertGrid = ({ concertsByDate, logEdit }: ConcertGridProps) => {
   // A custom sort function that sorts in DESCENDING order
   const descSort = (a: string, b: string) => {
