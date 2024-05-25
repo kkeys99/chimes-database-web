@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 
@@ -13,6 +12,17 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
 import { PopperProps } from "@mui/material";
 
+/***************************************************************
+ * Component: CustomDatePicker
+ * - Utilizes the MUI-X DatePicker component plus some extra styling
+ * - The date adapter is DayJS
+ *
+ * Props:
+ *   light: determines the color
+ *   date: DayJS object (should this be ISO String and convert internally)
+ *   setDate: function to pass date up to state manager
+ *   disabled: If set, component is disabled
+ * ***************************************************************/
 interface DatePickerProps {
   light: boolean;
   date: Dayjs;
@@ -32,7 +42,7 @@ const CustomDatePicker = ({
   const [closing, setClosing] = useState(false);
 
   // console.log(`Rerendering popper - open is ${open}`);
-  console.log(`Rerendering dat picket - date is ${date}`);
+  console.log(`Rerendering date picker - date is ${date}`);
 
   // The handler for date changes.
   // The Input is a JS Date, and we call the parent SetState function with an ISO string.
@@ -71,7 +81,7 @@ const CustomDatePicker = ({
       <DatePicker
         disableFuture
         disabled={disabled}
-        open={open} // TODO - enable calendar popup. This seems difficult for now.
+        open={open}
         onClose={() => {
           setOpen(false);
           //setAnchorEl(null);

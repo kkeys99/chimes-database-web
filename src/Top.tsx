@@ -23,9 +23,18 @@ import Dashboard from "./pages/Dashboard";
 import { sessionStorageKeys, styleVariables, headerStyles } from "./constants";
 import logger from "./shared/logger";
 
-// This component contains state that is handled across different pages
-// This naming is what you get when an RTL engineer learns frontend lol
+/************************************************************************
+ * Component: Top
+ *
+ * - Contains routes
+ * - Keeps state variables that multiple components are sensitive to
+ * - Also contains the button for the concert log
+ *
+ * Props: None
+ *
+ *************************************************************************/
 const Top = () => {
+  // This naming is what you get when an RTL engineer learns frontend lol
   const name = "Top";
   logger.log(name, "Render", logger.logLevel.INFO);
 

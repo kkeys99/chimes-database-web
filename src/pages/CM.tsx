@@ -222,26 +222,21 @@ function CMPageRequests(props: { initials: string | undefined }) {
   );
 }
 
-// Container for the Body of the CM Page
-function CM(props: { logEdit: Function }) {
+/********************************************************
+ * Component: CM
+ *
+ * - Top level component of the CM Page
+ ********************************************************/
+interface CMPageProps {
+  // c/b func that puts the concert log in edit mode
+  logEdit: Function;
+}
+
+function CM({ logEdit }: CMPageProps) {
   const name = "CM Page";
   logger.log(name, `Render`, logger.logLevel.INFO);
 
-  /****************************************************
-   * State variables:
-   *
-   * thisCM
-   * Person structure for whom this is page instance is
-   *
-   * subPage
-   * Which of the sub-pages is displayed
-   * Setter gets passed to header component
-   * Is an index of global list intraPageFields
-   *
-   * initials
-   * The initials grabbed from the URL
-   * Must get them from here to make the API request
-   ****************************************************/
+  // State variables
   const [thisCM, setThisCM] = useState<Person>({} as Person);
   const [subPage, setSubPage] = useState(0);
   const { initials } = useParams(); // This hook lets us get params from HTTP req
@@ -268,9 +263,7 @@ function CM(props: { logEdit: Function }) {
     }
     // Concerts
     case 1: {
-      bodyComponent = (
-        <CMPageConcerts initials={initials} logEdit={props.logEdit} />
-      );
+      bodyComponent = <CMPageConcerts initials={initials} logEdit={logEdit} />;
       break;
     }
     // Arrangements

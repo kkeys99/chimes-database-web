@@ -11,7 +11,6 @@ import InputLabel from "@mui/material/InputLabel";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import FilledInput from "@mui/material/FilledInput";
-import { cms } from "../constants";
 import { useTheme } from "@mui/material/styles";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -20,14 +19,30 @@ import { NavLink as RouterNavLink } from "react-router-dom";
 
 import { Person } from "../typing/types";
 import { styleVariables, navBarStyles, headerStyles } from "../constants";
+import logger from "../shared/logger";
 
+/***************************************************************
+ * Component: CMList
+ * - List of current CMs that are links to their respective CM Page
+ * - Gets current CMs from database, thus needs no props or URL info
+ *
+ * Props: None
+ *
+ * ***************************************************************/
 const CMList = () => {
+  const name = "CM List";
+  logger.log(name, `Render`, logger.logLevel.INFO);
+
   const theme = useTheme();
   const location = useLocation();
   const [currentCMs, setCurrentCMs] = useState<Person[]>([]);
 
   useEffect(() => {
-    console.log("NavBar useEffect");
+    logger.log(
+      name,
+      `[useEffect] - fetching current CMs`,
+      logger.logLevel.INFO
+    );
     fetch(`/person/current`)
       .then(res => res.json())
       .then(data => setCurrentCMs(data));
@@ -47,7 +62,7 @@ const CMList = () => {
         {currentCMs.map(cm => {
           return (
             // Gianluca wuz here
-            //I want to use react-router-dom link but Typography doesn't have the underline prop
+            // I want to use react-router-dom link but Typography doesn't have the underline prop
             <MuiLink
               component={RouterNavLink}
               to={`/cm/${cm.initials}`}
@@ -72,11 +87,20 @@ const CMList = () => {
   );
 };
 
-const SearchInput = (props: SearchBarProps) => {
+/***************************************************************
+ * Component: SearchInput
+ * - The text input field of the search bar
+ *
+ * Props:
+ *
+ * ***************************************************************/
+interface SearchInputProps extends NavBarProps {} // Alias for better naming
+
+const SearchInput = (props: SearchInputProps) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const keyDownHandler: React.KeyboardEventHandler<HTMLInputElement> = e => {
+  const keyUpHandler: React.KeyboardEventHandler<HTMLInputElement> = e => {
     if (e.key == "Enter") {
       props.makeNewSearch();
     }
@@ -93,7 +117,7 @@ const SearchInput = (props: SearchBarProps) => {
       </InputLabel>
       <FilledInput
         value={props.searchInput}
-        onKeyDown={keyDownHandler}
+        onKeyUp={keyUpHandler}
         onChange={props.searchInputChangeHandler}
         endAdornment={
           <InputAdornment position="end">
@@ -116,6 +140,14 @@ const SearchInput = (props: SearchBarProps) => {
   );
 };
 
+/***************************************************************
+ * Component: SearchBar
+ * - Parent of the whole bottommost row of nav bar
+ * - Contains search input box and tags buttons
+ *
+ * Props:
+ *
+ * ***************************************************************/
 interface SearchBarProps extends NavBarProps {} // Alias for better naming
 
 const SearchBar = (props: SearchBarProps) => {
@@ -150,6 +182,15 @@ const SearchBar = (props: SearchBarProps) => {
   );
 };
 
+/***************************************************************
+ * Component: NavBar
+ * - The parent component of the whole Nav Bar
+ * - Nav Bar meaning the gray strip underneath the red header
+ * - Contains CM List (top row) and Search Bar (bottom row)
+ *
+ * Props:
+ *
+ * ***************************************************************/
 interface NavBarProps {
   searchBy: string;
   searchByChangeHandler: Function; // maybe get a better type for this

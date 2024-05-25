@@ -67,32 +67,6 @@ const defaultLog: concertLogFields = {
   publicNote: "",
 };
 
-/* Prop Interfaces ***********************************/
-
-interface ConcertLoggerProps {
-  open: boolean;
-  isEditMode: boolean;
-  editID: number | null;
-  setEditMode: Function;
-  cancelEdit: Function;
-}
-
-interface LogIconProps {
-  children: any;
-  clickHandler?: React.MouseEventHandler | null;
-}
-
-interface SongLoggerProps {
-  song: songEntry; // The song data itself
-  index: number; // The vertical position in the list "X"
-  bottom: boolean; // Whether it's the bottom entry
-  addSong: Function; // Handlers from the top-level Logger
-  deleteSong: Function;
-  editSong: Function;
-  checkErrors: boolean;
-  sortableList: HTMLElement;
-}
-
 /* Components ***********************************/
 
 // This was necessary for having more control over the shape of the selector
@@ -111,6 +85,11 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 
 // A simple component that's basically a styled icon button
 // TODO - change this to styled API maybe?
+interface LogIconProps {
+  children: any;
+  clickHandler?: React.MouseEventHandler | null;
+}
+
 const LogIcon = ({ children, clickHandler = null }: LogIconProps) => {
   return (
     <IconButton
@@ -138,6 +117,17 @@ const LogIcon = ({ children, clickHandler = null }: LogIconProps) => {
  *     ConcertLogger. This is necessary because the Logger functions
  *     need to know the index.
  *****************************************************************************/
+interface SongLoggerProps {
+  song: songEntry; // The song data itself
+  index: number; // The vertical position in the list "X"
+  bottom: boolean; // Whether it's the bottom entry
+  addSong: Function; // Handlers from the top-level Logger
+  deleteSong: Function;
+  editSong: Function;
+  checkErrors: boolean;
+  sortableList: HTMLElement;
+}
+
 const SongLogger = ({
   song,
   index,
@@ -255,6 +245,14 @@ const SongLogger = ({
  *   A drawer that you can slide out to log the concert
  *   https://mui.com/material-ui/react-drawer/
  *****************************************************************************/
+interface ConcertLoggerProps {
+  open: boolean;
+  isEditMode: boolean;
+  editID: number | null;
+  setEditMode: Function;
+  cancelEdit: Function;
+}
+
 const ConcertLogger = ({
   open,
   isEditMode,

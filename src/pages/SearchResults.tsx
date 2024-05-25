@@ -20,6 +20,16 @@ import { Song, SongDisplay, resultTableRowData } from "../typing/types";
 import { songListToSongDisplayList } from "../shared/utils";
 import logger from "../shared/logger";
 
+/***************************************************************
+ * Component: SearchResults
+ * - Top-level component for the Song pages
+ *
+ * Props:
+ *   newSearch - prompts the component to make another fetch request
+ *               using the URL parameters
+ *   searchDone - a function that indicates to the state manager
+ *                that the search has been completed
+ * ***************************************************************/
 interface SearchResultsProps {
   newSearch: boolean;
   searchDone: Function;
