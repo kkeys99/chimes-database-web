@@ -51,7 +51,6 @@ interface SongTagProp {
   tagData: string[];
 }
 
-
 const SongTitle = ({ sheet, title }: SongTitleProps) => {
   return (
     <Box display="flex" flexDirection="row">
@@ -65,11 +64,11 @@ const SongTitle = ({ sheet, title }: SongTitleProps) => {
 };
 
 /***************************************************************
-* Component: ListSongTag
-* - 
-* 
-* Props: 
-* ***************************************************************/
+ * Component: ListSongTag
+ * -
+ *
+ * Props:
+ * ***************************************************************/
 const ListSongTag = ({ tagName, tagData }: SongTagProp) => {
   return (
     <Box flexShrink={0}>
@@ -88,13 +87,12 @@ const ListSongTag = ({ tagName, tagData }: SongTagProp) => {
   );
 };
 
-
 /***************************************************************
-* Component: SingleSongTag
-* - One list item of the song tag
-* 
-* Props: 
-* ***************************************************************/
+ * Component: SingleSongTag
+ * - One list item of the song tag
+ *
+ * Props:
+ * ***************************************************************/
 interface SingleSongTagProp {
   tagName: keyof SongDisplay | string; // temp hack for now
   tagData: string;
@@ -114,14 +112,13 @@ const SingleSongTag = ({ tagName, tagData }: SingleSongTagProp) => {
   );
 };
 
-
 /***************************************************************
-* Component: EditSongTagField
-* - A simple component that's basically a styled icon button
-* - TODO - change this to styled API maybe?
-* 
-* Props: 
-* ***************************************************************/
+ * Component: EditSongTagField
+ * - A simple component that's basically a styled icon button
+ * - TODO - change this to styled API maybe?
+ *
+ * Props:
+ * ***************************************************************/
 interface LogIconProps {
   children: any;
   clickHandler?: React.MouseEventHandler | null;
@@ -147,11 +144,11 @@ const EditFieldIconButton = ({
 };
 
 /***************************************************************
-* Component: EditSongTagField
-* - Editing one entry in the song tag
-* 
-* Props: 
-* ***************************************************************/
+ * Component: EditSongTagField
+ * - Editing one entry in the song tag
+ *
+ * Props:
+ * ***************************************************************/
 interface EditSongTagItemProp extends EditSongTagProp {
   index: number;
 }
@@ -202,12 +199,12 @@ const EditSongTagField = ({
 };
 
 /***************************************************************
-* Component: EditSongTag
-* - Comp for editing a song tag
-* - Only instantiates when page is in edit mode
-* 
-* Props: 
-* ***************************************************************/
+ * Component: EditSongTag
+ * - Comp for editing a song tag
+ * - Only instantiates when page is in edit mode
+ *
+ * Props:
+ * ***************************************************************/
 interface EditSongTagProp extends SongTagProp {
   removeFieldListItem: Function;
   addFieldListItem: Function;
@@ -245,12 +242,12 @@ const EditSongTag = ({
 };
 
 /***************************************************************
-* Component: SongInfo
-* - One of the direct children of SongPage
-* - Contains all song fields
-* 
-* Props: 
-* ***************************************************************/
+ * Component: SongInfo
+ * - One of the direct children of SongPage
+ * - Contains all song fields
+ *
+ * Props:
+ * ***************************************************************/
 interface SongInfoProps {
   song: SongDisplay;
   isEditMode: boolean;
@@ -332,11 +329,11 @@ const SongInfo = ({
 };
 
 /***************************************************************
-* Component: DayRange
-* - Date Range on top right corner
-* 
-* Props: 
-* ***************************************************************/
+ * Component: DayRange
+ * - Date Range on top right corner
+ *
+ * Props:
+ * ***************************************************************/
 const DayRange = () => {
   const firstDay = dayjs("2006-01-01");
 
@@ -354,11 +351,11 @@ const DayRange = () => {
 };
 
 /***************************************************************
-* Component: Statistics
-* - Total plays, requests, plays per CM
-* 
-* Props: 
-* ***************************************************************/
+ * Component: Statistics
+ * - Total plays, requests, plays per CM
+ *
+ * Props:
+ * ***************************************************************/
 interface songStatsProp {
   stats: songStats;
   playsPerCM: playsPerCM;
@@ -409,10 +406,10 @@ const Statistics = ({ stats, playsPerCM }: songStatsProp) => {
  * Component: History
  * - To be used as child of SongPage
  * - Contains list of all plays of the song
- * 
+ *
  * Props: None
-***************************************************************/ 
-interface historyProp { 
+ ***************************************************************/
+interface historyProp {
   history: songHistory;
 }
 
@@ -448,12 +445,12 @@ const History = ({ history }: historyProp) => {
 };
 
 /***************************************************************
-* Component: PlayStats
-* - The column on the right with all the stats
-* - DISABLED currently because no API for this op yet
-* 
-* Props: 
-* ***************************************************************/
+ * Component: PlayStats
+ * - The column on the right with all the stats
+ * - DISABLED currently because no API for this op yet
+ *
+ * Props:
+ * ***************************************************************/
 interface PlayStatsProp {
   stats: songStats;
   playsPerCM: playsPerCM;
@@ -472,13 +469,12 @@ const PlayStats = ({ stats, playsPerCM, history }: PlayStatsProp) => {
   );
 };
 
-
 /***************************************************************
-* Component: SongPage
-* - Top-level component for the Song pages
-* 
-* Props: None
-* ***************************************************************/
+ * Component: SongPage
+ * - Top-level component for the Song pages
+ *
+ * Props: None
+ * ***************************************************************/
 const SongPage = () => {
   const name = "Song Page";
   logger.log(name, `Render`, logger.logLevel.INFO);

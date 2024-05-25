@@ -1,6 +1,6 @@
 /*************************************************************
  * Home Page
- *************************************************************/ 
+ *************************************************************/
 import { useState, useEffect, memo } from "react";
 import dayjs from "dayjs";
 import { Dayjs } from "dayjs";
@@ -23,7 +23,7 @@ import logger from "../shared/logger";
  * - It makes a fetch request to the API for the concert history
  * and passes it into the ConcertGrid component.
  * - It also has two Date Pickers which decide the search range.
- * 
+ *
  * Props:
  *   logEdit
  *     Function that indicates Concert Logger to go into Edit Mode
@@ -69,7 +69,9 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
   // Fetch the concert history between the search dates any time they change
   useEffect(() => {
     // month+1 because dayjs indexes months from 0 but backend expects Jan = 1
-    const fetchStr = `/concert/year/${toYear}/month/${toMonth+1}/day/${toDay}?previous=month`;
+    const fetchStr = `/concert/year/${toYear}/month/${
+      toMonth + 1
+    }/day/${toDay}?previous=month`;
 
     logger.log(name, `Fetching concert:`, logger.logLevel.DEBUG);
     logger.printObj(fetchStr, logger.logLevel.DEBUG);
@@ -91,7 +93,11 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
         sx={{ height: "28px" }}
       >
         <Box> from </Box>
-        <CustomDatePicker light={false} date={fromDateAsDayjs} setDate={setFrom} />
+        <CustomDatePicker
+          light={false}
+          date={fromDateAsDayjs}
+          setDate={setFrom}
+        />
         <Box> to </Box>
         <CustomDatePicker light={false} date={toDateAsDayjs} setDate={setTo} />
       </Stack>

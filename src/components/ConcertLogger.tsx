@@ -118,9 +118,9 @@ const LogIcon = ({ children, clickHandler = null }: LogIconProps) => {
  *     need to know the index.
  *****************************************************************************/
 interface SongLoggerProps {
-  song: songEntry;   // The song data itself
-  index: number;     // The vertical position in the list "X"
-  bottom: boolean;   // Whether it's the bottom entry
+  song: songEntry; // The song data itself
+  index: number; // The vertical position in the list "X"
+  bottom: boolean; // Whether it's the bottom entry
   addSong: Function; // Handlers from the top-level Logger
   deleteSong: Function;
   editSong: Function;

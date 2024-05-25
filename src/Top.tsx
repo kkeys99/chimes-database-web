@@ -25,14 +25,14 @@ import logger from "./shared/logger";
 
 /************************************************************************
  * Component: Top
- * 
+ *
  * - Contains routes
  * - Keeps state variables that multiple components are sensitive to
  * - Also contains the button for the concert log
- * 
+ *
  * Props: None
- * 
-*************************************************************************/
+ *
+ *************************************************************************/
 const Top = () => {
   // This naming is what you get when an RTL engineer learns frontend lol
   const name = "Top";

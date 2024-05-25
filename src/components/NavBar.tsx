@@ -22,13 +22,13 @@ import { styleVariables, navBarStyles, headerStyles } from "../constants";
 import logger from "../shared/logger";
 
 /***************************************************************
-* Component: CMList
-* - List of current CMs that are links to their respective CM Page
-* - Gets current CMs from database, thus needs no props or URL info
-* 
-* Props: None
-*   
-* ***************************************************************/
+ * Component: CMList
+ * - List of current CMs that are links to their respective CM Page
+ * - Gets current CMs from database, thus needs no props or URL info
+ *
+ * Props: None
+ *
+ * ***************************************************************/
 const CMList = () => {
   const name = "CM List";
   logger.log(name, `Render`, logger.logLevel.INFO);
@@ -38,7 +38,11 @@ const CMList = () => {
   const [currentCMs, setCurrentCMs] = useState<Person[]>([]);
 
   useEffect(() => {
-    logger.log(name, `[useEffect] - fetching current CMs`, logger.logLevel.INFO);
+    logger.log(
+      name,
+      `[useEffect] - fetching current CMs`,
+      logger.logLevel.INFO
+    );
     fetch(`/person/current`)
       .then(res => res.json())
       .then(data => setCurrentCMs(data));
@@ -84,12 +88,12 @@ const CMList = () => {
 };
 
 /***************************************************************
-* Component: SearchInput
-* - The text input field of the search bar
-* 
-* Props: 
-*   
-* ***************************************************************/
+ * Component: SearchInput
+ * - The text input field of the search bar
+ *
+ * Props:
+ *
+ * ***************************************************************/
 interface SearchInputProps extends NavBarProps {} // Alias for better naming
 
 const SearchInput = (props: SearchInputProps) => {
@@ -137,13 +141,13 @@ const SearchInput = (props: SearchInputProps) => {
 };
 
 /***************************************************************
-* Component: SearchBar
-* - Parent of the whole bottommost row of nav bar
-* - Contains search input box and tags buttons
-* 
-* Props: 
-*   
-* ***************************************************************/
+ * Component: SearchBar
+ * - Parent of the whole bottommost row of nav bar
+ * - Contains search input box and tags buttons
+ *
+ * Props:
+ *
+ * ***************************************************************/
 interface SearchBarProps extends NavBarProps {} // Alias for better naming
 
 const SearchBar = (props: SearchBarProps) => {
@@ -179,14 +183,14 @@ const SearchBar = (props: SearchBarProps) => {
 };
 
 /***************************************************************
-* Component: NavBar
-* - The parent component of the whole Nav Bar
-* - Nav Bar meaning the gray strip underneath the red header
-* - Contains CM List (top row) and Search Bar (bottom row)
-* 
-* Props: 
-*   
-* ***************************************************************/
+ * Component: NavBar
+ * - The parent component of the whole Nav Bar
+ * - Nav Bar meaning the gray strip underneath the red header
+ * - Contains CM List (top row) and Search Bar (bottom row)
+ *
+ * Props:
+ *
+ * ***************************************************************/
 interface NavBarProps {
   searchBy: string;
   searchByChangeHandler: Function; // maybe get a better type for this

@@ -224,12 +224,12 @@ function CMPageRequests(props: { initials: string | undefined }) {
 
 /********************************************************
  * Component: CM
- * 
+ *
  * - Top level component of the CM Page
-********************************************************/
+ ********************************************************/
 interface CMPageProps {
   // c/b func that puts the concert log in edit mode
-  logEdit: Function; 
+  logEdit: Function;
 }
 
 function CM({ logEdit }: CMPageProps) {
@@ -263,9 +263,7 @@ function CM({ logEdit }: CMPageProps) {
     }
     // Concerts
     case 1: {
-      bodyComponent = (
-        <CMPageConcerts initials={initials} logEdit={logEdit} />
-      );
+      bodyComponent = <CMPageConcerts initials={initials} logEdit={logEdit} />;
       break;
     }
     // Arrangements

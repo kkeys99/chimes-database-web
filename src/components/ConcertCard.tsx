@@ -14,7 +14,6 @@ import { Note, Song, Performance, Concert } from "../typing/types";
 import { Link as MuiLink } from "@mui/material";
 import logger from "../shared/logger";
 
-
 interface Props {
   concert: Concert;
   logEdit: Function;
@@ -30,7 +29,7 @@ interface Props {
 const ConcertCard = ({ concert, logEdit }: Props) => {
   const name = "ConcertCard";
   logger.log(name, `Render`, logger.logLevel.DEBUG);
-  
+
   const theme = useTheme();
 
   const handleEditClick: any = () => {

@@ -13,20 +13,20 @@ import { Dayjs } from "dayjs";
 import { PopperProps } from "@mui/material";
 
 /***************************************************************
-* Component: CustomDatePicker
-* - Utilizes the MUI-X DatePicker component plus some extra styling
-* - The date adapter is DayJS
-* 
-* Props: 
-*   light: determines the color
-*   date: DayJS object (should this be ISO String and convert internally)
-*   setDate: function to pass date up to state manager
-*   disabled: If set, component is disabled
-* ***************************************************************/
+ * Component: CustomDatePicker
+ * - Utilizes the MUI-X DatePicker component plus some extra styling
+ * - The date adapter is DayJS
+ *
+ * Props:
+ *   light: determines the color
+ *   date: DayJS object (should this be ISO String and convert internally)
+ *   setDate: function to pass date up to state manager
+ *   disabled: If set, component is disabled
+ * ***************************************************************/
 interface DatePickerProps {
-  light:     boolean;
-  date:      Dayjs;
-  setDate:   Function;
+  light: boolean;
+  date: Dayjs;
+  setDate: Function;
   disabled?: boolean;
 }
 
@@ -81,7 +81,7 @@ const CustomDatePicker = ({
       <DatePicker
         disableFuture
         disabled={disabled}
-        open={open} 
+        open={open}
         onClose={() => {
           setOpen(false);
           //setAnchorEl(null);
