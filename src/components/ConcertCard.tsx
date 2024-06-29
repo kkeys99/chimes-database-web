@@ -76,7 +76,6 @@ const ConcertCard = ({ concert, logEdit }: Props) => {
               }}
             />
           </Stack>
-
           {/*** Concert Songs List *********************************/}
           <List dense sx={{ ml: 7, listStyleType: "disc" }}>
             {concert.performances.map(performance => {
@@ -98,7 +97,8 @@ const ConcertCard = ({ concert, logEdit }: Props) => {
               );
             })}
           </List>
-=        </CardContent>
+          ={" "}
+        </CardContent>
       </Card>
     </Box>
   );
