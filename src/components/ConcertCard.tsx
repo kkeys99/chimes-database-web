@@ -10,7 +10,7 @@ import SvgIcon from "@mui/material/SvgIcon";
 import { useTheme } from "@mui/material/styles";
 import { ReactComponent as BellIcon } from "../assets/bell.svg";
 import { ReactComponent as EditIcon } from "../assets/edit.svg";
-import { Note, Song, Performance, Concert } from "../typing/types";
+import { Note, DBSong, Performance, Concert } from "../typing/types";
 import { Link as MuiLink } from "@mui/material";
 import logger from "../shared/logger";
 
@@ -76,9 +76,7 @@ const ConcertCard = ({ concert, logEdit }: Props) => {
               }}
             />
           </Stack>
-
           {/*** Concert Songs List *********************************/}
-          {/* TODO - UNCOMMENT THIS WHEN PERFORMANCES IN DB
           <List dense sx={{ ml: 7, listStyleType: "disc" }}>
             {concert.performances.map(performance => {
               return (
@@ -87,19 +85,19 @@ const ConcertCard = ({ concert, logEdit }: Props) => {
                     display="inline"
                     variant="body2"
                     color="secondary.main"
-                    href={`/song/${performance.song.id}`}
+                    href={`/song/${performance.song._id}`}
                     underline="hover"
                   >
                     {`${performance.song.sheet[0]} - ${performance.song.title}`}
                   </MuiLink>
                   <Typography display="inline" variant="body2">
-                    {` (${performance.performers.join(", ")})`}
+                    {` (${performance.initialsList.join(", ")})`}
                   </Typography>
                 </ListItemText>
               );
             })}
           </List>
-          */}
+          ={" "}
         </CardContent>
       </Card>
     </Box>

@@ -9,15 +9,14 @@ import {
 import { useState, useEffect, memo } from "react";
 import dayjs from "dayjs";
 import { Dayjs } from "dayjs";
-
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 // Custom Components
 import { ResultsTable, SearchByFieldResults } from "../components/ResultsTable";
 // Custom Types
-import { Song, SongDisplay, resultTableRowData } from "../typing/types";
-import { songListToSongDisplayList } from "../shared/utils";
+import { DBSong, Song, resultTableRowData } from "../typing/types";
+import { DBSongList2FESongList } from "../shared/utils";
 import logger from "../shared/logger";
 
 /***************************************************************
@@ -50,7 +49,7 @@ const SearchResults = memo(function SearchResults({
    * Using useLocation's search attribute seems to do the trick.
    */
 
-  const [returnedSongs, setReturnedSongs] = useState<SongDisplay[]>([]);
+  const [returnedSongs, setReturnedSongs] = useState<Song[]>([]);
   const numResults = returnedSongs.length;
 
   useEffect(() => {
@@ -61,11 +60,11 @@ const SearchResults = memo(function SearchResults({
         //fetch(`song/search?${searchParams["searchBy"]}=${searchParams["q"]}`)
         .then(res => res.json())
         .then(data => {
-          // Convert to songDisplay
-          const resAsSongDisplay = songListToSongDisplayList(data);
+          // Convert to Song
+          const resAsSong = DBSongList2FESongList(data);
           // Calculate "you"
           // "you" not implemented yet
-          setReturnedSongs(resAsSongDisplay);
+          setReturnedSongs(resAsSong);
         });
     searchDone();
   }, [newSearch]);

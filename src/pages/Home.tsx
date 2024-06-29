@@ -12,7 +12,11 @@ import Typography from "@mui/material/Typography";
 import { Concert } from "../typing/types";
 import CustomDatePicker from "../components/CustomDatePicker";
 
-import { sortConcertsByDate } from "../shared/utils";
+import {
+  DBSong2FESong,
+  sortConcertsByDate,
+  DBConcertList2FEConcertList,
+} from "../shared/utils";
 import logger from "../shared/logger";
 
 /*************************************************************
@@ -37,10 +41,10 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
   logger.log(name, `Render`, logger.logLevel.INFO);
 
   const searchStart = "2006-01-01";
-  const tempSearchDate = "2013-05-05";
+  const tempSearchDate = "2006-05-05";
 
   // The concert history itself
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Concert[]>([]);
 
   // The dates for the search range
   // These should be ISO strings
@@ -78,8 +82,11 @@ const Home = memo(function Home({ logEdit }: HomePageProps) {
 
     fetch(fetchStr)
       .then(res => res.json())
-      .then(data => setData(data));
+      // Convert the songs to Song
+      .then(data => setData(DBConcertList2FEConcertList(data)));
   }, [dateFrom, dateTo]);
+
+  logger.printObj(data, logger.logLevel.DEBUG);
 
   return (
     // TODO: Make a reusable body container

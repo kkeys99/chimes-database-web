@@ -21,14 +21,14 @@ import { makeStyles } from "@material-ui/styles";
 import { IconButton } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { songFieldToDisplay, songToDisplayObj } from "../shared/utils";
+import { songFieldToDisplay, DBSong2FESong } from "../shared/utils";
 import CustomDatePicker from "../components/CustomDatePicker";
 
 import logger from "../shared/logger";
 
 import {
+  DBSong,
   Song,
-  SongDisplay,
   songStats,
   songPageData,
   songHistory,
@@ -39,7 +39,7 @@ import { Dayjs } from "dayjs";
 //https://stackoverflow.com/questions/51419176/how-to-get-a-subset-of-keyof-t-whose-value-tk-are-callable-functions-in-typ
 // Making a type of list fields so checking for length doesn't error out when you remove items
 type KeyOfType<T, U> = { [P in keyof T]: T[P] extends U ? P : never }[keyof T];
-type ListTags = KeyOfType<SongDisplay, string[]>;
+type ListTags = KeyOfType<Song, string[]>;
 
 interface SongTitleProps {
   sheet: string;
@@ -47,7 +47,7 @@ interface SongTitleProps {
 }
 
 interface SongTagProp {
-  tagName: keyof SongDisplay;
+  tagName: keyof Song;
   tagData: string[];
 }
 
@@ -94,7 +94,7 @@ const ListSongTag = ({ tagName, tagData }: SongTagProp) => {
  * Props:
  * ***************************************************************/
 interface SingleSongTagProp {
-  tagName: keyof SongDisplay | string; // temp hack for now
+  tagName: keyof Song | string; // temp hack for now
   tagData: string;
 }
 
@@ -249,7 +249,7 @@ const EditSongTag = ({
  * Props:
  * ***************************************************************/
 interface SongInfoProps {
-  song: SongDisplay;
+  song: Song;
   isEditMode: boolean;
   removeFieldListItem: Function;
   addFieldListItem: Function;
@@ -264,7 +264,7 @@ const SongInfo = ({
   editFieldListItem,
 }: SongInfoProps) => {
   console.log(`Rendering SongInfo in Edit Mode ${isEditMode}`);
-  const tagInfoRow1: (keyof SongDisplay)[] = [
+  const tagInfoRow1: (keyof Song)[] = [
     "sheet",
     "composer",
     "arranger",
@@ -482,10 +482,10 @@ const SongPage = () => {
   const { id } = useParams(); // Get ID of song from URL
 
   /*** State Variables ********************************************/
-  const [data, setData] = useState<SongDisplay>({} as SongDisplay); //<songPageData>({} as songPageData);
+  const [data, setData] = useState<Song>({} as Song); //<songPageData>({} as songPageData);
   const [isEditMode, setEditMode] = useState(false);
   const [ready, setReady] = useState(false); // This prevents trying to access empty data before fetching is done.
-  const [songForm, setSongForm] = useState<SongDisplay>(new SongDisplay());
+  const [songForm, setSongForm] = useState<Song>(new Song());
 
   //const { song, stats, playsPerCM, history } = data;
   const song = data;
@@ -548,7 +548,7 @@ const SongPage = () => {
     fetch(`/song/${id}`)
       .then(res => res.json())
       .then(dataIn => {
-        const temp = songToDisplayObj(dataIn);
+        const temp = DBSong2FESong(dataIn);
         setData(temp);
         setSongForm(JSON.parse(JSON.stringify(temp))); // Needs a "Deep Copy"
       })

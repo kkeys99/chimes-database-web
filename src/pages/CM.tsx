@@ -12,8 +12,8 @@ import ButtonBase from "@mui/material/ButtonBase";
 // Custom Components
 import { ResultsTable } from "../components/ResultsTable";
 import ConcertGrid from "../components/ConcertGrid";
-import { Person, Song, SongDisplay, resultTableRowData } from "../typing/types";
-import { sortConcertsByDate, songListToSongDisplayList } from "../shared/utils";
+import { Person, DBSong, Song, resultTableRowData } from "../typing/types";
+import { sortConcertsByDate, DBSongList2FESongList } from "../shared/utils";
 import logger from "../shared/logger";
 
 const intraPageFields = [
@@ -168,11 +168,11 @@ function CMPageArrangements(props: { initials: string | undefined }) {
     fetch(`/song/search?arranger=${props.initials}`)
       .then(res => res.json())
       .then(data => {
-        // Convert to songDisplay
-        const resAsSongDisplay = songListToSongDisplayList(data);
+        // Convert to Song
+        const resAsSong = DBSongList2FESongList(data);
         // Calculate "you"
         // "you" not implemented yet
-        setData(resAsSongDisplay);
+        setData(resAsSong);
       });
   }, [props.initials]);
 

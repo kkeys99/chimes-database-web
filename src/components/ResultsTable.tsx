@@ -19,9 +19,9 @@ import { Link as RouterLink } from "react-router-dom";
 import {
   resultTableRowData,
   searchByFieldRowData,
-  Song,
+  DBSong,
 } from "../typing/types";
-import { songDisplayFieldToVar } from "../shared/utils";
+import { songFieldToVar } from "../shared/utils";
 import { useState, useEffect } from "react";
 
 import logger from "../shared/logger";
@@ -52,7 +52,7 @@ const playingStatsFieldsFull = [
 ];
 
 function getField(field: string): string {
-  return field == "Song" ? "title" : songDisplayFieldToVar(field);
+  return field == "Song" ? "title" : songFieldToVar(field);
 }
 
 // Example from https://mui.com/material-ui/react-table/
