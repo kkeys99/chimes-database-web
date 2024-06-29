@@ -13,47 +13,22 @@ export class Note {
   text: string = "";
 }
 
-export class Song {
+export interface DBSong {
   id: number;
-  location: string = "";
-  title: string = "";
-  composer: string = "";
-  arranger: string = "";
-  genre: string = "";
-  requests: number = 0;
-  keySignature: string = "";
-  timeSignature: string = "";
-  tempo: string = "";
-  dateAdded: string = "";
-  constructor(
-    id: number = 0,
-    sheet: string = "",
-    title: string = "",
-    composer: string = "",
-    arranger: string = "",
-    genre: string = "",
-    requests: number = 0,
-    keySignature: string = "",
-    timeSignature: string = "",
-    tempo: string = "",
-    dateAdded: string = ""
-  ) {
-    this.id = id;
-    this.location = sheet;
-    this.title = title;
-    this.composer = composer;
-    this.arranger = arranger;
-    this.genre = genre;
-    this.requests = requests;
-    this.keySignature = keySignature;
-    this.timeSignature = timeSignature;
-    this.tempo = tempo;
-    this.dateAdded = dateAdded;
-  }
+  location: string;
+  title: string;
+  composer: string;
+  arranger: string;
+  genre: string;
+  requests: number;
+  keySignature: string;
+  timeSignature: string;
+  tempo: string;
+  dateAdded: string;
 }
 
 // Non backend
-export class SongDisplay {
+export class Song {
   _id: number;
   sheet: string[] = [""];
   title: string = "";
@@ -89,11 +64,51 @@ export class SongDisplay {
   }
 }
 
+export interface DBPerfMap {
+  _id: number;
+  performanceId: number;
+  performerId: number;
+  performer: Person;
+}
+
+export interface DBPerformance {
+  _id: number;
+  song: DBSong;
+  performers: DBPerfMap[];
+  isRequest?: boolean;
+}
+
+export interface PerformanceFields {
+  _id: number;
+  song: Song;
+  performers: Person[];
+  isRequest?: boolean;
+}
+
 export class Performance {
   _id: number = 0;
   song: Song = new Song();
-  isRequest: boolean = false;
-  performers: String[] = [];
+  performers: Person[] = [];
+  isRequest?: boolean = false;
+
+  constructor(opts: PerformanceFields) {
+    Object.assign(this, opts);
+  }
+
+  get initialsList() {
+    return this.performers.map((person) => {
+      return person.initials;
+    })
+  }
+}
+
+export interface DBConcert {
+  id: number;
+  type: string;
+  date: Date;
+  bellsAdjusted: boolean;
+  notes: string;
+  performances: DBPerformance[];
 }
 
 export class Concert {
@@ -129,6 +144,7 @@ export class Person {
   location: string = "";
   activeYears: string = "";
   isCurrent: boolean = false;
+
   constructor(opts: PersonFields) {
     Object.assign(this, opts);
   }
@@ -141,7 +157,7 @@ export class Person {
 //----------------------------------------
 // Results Table
 //----------------------------------------
-export interface resultTableRowData extends SongDisplay {
+export interface resultTableRowData extends Song {
   available?: Dayjs; //  TODO MAKE THIS REQUIRED WHEN ITS ENABLED
   you?: number;
 }
@@ -189,7 +205,7 @@ export interface songHistory {
 }
 
 export interface songPageData {
-  song: Song;
+  song: DBSong;
   stats: songStats;
   playsPerCM: playsPerCM;
   history: songHistory;
