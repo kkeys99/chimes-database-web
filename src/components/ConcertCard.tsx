@@ -92,13 +92,13 @@ const ConcertCard = ({ concert, logEdit }: Props) => {
                     {`${performance.song.sheet[0]} - ${performance.song.title}`}
                   </MuiLink>
                   <Typography display="inline" variant="body2">
-                    {` (${performance.initialsList.join(", ")})`}
+                    {` (${performance.initialsList.join("+")})`}
                   </Typography>
                 </ListItemText>
               );
             })}
           </List>
-=        </CardContent>
+        </CardContent>
       </Card>
     </Box>
   );

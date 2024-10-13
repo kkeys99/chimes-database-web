@@ -49,6 +49,10 @@ import {
 /* Constants ****************************************/
 const concertTypes = ["morning", "afternoon", "evening", "specialty"];
 
+// NOTE: I probably want to do away with SongEntry because ideally it's a Performance
+// But the thing is - how do I handle editMode and a new concert in the same way?
+// In editMode, it's a reference to a performance that exists
+// Otherwise, it's just a couple of text fields.
 const emptySong = () => {
   const newSong: songEntry = {
     title: "",
