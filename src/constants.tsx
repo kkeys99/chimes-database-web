@@ -30,7 +30,9 @@ export const styleVariables = {
     height: 128,
   },
   concertLog: {
-    width: 256,
+    sheetWidth: 54,
+    titleWidth: 96,
+    totalWidth: 320,
   },
 };
 
@@ -61,6 +63,34 @@ export class navBarStyles {
   static totalHeight =
     4 * (this.paddingTop + this.paddingBot + this.spaceBetweenVertical) +
     (this.heightRow1 + this.heightRow2);
+}
+
+export class concertLogStyles {
+  // Padding - MUI units
+  static paddingX = 3;
+  static paddingY = 5;
+
+  // Individual components - Pixels
+  static spacing = 8;
+  static iconsWidth = 12; // Unused - for calc only
+  static sheetWidth = 52;
+  static titleWidth = 200; //96;
+  static cmWidth = 76;
+
+  // Calculated total width
+  static totalWidth =
+    2 * (4 * this.paddingX) +
+    this.iconsWidth +
+    this.spacing +
+    this.sheetWidth +
+    this.spacing +
+    this.titleWidth +
+    this.spacing +
+    this.cmWidth +
+    this.spacing +
+    this.iconsWidth +
+    this.spacing +
+    this.iconsWidth;
 }
 
 /*
