@@ -96,7 +96,7 @@ export class Performance {
   }
 
   get initialsList() {
-    return this.performers.map((person) => {
+    return this.performers.map(person => {
       return person.initials;
     });
   }

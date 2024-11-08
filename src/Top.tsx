@@ -22,9 +22,15 @@ import { Button, Box, Typography } from "@mui/material";
 import SongPage from "./pages/SongPage";
 import Dashboard from "./pages/Dashboard";
 
-import { sessionStorageKeys, styleVariables, headerStyles, concertLogStyles, navBarStyles } from "./constants";
+import {
+  sessionStorageKeys,
+  styleVariables,
+  headerStyles,
+  concertLogStyles,
+  navBarStyles,
+} from "./constants";
 import logger from "./shared/logger";
-import { DBSongList2FESongList } from "./shared/utils"
+import { DBSongList2FESongList } from "./shared/utils";
 
 /************************************************************************
  * Component: Top
@@ -52,7 +58,9 @@ const Top = () => {
 
   /*** Contexts ******************************************/
 
-  const [sheetTitleMap, setSheetTitleMap] = useState({} as {[sheet: string]: string[]});
+  const [sheetTitleMap, setSheetTitleMap] = useState(
+    {} as { [sheet: string]: string[] }
+  );
 
   // Query for all songs and form the map
   useEffect(() => {
@@ -63,18 +71,17 @@ const Top = () => {
         // Convert to Song
         const resAsSong = DBSongList2FESongList(data);
         // empty dict to build map
-        let tempMap: {[sheet: string] : string[]} = {}
+        let tempMap: { [sheet: string]: string[] } = {};
         resAsSong.forEach((song, index) => {
           if (song.sheet[0] in tempMap) {
             tempMap[song.sheet[0]].push(song.title);
-          }
-          else {
+          } else {
             tempMap[song.sheet[0]] = [song.title];
           }
-        })
+        });
         setSheetTitleMap(tempMap);
-      })
-  }, [])
+      });
+  }, []);
 
   /*** Concert Logger ************************************/
   // State variables
@@ -276,7 +283,7 @@ const Top = () => {
         )
       }
       {!disableConcertLogger && (
-        <SongMapContext.Provider value={sheetTitleMap} >
+        <SongMapContext.Provider value={sheetTitleMap}>
           <ConcertLogger
             open={logOpen}
             isEditMode={logEditMode}

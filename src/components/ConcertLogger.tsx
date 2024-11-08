@@ -62,7 +62,7 @@ const emptySong = () => {
     title: "",
     CM: "",
     request: false,
-    titleOptions: [""]
+    titleOptions: [""],
   };
   return newSong;
 };
@@ -90,8 +90,9 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     borderRadius: 4,
     padding: "4px 8px",
   },
-  "& .MuiSelect-select": { // This makes Title Select component wrap the text
-    whiteSpace: "break-spaces"
+  "& .MuiSelect-select": {
+    // This makes Title Select component wrap the text
+    whiteSpace: "break-spaces",
   },
 }));
 
@@ -106,7 +107,7 @@ const LogIcon = ({ children, clickHandler = null }: LogIconProps) => {
   return (
     <IconButton
       disableRipple
-      sx={{ p: 0, alignItems: "center", }}
+      sx={{ p: 0, alignItems: "center" }}
       onClick={e => {
         if (clickHandler) {
           clickHandler(e);
@@ -150,18 +151,18 @@ const SongLogger = ({
   checkErrors,
   sortableList,
 }: SongLoggerProps) => {
-  const name =  "Song Logger";
-  
+  const name = "Song Logger";
+
   const theme = useTheme();
   const inputFontSize = theme.typography.body2;
 
-  const sheetTitleMap: {[sheet: string]: string[]} = useContext(SongMapContext);
+  const sheetTitleMap: { [sheet: string]: string[] } =
+    useContext(SongMapContext);
   logger.log(name, "Sheet Title Map", logger.logLevel.DEBUG);
   logger.printObj(sheetTitleMap, logger.logLevel.DEBUG);
 
   logger.log(name, "Song is", logger.logLevel.DEBUG);
   logger.printObj(song, logger.logLevel.DEBUG);
-
 
   const [sheetTitles, setSheetTitles] = useState([""] as string[]);
   const [titlesAsDropdown, setTitlesAsDropdown] = useState(false);
@@ -175,7 +176,11 @@ const SongLogger = ({
   const lookupTitles = () => {
     // Guard clause - cease lookup if sheet isn't an option
     if (!(song.sheet in sheetTitleMap)) {
-      logger.log(name, `Invalid Sheet input! Your input is: ${song.sheet}`, logger.logLevel.ERROR);
+      logger.log(
+        name,
+        `Invalid Sheet input! Your input is: ${song.sheet}`,
+        logger.logLevel.ERROR
+      );
       // Put error detection code here
       return;
     }
@@ -187,16 +192,15 @@ const SongLogger = ({
     // Go ahead and populate the title if we know what it is
     if (titles.length < 2) {
       populateSongTitle(titles[0]);
-    } 
-    else {
+    } else {
       populateSongTitle("");
     }
-  }
+  };
 
   const populateSongTitle = (title: string) => {
     song.title = title;
     editSong(index, song);
-  }
+  };
 
   // Event handlers
 
@@ -213,7 +217,9 @@ const SongLogger = ({
     editSong(index, song);
   };
 
-  const sheetEnterDetector: React.KeyboardEventHandler<HTMLInputElement> = e => {
+  const sheetEnterDetector: React.KeyboardEventHandler<
+    HTMLInputElement
+  > = e => {
     if (e.key === "Enter") {
       e.preventDefault();
       lookupTitles();
@@ -247,17 +253,17 @@ const SongLogger = ({
     <FormGroup row sx={boxSX}>
       {/* Icons on the left-hand side: drag and add song */}
       {/*<Stack direction="column" spacing={1} alignItems={"center"} sx={{height:"100%"}}>*/}
-        <Box sx={{height: 20}}>
-          <LogIcon>
-            <MenuIcon sx={{ fontSize: inputFontSize }} />
-          </LogIcon>
-        </Box>
-        {
-          //bottom && // Only be able to add at the bottom of list - disabled for now bc we can't reorder
-          //<LogIcon clickHandler={addSongHandler}>
-          //  <AddCircleOutlineIcon sx={{ fontSize: inputFontSize }} />
-          //</LogIcon>
-        }
+      <Box sx={{ height: 20 }}>
+        <LogIcon>
+          <MenuIcon sx={{ fontSize: inputFontSize }} />
+        </LogIcon>
+      </Box>
+      {
+        //bottom && // Only be able to add at the bottom of list - disabled for now bc we can't reorder
+        //<LogIcon clickHandler={addSongHandler}>
+        //  <AddCircleOutlineIcon sx={{ fontSize: inputFontSize }} />
+        //</LogIcon>
+      }
       {/*</Stack>*/}
 
       {/* Sheet Number text field*/}
@@ -276,42 +282,48 @@ const SongLogger = ({
           sx: { borderRadius: "4px", py: 1, px: 2, fontSize: inputFontSize },
         }}
       />
-      
+
       {/* Song Title text field*/}
       {/* TODO: Maybe use styled API to not copy/paste same as above */}
-      {!titlesAsDropdown2 &&
-      <TextField
-        disabled
-        error={titleError}
-        //onChange={titleChangeHandler}
-        name="title"
-        value={song.title}
-        multiline // TODO: Why does this affect format so much?
-        minRows={1}
-        sx={{ width: concertLogStyles.titleWidth, flexShrink: 0 }}
-        variant="filled"
-        InputProps={{
-          disableUnderline: !titleError,
-          sx: { borderRadius: "4px", py: 1, px: 2, fontSize: inputFontSize },
-        }}
-      />}
-      {titlesAsDropdown2 &&
-      <Select
-        error={cmError}
-        name={"CM"}
-        value={song.title}
-        onChange={titleChangeHandler}
-        sx={{ width: concertLogStyles.titleWidth, flexShrink: 0, fontSize: inputFontSize }}
-        input={<BootstrapInput />}
-      >
-      {song.titleOptions.map(title => {
-        return (
-          <MenuItem sx={{ fontSize: inputFontSize }} value={title}>
-            {title}
-          </MenuItem>
-        );
-      })}
-      </Select>}
+      {!titlesAsDropdown2 && (
+        <TextField
+          disabled
+          error={titleError}
+          //onChange={titleChangeHandler}
+          name="title"
+          value={song.title}
+          multiline // TODO: Why does this affect format so much?
+          minRows={1}
+          sx={{ width: concertLogStyles.titleWidth, flexShrink: 0 }}
+          variant="filled"
+          InputProps={{
+            disableUnderline: !titleError,
+            sx: { borderRadius: "4px", py: 1, px: 2, fontSize: inputFontSize },
+          }}
+        />
+      )}
+      {titlesAsDropdown2 && (
+        <Select
+          error={cmError}
+          name={"CM"}
+          value={song.title}
+          onChange={titleChangeHandler}
+          sx={{
+            width: concertLogStyles.titleWidth,
+            flexShrink: 0,
+            fontSize: inputFontSize,
+          }}
+          input={<BootstrapInput />}
+        >
+          {song.titleOptions.map(title => {
+            return (
+              <MenuItem sx={{ fontSize: inputFontSize }} value={title}>
+                {title}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      )}
 
       {/* CM Selector */}
       <Select
@@ -319,19 +331,19 @@ const SongLogger = ({
         name={"CM"}
         value={song.CM}
         onChange={cmChangeHandler}
-        sx={{ 
-          width: concertLogStyles.cmWidth, 
+        sx={{
+          width: concertLogStyles.cmWidth,
           height: "26px", // This is needed or else things get out of whack
-          flexShrink: 0, 
-          fontSize: inputFontSize, 
+          flexShrink: 0,
+          fontSize: inputFontSize,
           whiteSpace: "break-spaces",
           //alignItems: "start",
           "& .MuiSelect-root": {
-            whiteSpace: "break-spaces !important"
-          }
+            whiteSpace: "break-spaces !important",
+          },
         }}
         inputProps={{
-          style: { backgroundColor: "red"}
+          style: { backgroundColor: "red" },
         }}
         input={<BootstrapInput />}
       >
@@ -345,16 +357,16 @@ const SongLogger = ({
       </Select>
 
       {/* Icons on the right-hand side: Request and Delete */}
-      <Box sx={{gap: "8px", display: "flex", height: "24px"}}>
+      <Box sx={{ gap: "8px", display: "flex", height: "24px" }}>
         <LogIcon clickHandler={requestChangeHandler}>
           {song.request ? (
             <StarIcon sx={{ fontSize: inputFontSize }} />
           ) : (
-            <StarBorderIcon sx={{ fontSize: inputFontSize}} />
+            <StarBorderIcon sx={{ fontSize: inputFontSize }} />
           )}
         </LogIcon>
         <LogIcon clickHandler={deleteSongHandler}>
-          <DeleteIcon sx={{ fontSize: inputFontSize}} />
+          <DeleteIcon sx={{ fontSize: inputFontSize }} />
         </LogIcon>
       </Box>
     </FormGroup>
@@ -498,7 +510,7 @@ const ConcertLogger = ({
       // if so, include that logic here.
       setLog({
         ...logForm,
-        songs: [emptySong()]
+        songs: [emptySong()],
       });
       return;
     }
@@ -738,11 +750,8 @@ const ConcertLogger = ({
             )}
           </Droppable>
         </DragDropContext>
-        <Box sx={{ alignItems: "center"}}>
-          <IconButton 
-            onClick={e => addSongLogger(0)}
-            sx={{ width: "100%"}}
-          >
+        <Box sx={{ alignItems: "center" }}>
+          <IconButton onClick={e => addSongLogger(0)} sx={{ width: "100%" }}>
             <AddCircleOutlineIcon sx={{ fontSize: 24 }} />
           </IconButton>
         </Box>

@@ -3,7 +3,15 @@ Some utility functions that can be reused
 */
 import dayjs from "dayjs";
 import { Dayjs } from "dayjs";
-import { DBSong, Song, DBConcert, Concert, DBPerformance, Performance, PerformanceFields } from "../typing/types";
+import {
+  DBSong,
+  Song,
+  DBConcert,
+  Concert,
+  DBPerformance,
+  Performance,
+  PerformanceFields,
+} from "../typing/types";
 
 /********************************
  * Date Processing
@@ -106,9 +114,11 @@ export function songFieldToVar(field: string) {
 export function DBPerf2FEPerf(dbPerf: DBPerformance) {
   const fePerfParams: PerformanceFields = {
     ...dbPerf,
-    performers: dbPerf.performers.map((p) => { return p.performer}),
-    song: DBSong2FESong(dbPerf.song)
-  }
+    performers: dbPerf.performers.map(p => {
+      return p.performer;
+    }),
+    song: DBSong2FESong(dbPerf.song),
+  };
   const fePerf: Performance = new Performance(fePerfParams);
   return fePerf;
 }
@@ -116,7 +126,7 @@ export function DBPerf2FEPerf(dbPerf: DBPerformance) {
 export function DBPerfList2FEPerfList(dbPerfList: DBPerformance[]) {
   const fePerfList: Performance[] = dbPerfList.map((dbPerf: DBPerformance) => {
     return DBPerf2FEPerf(dbPerf);
-  })
+  });
   return fePerfList;
 }
 
@@ -127,8 +137,8 @@ export function DBPerfList2FEPerfList(dbPerfList: DBPerformance[]) {
 export function DBConcert2FEConcert(dbConcert: DBConcert) {
   const feConcert: Concert = {
     ...dbConcert,
-    performances: DBPerfList2FEPerfList(dbConcert.performances)
-  }
+    performances: DBPerfList2FEPerfList(dbConcert.performances),
+  };
   return feConcert;
 }
 
@@ -152,5 +162,3 @@ export function sortConcertsByDate(concerts: Concert[]) {
   });
   return concertsByDate;
 }
-
-

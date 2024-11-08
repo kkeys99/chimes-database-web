@@ -67,25 +67,29 @@ export class navBarStyles {
 
 export class concertLogStyles {
   // Padding - MUI units
-  static paddingX = 3
-  static paddingY = 5
+  static paddingX = 3;
+  static paddingY = 5;
 
   // Individual components - Pixels
-  static spacing = 8;         
-  static iconsWidth = 12;  // Unused - for calc only
-  static sheetWidth = 52
-  ;
+  static spacing = 8;
+  static iconsWidth = 12; // Unused - for calc only
+  static sheetWidth = 52;
   static titleWidth = 200; //96;
   static cmWidth = 76;
 
   // Calculated total width
-  static totalWidth = 
-    2*(4*this.paddingX) + 
-    this.iconsWidth + this.spacing + 
-    this.sheetWidth + this.spacing +
-    this.titleWidth + this.spacing +
-    this.cmWidth + this.spacing +
-    this.iconsWidth + this.spacing +
+  static totalWidth =
+    2 * (4 * this.paddingX) +
+    this.iconsWidth +
+    this.spacing +
+    this.sheetWidth +
+    this.spacing +
+    this.titleWidth +
+    this.spacing +
+    this.cmWidth +
+    this.spacing +
+    this.iconsWidth +
+    this.spacing +
     this.iconsWidth;
 }
 
