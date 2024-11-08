@@ -1,6 +1,6 @@
 // React and hooks
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import useSessionStorage from "../hooks/useSessionStorage";
 // Dayjs
 import dayjs from "dayjs";
@@ -38,16 +38,19 @@ import {
   Performance,
 } from "../typing/types";
 import { sessionStorageKeys } from "../constants";
-import { styleVariables } from "../constants";
+import { concertLogStyles } from "../constants";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
+import logger from "../shared/logger";
+import { SongMapContext } from "../Contexts";
 
 /* Constants ****************************************/
 const concertTypes = ["morning", "afternoon", "evening", "specialty"];
+const sampleCMs = ["AK", "KJC", "JLCLM"];
 
 // NOTE: I probably want to do away with SongEntry because ideally it's a Performance
 // But the thing is - how do I handle editMode and a new concert in the same way?
@@ -55,9 +58,11 @@ const concertTypes = ["morning", "afternoon", "evening", "specialty"];
 // Otherwise, it's just a couple of text fields.
 const emptySong = () => {
   const newSong: songEntry = {
+    sheet: "",
     title: "",
     CM: "",
     request: false,
+    titleOptions: [""]
   };
   return newSong;
 };
@@ -85,6 +90,9 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     borderRadius: 4,
     padding: "4px 8px",
   },
+  "& .MuiSelect-select": { // This makes Title Select component wrap the text
+    whiteSpace: "break-spaces"
+  },
 }));
 
 // A simple component that's basically a styled icon button
@@ -98,7 +106,7 @@ const LogIcon = ({ children, clickHandler = null }: LogIconProps) => {
   return (
     <IconButton
       disableRipple
-      sx={{ p: 0 }}
+      sx={{ p: 0, alignItems: "center", }}
       onClick={e => {
         if (clickHandler) {
           clickHandler(e);
@@ -142,12 +150,55 @@ const SongLogger = ({
   checkErrors,
   sortableList,
 }: SongLoggerProps) => {
+  const name =  "Song Logger";
+  
   const theme = useTheme();
   const inputFontSize = theme.typography.body2;
 
+  const sheetTitleMap: {[sheet: string]: string[]} = useContext(SongMapContext);
+  logger.log(name, "Sheet Title Map", logger.logLevel.DEBUG);
+  logger.printObj(sheetTitleMap, logger.logLevel.DEBUG);
+
+  logger.log(name, "Song is", logger.logLevel.DEBUG);
+  logger.printObj(song, logger.logLevel.DEBUG);
+
+
+  const [sheetTitles, setSheetTitles] = useState([""] as string[]);
+  const [titlesAsDropdown, setTitlesAsDropdown] = useState(false);
+
+  const titlesAsDropdown2 = song.titleOptions.length > 1;
   // Error Flags
   const titleError = checkErrors && song.title === "";
   const cmError = checkErrors && song.CM === "";
+
+  // Helper functions
+  const lookupTitles = () => {
+    // Guard clause - cease lookup if sheet isn't an option
+    if (!(song.sheet in sheetTitleMap)) {
+      logger.log(name, `Invalid Sheet input! Your input is: ${song.sheet}`, logger.logLevel.ERROR);
+      // Put error detection code here
+      return;
+    }
+    // Gather results
+    const titles = sheetTitleMap[song.sheet];
+    logger.log(name, "Hit Enter, looking up titles", logger.logLevel.DEBUG);
+    logger.printObj(titles, logger.logLevel.DEBUG);
+    song.titleOptions = titles;
+    // Go ahead and populate the title if we know what it is
+    if (titles.length < 2) {
+      populateSongTitle(titles[0]);
+    } 
+    else {
+      populateSongTitle("");
+    }
+  }
+
+  const populateSongTitle = (title: string) => {
+    song.title = title;
+    editSong(index, song);
+  }
+
+  // Event handlers
 
   const addSongHandler: React.MouseEventHandler = () => {
     addSong(index);
@@ -157,7 +208,19 @@ const SongLogger = ({
     deleteSong(index);
   };
 
-  const titleChangeHandler: React.ChangeEventHandler<HTMLInputElement> = e => {
+  const sheetChangeHandler: React.ChangeEventHandler<HTMLInputElement> = e => {
+    song.sheet = e.target.value.toUpperCase();
+    editSong(index, song);
+  };
+
+  const sheetEnterDetector: React.KeyboardEventHandler<HTMLInputElement> = e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      lookupTitles();
+    }
+  };
+
+  const titleChangeHandler = (e: any) => {
     song.title = e.target.value;
     editSong(index, song);
   };
@@ -175,39 +238,80 @@ const SongLogger = ({
 
   const boxSX = {
     display: "flex",
+    alignItems: "start",
     gap: "8px",
+    py: 1,
   };
 
   return (
     <FormGroup row sx={boxSX}>
       {/* Icons on the left-hand side: drag and add song */}
-      <Stack direction="column" spacing={1}>
-        <LogIcon>
-          <MenuIcon sx={{ fontSize: inputFontSize }} />
-        </LogIcon>
+      {/*<Stack direction="column" spacing={1} alignItems={"center"} sx={{height:"100%"}}>*/}
+        <Box sx={{height: 20}}>
+          <LogIcon>
+            <MenuIcon sx={{ fontSize: inputFontSize }} />
+          </LogIcon>
+        </Box>
         {
           //bottom && // Only be able to add at the bottom of list - disabled for now bc we can't reorder
-          <LogIcon clickHandler={addSongHandler}>
-            <AddCircleOutlineIcon sx={{ fontSize: inputFontSize }} />
-          </LogIcon>
+          //<LogIcon clickHandler={addSongHandler}>
+          //  <AddCircleOutlineIcon sx={{ fontSize: inputFontSize }} />
+          //</LogIcon>
         }
-      </Stack>
+      {/*</Stack>*/}
 
-      {/* Song Title text field*/}
+      {/* Sheet Number text field*/}
       <TextField
         error={titleError}
-        onChange={titleChangeHandler}
-        name="title"
-        value={song.title}
-        multiline
+        onChange={sheetChangeHandler}
+        onKeyDown={sheetEnterDetector}
+        name="sheet"
+        value={song.sheet}
+        multiline // TODO: Why does this affect format so much?
         minRows={1}
-        sx={{ py: 1, width: "96px", flexShrink: 0 }}
+        sx={{ width: concertLogStyles.sheetWidth, flexShrink: 0 }}
         variant="filled"
         InputProps={{
           disableUnderline: !titleError,
           sx: { borderRadius: "4px", py: 1, px: 2, fontSize: inputFontSize },
         }}
       />
+      
+      {/* Song Title text field*/}
+      {/* TODO: Maybe use styled API to not copy/paste same as above */}
+      {!titlesAsDropdown2 &&
+      <TextField
+        disabled
+        error={titleError}
+        //onChange={titleChangeHandler}
+        name="title"
+        value={song.title}
+        multiline // TODO: Why does this affect format so much?
+        minRows={1}
+        sx={{ width: concertLogStyles.titleWidth, flexShrink: 0 }}
+        variant="filled"
+        InputProps={{
+          disableUnderline: !titleError,
+          sx: { borderRadius: "4px", py: 1, px: 2, fontSize: inputFontSize },
+        }}
+      />}
+      {titlesAsDropdown2 &&
+      <Select
+        error={cmError}
+        name={"CM"}
+        value={song.title}
+        onChange={titleChangeHandler}
+        sx={{ width: concertLogStyles.titleWidth, flexShrink: 0, fontSize: inputFontSize }}
+        input={<BootstrapInput />}
+      >
+      {song.titleOptions.map(title => {
+        return (
+          <MenuItem sx={{ fontSize: inputFontSize }} value={title}>
+            {title}
+          </MenuItem>
+        );
+      })}
+      </Select>}
 
       {/* CM Selector */}
       <Select
@@ -215,10 +319,23 @@ const SongLogger = ({
         name={"CM"}
         value={song.CM}
         onChange={cmChangeHandler}
-        sx={{ width: "64px", flexShrink: 0, fontSize: inputFontSize }}
+        sx={{ 
+          width: concertLogStyles.cmWidth, 
+          height: "26px", // This is needed or else things get out of whack
+          flexShrink: 0, 
+          fontSize: inputFontSize, 
+          whiteSpace: "break-spaces",
+          //alignItems: "start",
+          "& .MuiSelect-root": {
+            whiteSpace: "break-spaces !important"
+          }
+        }}
+        inputProps={{
+          style: { backgroundColor: "red"}
+        }}
         input={<BootstrapInput />}
       >
-        {concertTypes.map(type => {
+        {sampleCMs.map(type => {
           return (
             <MenuItem sx={{ fontSize: inputFontSize }} value={type}>
               {type}
@@ -228,16 +345,18 @@ const SongLogger = ({
       </Select>
 
       {/* Icons on the right-hand side: Request and Delete */}
-      <LogIcon clickHandler={requestChangeHandler}>
-        {song.request ? (
-          <StarIcon sx={{ fontSize: inputFontSize }} />
-        ) : (
-          <StarBorderIcon sx={{ fontSize: inputFontSize }} />
-        )}
-      </LogIcon>
-      <LogIcon clickHandler={deleteSongHandler}>
-        <DeleteIcon sx={{ fontSize: inputFontSize }} />
-      </LogIcon>
+      <Box sx={{gap: "8px", display: "flex", height: "24px"}}>
+        <LogIcon clickHandler={requestChangeHandler}>
+          {song.request ? (
+            <StarIcon sx={{ fontSize: inputFontSize }} />
+          ) : (
+            <StarBorderIcon sx={{ fontSize: inputFontSize}} />
+          )}
+        </LogIcon>
+        <LogIcon clickHandler={deleteSongHandler}>
+          <DeleteIcon sx={{ fontSize: inputFontSize}} />
+        </LogIcon>
+      </Box>
     </FormGroup>
   );
 };
@@ -324,7 +443,7 @@ const ConcertLogger = ({
   // Props passed into the Paper component of the Drawer
   const paperProps = {
     sx: {
-      width: styleVariables.concertLog.width,
+      width: concertLogStyles.totalWidth,
       borderRight: "none",
       overflow: "hidden",
     },
@@ -334,10 +453,10 @@ const ConcertLogger = ({
   /***** Form Related things ****************************/
 
   // State variable
-  const [logForm, setLog] = useSessionStorage(
-    sessionStorageKeys.concertLog.logForm,
-    defaultLog
-  );
+  const [logForm, setLog] = useState(defaultLog); //useSessionStorage(
+  //  sessionStorageKeys.concertLog.logForm,
+  //  defaultLog
+  //);
 
   const logDateAsDayjs = dayjs(logForm.date);
 
@@ -362,7 +481,8 @@ const ConcertLogger = ({
     // Go here when you press the plus icon
     // Doing it this way because splice edits in-place and returns deleted items
     const songList: songEntry[] = logForm.songs;
-    songList.splice(index + 1, 0, emptySong());
+    //songList.splice(index + 1, 0, emptySong());
+    songList.splice(songList.length, 0, emptySong());
     // Change the State
     setLog({
       ...logForm,
@@ -373,9 +493,13 @@ const ConcertLogger = ({
   const removeSongLogger = (index: number) => {
     // Go here when you press the trash icon
     // Guard clause for when there is only one entry
-    if (logForm.songs.length == 1) {
+    if (logForm.songs.length === 1) {
       // TODO - Should pressing delete on a single entry clear it?
       // if so, include that logic here.
+      setLog({
+        ...logForm,
+        songs: [emptySong()]
+      });
       return;
     }
     // Doing it this way because splice edits in-place and returns deleted items
@@ -462,10 +586,10 @@ const ConcertLogger = ({
 
     // Clear the form if submit was successful
     setLog(defaultLog);
-    sessionStorage.setItem(
-      sessionStorageKeys.concertLog.logForm,
-      JSON.stringify(defaultLog)
-    );
+    //sessionStorage.setItem(
+    // sessionStorageKeys.concertLog.logForm,
+    //  JSON.stringify(defaultLog)
+    //);
     setCheckErrors(false);
   };
 
@@ -602,7 +726,7 @@ const ConcertLogger = ({
                           deleteSong={removeSongLogger}
                           editSong={editSongEntry}
                           checkErrors={checkErrors}
-                          bottom={index == logForm.songs.length - 1}
+                          bottom={index === logForm.songs.length - 1}
                           sortableList={sortableList.current!}
                         />
                       </div>
@@ -614,6 +738,14 @@ const ConcertLogger = ({
             )}
           </Droppable>
         </DragDropContext>
+        <Box sx={{ alignItems: "center"}}>
+          <IconButton 
+            onClick={e => addSongLogger(0)}
+            sx={{ width: "100%"}}
+          >
+            <AddCircleOutlineIcon sx={{ fontSize: 24 }} />
+          </IconButton>
+        </Box>
 
         {/*** NOTE PRIVATE ***********************************************/}
         <FormLabel sx={{ pt: 2, pb: 0.5, color: theme.palette.primary.dark }}>

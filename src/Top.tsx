@@ -6,6 +6,8 @@ import theme from "./theme";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 
+import { SongMapContext, CurrentCmContext } from "./Contexts";
+
 import NavBar from "./components/NavBar";
 import SiteHeader from "./components/SiteHeader";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -20,8 +22,9 @@ import { Button, Box, Typography } from "@mui/material";
 import SongPage from "./pages/SongPage";
 import Dashboard from "./pages/Dashboard";
 
-import { sessionStorageKeys, styleVariables, headerStyles } from "./constants";
+import { sessionStorageKeys, styleVariables, headerStyles, concertLogStyles, navBarStyles } from "./constants";
 import logger from "./shared/logger";
+import { DBSongList2FESongList } from "./shared/utils"
 
 /************************************************************************
  * Component: Top
@@ -46,6 +49,32 @@ const Top = () => {
   // Component Control
   const disableConcertLogger = currentPage === "dashboard";
   const disableNavbar = currentPage === "dashboard";
+
+  /*** Contexts ******************************************/
+
+  const [sheetTitleMap, setSheetTitleMap] = useState({} as {[sheet: string]: string[]});
+
+  // Query for all songs and form the map
+  useEffect(() => {
+    logger.log(name, "Building Sheet:Title Map", logger.logLevel.DEBUG);
+    fetch(`song/search?title=%`)
+      .then(res => res.json())
+      .then(data => {
+        // Convert to Song
+        const resAsSong = DBSongList2FESongList(data);
+        // empty dict to build map
+        let tempMap: {[sheet: string] : string[]} = {}
+        resAsSong.forEach((song, index) => {
+          if (song.sheet[0] in tempMap) {
+            tempMap[song.sheet[0]].push(song.title);
+          }
+          else {
+            tempMap[song.sheet[0]] = [song.title];
+          }
+        })
+        setSheetTitleMap(tempMap);
+      })
+  }, [])
 
   /*** Concert Logger ************************************/
   // State variables
@@ -95,15 +124,14 @@ const Top = () => {
   const buttonWidth = 64;
   const buttonMargin = 4; // needs a margin else you don't see the shadows. No bottom margin for this reason
   const buttonPosLeft = logOpen
-    ? styleVariables.concertLog.width - buttonMargin
+    ? concertLogStyles.totalWidth - buttonMargin
     : -buttonMargin;
   const buttonPosTop =
     headerStyles.totalHeight +
-    styleVariables.navBar.height -
+    navBarStyles.totalHeight -
     buttonWidth -
     buttonHeight -
     buttonMargin;
-
   /*** Search *******************************************/
   // State variables
   const [searchBy, setSearchBy] = useState("title");
@@ -248,13 +276,15 @@ const Top = () => {
         )
       }
       {!disableConcertLogger && (
-        <ConcertLogger
-          open={logOpen}
-          isEditMode={logEditMode}
-          editID={logEditID}
-          setEditMode={setLogEditMode}
-          cancelEdit={cancelEdit}
-        />
+        <SongMapContext.Provider value={sheetTitleMap} >
+          <ConcertLogger
+            open={logOpen}
+            isEditMode={logEditMode}
+            editID={logEditID}
+            setEditMode={setLogEditMode}
+            cancelEdit={cancelEdit}
+          />
+        </SongMapContext.Provider>
       )}
     </Box> // Container
   );

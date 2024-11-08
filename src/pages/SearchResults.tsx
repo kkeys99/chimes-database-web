@@ -72,7 +72,7 @@ const SearchResults = memo(function SearchResults({
   return (
     <Box sx={{ px: 6 }}>
       <Typography sx={{ py: 3 }}>
-        {`${numResults} result${numResults > 1 ? "s" : ""} found`}
+        {`${numResults} result${numResults !== 1 ? "s" : ""} found`}
       </Typography>
       <ResultsTable data={returnedSongs as resultTableRowData[]} lite={false} />
     </Box>

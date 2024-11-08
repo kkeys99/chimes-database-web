@@ -20,14 +20,14 @@ class Logger {
   }
 
   log(name: string, message: string, logLevel: logLevel) {
-    const errorStr = logLevel == this.logLevel.ERROR ? "ERROR: " : "";
-    if (logLevel >= Logger.configLogLevel) {
+    const errorStr = logLevel === this.logLevel.ERROR ? "ERROR: " : "";
+    if (logLevel <= Logger.configLogLevel) {
       console.log(`${name} - ${errorStr}${message}`);
     }
   }
 
   printObj(obj: Object, logLevel: logLevel) {
-    if (logLevel >= Logger.configLogLevel) {
+    if (logLevel <= Logger.configLogLevel) {
       console.log(obj);
     }
   }

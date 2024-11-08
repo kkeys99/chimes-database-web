@@ -172,9 +172,11 @@ export interface searchByFieldRowData {
 //---------------------------------------
 
 export interface songEntry {
+  sheet: string;
   title: string;
   CM: string;
   request: boolean;
+  titleOptions: string[];
 }
 
 export interface concertLogFields {
