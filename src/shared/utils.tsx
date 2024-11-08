@@ -135,7 +135,8 @@ export function DBConcert2FEConcert(dbConcert: DBConcert) {
 export function DBConcertList2FEConcertList(dbConcertList: DBConcert[]) {
   const feConcertList: Concert[] = dbConcertList.map((dbConcert: DBConcert) => {
     return DBConcert2FEConcert(dbConcert);
-  })
+  });
+
   return feConcertList;
 }
 
